@@ -20,7 +20,8 @@ class _LoginpageState extends State<Loginpage> {
             SizedBox(height: 176.h),
             Image.asset("assets/image/Artboard-1 1.png", height: 190.h),
             SizedBox(height: 52.h),
-            RichText(textAlign: TextAlign.start,
+            RichText(
+              textAlign: TextAlign.start,
               text: TextSpan(
                 children: [
                   TextSpan(
@@ -35,8 +36,62 @@ class _LoginpageState extends State<Loginpage> {
                 ],
               ),
             ),
+            SizedBox(height: 8.h),
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(),
+              ),
+            ),
 
-            TextField(decoration: InputDecoration()),
+            RichText(
+              textAlign: TextAlign.start,
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '*  ',
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+
+                  TextSpan(
+                    text: ' Email',
+                    style: TextStyle(color: Colors.black, fontSize: 10),
+                  ),
+                ],
+              ),
+            ),
+
+            SizedBox(height: 8.h),
+
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(),
+              ),
+            ),
+            RichText(
+              textAlign: TextAlign.start,
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: '*  ',
+                    style: TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+
+                  TextSpan(
+                    text: ' passwrod',
+                    style: TextStyle(color: Colors.black, fontSize: 10),
+                  ),
+                ],
+              ),
+            ),
+
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                focusedBorder: OutlineInputBorder(),
+              ),
+            ),
           ],
         ),
       ),
