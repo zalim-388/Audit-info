@@ -1,9 +1,8 @@
-import 'package:audit_info/ui/Branch_manager.dart';
-import 'package:audit_info/ui/customDrawer.dart';
 import 'package:audit_info/utils/colors.dart';
+import 'package:audit_info/utils/customDrawer.dart';
+import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Dashboard extends StatefulWidget {
@@ -42,25 +41,36 @@ class _DashboardState extends State<Dashboard> {
 
         title: Text(
           "Dashboard",
-          style: TextStyle(color: kBorderColor, fontSize: 14),
+          style: TextStyle(color: ktextcolor, fontSize: 14),
         ),
 
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
-            child: Container(
-              height: 20.h,
-              width: 66.w,
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              decoration: BoxDecoration(
-                color: kPrimaryColor,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              alignment: Alignment.center,
-              child: Text(
-                "update\npassword",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white, fontSize: 9),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  ModalBottomSheetRoute(
+                    builder: (context) => UpdatepassSheet(),
+                    isScrollControlled: true,
+                  ),
+                );
+              },
+              child: Container(
+                height: 20.h,
+                width: 66.w,
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                decoration: BoxDecoration(
+                  color: kPrimaryColor,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  "update\npassword",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Colors.white, fontSize: 9),
+                ),
               ),
             ),
           ),
@@ -75,555 +85,551 @@ class _DashboardState extends State<Dashboard> {
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(
-          children: [
-            TextField(
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search, color: ktextcolor),
-                hintText: "search",
-                hintStyle: TextStyle(color: ktextcolor),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              TextField(
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.search, color: ktextcolor),
+                  hintText: "search",
+                  hintStyle: TextStyle(color: ktextcolor),
 
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(20),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  fillColor: kcontainer,
+                  filled: true,
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                fillColor: kcontainer,
-                filled: true,
               ),
-            ),
-            SizedBox(height: 21.h),
-            Stack(
-              children: [
-                Container(
-                  height: 71.h,
-                  width: 354.w,
-                  decoration: BoxDecoration(
-                    color: kcontainer,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-                Positioned(
-                  top: 5,
-                  left: 5,
-                  child: Container(
-                    height: 60.h,
-                    width: 110,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFFFFFFF),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-
-                    child: Row(
-                      children: [
-                        SizedBox(width: 10.w),
-                        Text(
-                          "No of\nLeads",
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            color: ktextcolor,
-                          ),
-                        ),
-                        SizedBox(width: 20.w),
-                        Text(
-                          "6",
-                          style: GoogleFonts.inter(
-                            fontSize: 16,
-                            color: ktextcolor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                Positioned(
-                  top: 5,
-                  left: 125,
-                  child: Container(
-                    height: 60.h,
-                    width: 110,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFFFFFFF),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-
-                    child: Row(
-                      children: [
-                        SizedBox(width: 10.w),
-                        Text(
-                          "No of\nAdmission",
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            color: ktextcolor,
-                          ),
-                        ),
-                        SizedBox(width: 10.w),
-                        Text(
-                          "2",
-                          style: GoogleFonts.inter(
-                            fontSize: 16,
-                            color: ktextcolor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                Positioned(
-                  top: 5,
-                  left: 245,
-                  child: Container(
-                    height: 60.h,
-                    width: 110,
-                    decoration: BoxDecoration(
-                      color: Color(0xFFFFFFFF),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(width: 10.w),
-                        Text(
-                          "No of\nBranches",
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-                            color: ktextcolor,
-                          ),
-                        ),
-                        SizedBox(width: 10.w),
-                        Text(
-                          "2",
-                          style: GoogleFonts.inter(
-                            fontSize: 16,
-                            color: ktextcolor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
-            SizedBox(height: 13.h),
-            Container(
-              width: 109.w,
-              height: 20.h,
-              decoration: BoxDecoration(
-                color: kcontainer,
-                borderRadius: BorderRadius.circular(7),
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 6),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+              SizedBox(height: 21.h),
+              Stack(
                 children: [
-                  Text(
-                    "select branch",
-                    style: GoogleFonts.inter(fontSize: 10, color: ktextcolor),
-                    overflow: TextOverflow.ellipsis,
+                  Container(
+                    height: 71.h,
+                    width: 354.w,
+                    decoration: BoxDecoration(
+                      color: kcontainer,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
                   ),
-                  GestureDetector(
-                    onTap: () {},
-                    child: Icon(
-                      Icons.keyboard_arrow_down,
-                      size: 16,
-                      color: ktextcolor,
+                  Positioned(
+                    top: 5,
+                    left: 8,
+                    child: Container(
+                      height: 60.h,
+                      width: 110,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFFFFF),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+
+                      child: Row(
+                        children: [
+                          SizedBox(width: 10.w),
+                          Text(
+                            "No of\nLeads",
+                            style: GoogleFonts.inter(
+                              fontSize: 13,
+                              color: ktextcolor,
+                            ),
+                          ),
+                          SizedBox(width: 20.w),
+                          Text(
+                            "6",
+                            style: GoogleFonts.inter(
+                              fontSize: 16,
+                              color: ktextcolor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  Positioned(
+                    top: 5,
+                    left: 128,
+                    child: Container(
+                      height: 60.h,
+                      width: 110,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFFFFF),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+
+                      child: Row(
+                        children: [
+                          SizedBox(width: 10.w),
+                          Text(
+                            "No of\nAdmission",
+                            style: GoogleFonts.inter(
+                              fontSize: 13,
+                              color: ktextcolor,
+                            ),
+                          ),
+                          SizedBox(width: 10.w),
+                          Text(
+                            "2",
+                            style: GoogleFonts.inter(
+                              fontSize: 16,
+                              color: ktextcolor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  Positioned(
+                    top: 5,
+                    left: 247,
+                    child: Container(
+                      height: 60.h,
+                      width: 110,
+                      decoration: BoxDecoration(
+                        color: Color(0xFFFFFFFF),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(width: 10.w),
+                          Text(
+                            "No of\nBranches",
+                            style: GoogleFonts.inter(
+                              fontSize: 13,
+                              color: ktextcolor,
+                            ),
+                          ),
+                          SizedBox(width: 10.w),
+                          Text(
+                            "2",
+                            style: GoogleFonts.inter(
+                              fontSize: 16,
+                              color: ktextcolor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
 
-            SizedBox(height: 17.h),
-
-            // chart
-            SizedBox(height: 18.h),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 35),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Leaderboard", style: GoogleFonts.inter(fontSize: 13)),
-                  SizedBox(height: 27.h),
-                  Container(
-                    width: 337.w,
-                    height: 30.h,
-                    decoration: BoxDecoration(
-                      color: kcontainer,
-                      border: Border.all(
-                        color: const Color(0x41414333),
-                        width: 1,
+              SizedBox(height: 13.h),
+              Container(
+                width: 109.w,
+                height: 20.h,
+                decoration: BoxDecoration(
+                  color: kcontainer,
+                  borderRadius: BorderRadius.circular(7),
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 6),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "select branch",
+                      style: GoogleFonts.inter(fontSize: 10, color: ktextcolor),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    GestureDetector(
+                      onTap: () {},
+                      child: Icon(
+                        Icons.keyboard_arrow_down,
+                        size: 16,
+                        color: ktextcolor,
                       ),
                     ),
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(
-                        'Branch Manager',
-                        style: GoogleFonts.inter(
-                          fontSize: 10.sp,
-                          color: ktextcolor,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 337.w,
-                    height: 90.h,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: const Color(0x41414333),
-                        width: 1,
-                      ),
-                    ),
-                    child: Table(
-                      border: TableBorder.all(color: Colors.black),
-                      columnWidths: const {
-                        0: FixedColumnWidth(60),
-                        1: FixedColumnWidth(160),
-                        2: FixedColumnWidth(60),
-                      },
-                      children: [
-                        TableRow(
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFEBC2AF),
-                          ),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                'No of',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                'Manager',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                'Admissions',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        TableRow(
-                          decoration: BoxDecoration(color: kcontainer),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                '1',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                'Fabio',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                '1',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        TableRow(
-                          decoration: BoxDecoration(color: kcontainer),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                '2',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                'Carvalho',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                '0',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 30.h),
-                  Container(
-                    width: 337.w,
-                    height: 30.h,
-                    decoration: BoxDecoration(
-                      color: kcontainer,
-                      border: Border.all(
-                        color: const Color(0x41414333),
-                        width: 1,
-                      ),
-                    ),
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Text(
-                        'SRC',
-                        style: GoogleFonts.inter(
-                          fontSize: 10.sp,
-                          color: ktextcolor,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 337.w,
-                    height: 90.h,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: const Color(0x41414333),
-                        width: 1,
-                      ),
-                    ),
-                    child: Table(
-                      border: TableBorder.all(color: Colors.black),
-                      columnWidths: const {
-                        0: FixedColumnWidth(60),
-                        1: FixedColumnWidth(160),
-                        2: FixedColumnWidth(60),
-                      },
-                      children: [
-                        TableRow(
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFEBC2AF),
-                          ),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                'No of',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                'Manager',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                'Admissions',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        TableRow(
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFEBC2AF),
-                          ),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                '1',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                'sreya',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                '1',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        TableRow(
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFEBC2AF),
-                          ),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                '2',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                'sahad',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 8.0,
-                              ),
-                              child: Text(
-                                '2',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.inter(
-                                  fontSize: 10.sp,
-                                  color: ktextcolor,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 30.h),
-                ],
+                  ],
+                ),
               ),
-            ),
-            SizedBox(height: 20.h),
-          ],
+
+              SizedBox(height: 17.h),
+
+              // chart
+              SizedBox(height: 18.h),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 34),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Leaderboard", style: GoogleFonts.inter(fontSize: 13)),
+                    SizedBox(height: 27.h),
+                    Container(
+                      width: 337.w,
+                      height: 30.h,
+                      decoration: BoxDecoration(
+                        color: kcontainer,
+                        border: Border.all(color: const Color(0x41414333)),
+                      ),
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          'Branch Manager',
+                          style: GoogleFonts.inter(
+                            fontSize: 10.sp,
+                            color: ktextcolor,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 337.w,
+                      height: 90.h,
+                      decoration: BoxDecoration(
+                        // border: BorderDirectional(
+                        //   top: BorderSide(
+                        //     color: const Color(0x41414333),
+                        //     width: 1,
+                        // //   ),
+                        // ),
+                      ),
+                      child: Table(
+                        border: TableBorder.all(color: Color(0x41414333)),
+                        columnWidths: {
+                          0: FixedColumnWidth(70),
+                          1: FixedColumnWidth(160),
+                          2: FixedColumnWidth(70),
+                        },
+                        children: [
+                          TableRow(
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFEBC2AF),
+                            ),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  'No of',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.symmetric(vertical: 8.0),
+                                child: Text(
+                                  'Manager',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  'Admissions',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          TableRow(
+                            decoration: BoxDecoration(color: kcontainer),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  '1',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  'Fabio',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  '1',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          TableRow(
+                            decoration: BoxDecoration(color: kcontainer),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  '2',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  'Carvalho',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  '0',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 30.h),
+                    Container(
+                      width: 337.w,
+                      height: 30.h,
+                      decoration: BoxDecoration(
+                        color: kcontainer,
+
+                        border: Border.all(color: const Color(0x41414333)),
+                      ),
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text(
+                          'SRC',
+                          style: GoogleFonts.inter(
+                            fontSize: 10.sp,
+                            color: ktextcolor,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 337.w,
+                      height: 90.h,
+                      decoration: BoxDecoration(
+                        border: BorderDirectional(
+                          top: BorderSide(color: Color(0x41414333)),
+                        ),
+                      ),
+                      child: Table(
+                        border: TableBorder.all(color: Color(0x41414333)),
+                        columnWidths: const {
+                          0: FixedColumnWidth(70),
+                          1: FixedColumnWidth(160),
+                          2: FixedColumnWidth(70),
+                        },
+                        children: [
+                          TableRow(
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFEBC2AF),
+                            ),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  'No of',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  'Manager',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  'Admissions',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          TableRow(
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFEBC2AF),
+                            ),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  '1',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  'sreya',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  '1',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          TableRow(
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFEBC2AF),
+                            ),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  '2',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  'sahad',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0,
+                                ),
+                                child: Text(
+                                  '2',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.inter(
+                                    fontSize: 10.sp,
+                                    color: ktextcolor,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 30.h),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20.h),
+            ],
+          ),
         ),
       ),
     );

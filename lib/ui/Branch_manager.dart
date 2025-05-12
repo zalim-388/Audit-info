@@ -1,8 +1,8 @@
-import 'package:audit_info/ui/customDrawer.dart';
 import 'package:audit_info/utils/colors.dart';
+import 'package:audit_info/utils/customDrawer.dart';
+import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class BranchManager extends StatefulWidget {
@@ -41,23 +41,31 @@ class _BranchMangerState extends State<BranchManager> {
 
         title: Text(
           "Branch Manager",
-          style: TextStyle(color: kBorderColor, fontSize: 14),
+          style: TextStyle(color: ktextcolor, fontSize: 14),
         ),
 
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
-            child: Container(
-              height: 20.h,
-              width: 66.w,
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              decoration: BoxDecoration(
-                color: kPrimaryColor,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  ModalBottomSheetRoute(
+                    builder: (context) => UpdatepassSheet(),
+                    isScrollControlled: true,
+                  ),
+                );
+              },
+              child: Container(
+                height: 20.h,
+                width: 66.w,
+                padding: EdgeInsets.symmetric(horizontal: 8),
+                decoration: BoxDecoration(
+                  color: kPrimaryColor,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                alignment: Alignment.center,
                 child: Text(
                   "update\npassword",
                   textAlign: TextAlign.center,

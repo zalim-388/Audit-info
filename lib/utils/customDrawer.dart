@@ -22,14 +22,15 @@ class Customdrawer extends StatelessWidget {
         scrollDirection: Axis.vertical,
         children: [
           DrawerHeader(
+            decoration: BoxDecoration(color: Colors.transparent),
+
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 6),
+              padding: EdgeInsets.symmetric(horizontal: 6),
               child: Container(
-                padding: EdgeInsets.all(16),
                 width: 216.w,
                 height: 79.h,
                 decoration: BoxDecoration(
-                  color: Color(0xFFF4F4F6),
+                  color: Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 alignment: Alignment.center,
@@ -226,7 +227,7 @@ Widget _Draweritems({
       height: 48.h,
       width: 216.w,
       decoration: BoxDecoration(
-        color: isSelected ? kPrimaryColor : const Color(0xFFF4F4F6),
+        color: isSelected ? kPrimaryColor : Colors.grey.shade300,
         borderRadius: BorderRadius.circular(4),
       ),
       child: ListTile(
