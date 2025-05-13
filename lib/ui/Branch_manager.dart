@@ -85,241 +85,243 @@ class _BranchMangerState extends State<BranchManager> {
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 25),
-        child: Column(
-          children: [
-            SizedBox(height: 30.h),
-            TextField(
-              decoration: InputDecoration(
-                prefixIcon: Icon(Icons.search, color: ktextcolor),
-                hintText: "search",
-                hintStyle: TextStyle(color: ktextcolor),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(height: 30.h),
+              TextField(
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.search, color: ktextcolor),
+                  hintText: "search",
+                  hintStyle: TextStyle(color: ktextcolor),
 
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(20),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  fillColor: kcontainer,
+                  filled: true,
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                fillColor: kcontainer,
-                filled: true,
               ),
-            ),
-            SizedBox(height: 21.h),
+              SizedBox(height: 21.h),
 
-            Padding(
-              padding: const EdgeInsets.only(left: 331),
-              child: GestureDetector(
-                onTap: () {
-                  opendialog(context);
-                },
-                child: Stack(
-                  alignment: Alignment.bottomRight,
+              Padding(
+                padding: const EdgeInsets.only(left: 331),
+                child: GestureDetector(
+                  onTap: () {
+                    opendialog(context);
+                  },
+                  child: Stack(
+                    alignment: Alignment.bottomRight,
+                    children: [
+                      Icon(Icons.folder, size: 40, color: Colors.orange),
+                      CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 10,
+                        child: Icon(Icons.add, size: 14, color: Colors.orange),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // SvgPicture.asset(
+              //   'assets/icon/Vector.svg', // your custom icon path
+              //   width: 40,
+              // ),
+              SizedBox(height: 20.h),
+
+              Container(
+                height: 30.h,
+                width: 350.w,
+                decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: kBorderColor),
+                  color: kcontainer,
+                ),
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "  Branch Manager",
+                  style: GoogleFonts.inter(fontSize: 10, color: ktextcolor),
+                ),
+              ),
+              Container(
+                height: 30.h,
+                width: 350.w,
+                decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: kBorderColor),
+                ),
+
+                child: Table(
+                  border: TableBorder.all(width: 1, color: kBorderColor),
                   children: [
-                    Icon(Icons.folder, size: 40, color: Colors.orange),
-                    CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 10,
-                      child: Icon(Icons.add, size: 14, color: Colors.orange),
+                    TableRow(
+                      decoration: BoxDecoration(color: Color(0xFFF5CEB8)),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "ID",
+                            style: GoogleFonts.inter(
+                              color: ktextcolor,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 152.w),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Status",
+                            style: GoogleFonts.inter(
+                              fontSize: 10,
+                              color: ktextcolor,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "Actions",
+                            style: GoogleFonts.inter(
+                              fontSize: 10,
+                              color: ktextcolor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    TableRow(
+                      decoration: BoxDecoration(color: kcontainer),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "677655",
+                            style: GoogleFonts.inter(
+                              color: ktextcolor,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 152.w),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.toggle_on, color: Colors.green),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Icon(Icons.edit_square),
+                              SizedBox(width: 8),
+                              Icon(Icons.delete),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    TableRow(
+                      decoration: BoxDecoration(color: kcontainer),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "677656",
+                            style: GoogleFonts.inter(
+                              color: ktextcolor,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 152.w),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.toggle_on, color: Colors.green),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Icon(Icons.edit_square),
+                              SizedBox(width: 8),
+                              Icon(Icons.delete),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    TableRow(
+                      decoration: BoxDecoration(color: kcontainer),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "677657",
+                            style: GoogleFonts.inter(
+                              color: ktextcolor,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 152.w),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.toggle_on, color: Colors.green),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Icon(Icons.edit_square),
+                              SizedBox(width: 8),
+                              Icon(Icons.delete),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    TableRow(
+                      decoration: BoxDecoration(color: kcontainer),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            "677658",
+                            style: GoogleFonts.inter(
+                              color: ktextcolor,
+                              fontSize: 10,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 152.w),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Icon(Icons.toggle_on, color: Colors.green),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              Icon(Icons.edit_square),
+                              SizedBox(width: 8),
+                              Icon(Icons.delete),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
               ),
-            ),
-
-            // SvgPicture.asset(
-            //   'assets/icon/Vector.svg', // your custom icon path
-            //   width: 40,
-            // ),
-            SizedBox(height: 20.h),
-
-            Container(
-              height: 30.h,
-              width: 350.w,
-              decoration: BoxDecoration(
-                border: Border.all(width: 1, color: kBorderColor),
-                color: kcontainer,
-              ),
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "  Branch Manager",
-                style: GoogleFonts.inter(fontSize: 10, color: ktextcolor),
-              ),
-            ),
-            Container(
-              height: 30.h,
-              width: 350.w,
-              decoration: BoxDecoration(
-                border: Border.all(width: 1, color: kBorderColor),
-              ),
-
-              child: Table(
-                border: TableBorder.all(width: 1, color: kBorderColor),
-                children: [
-                  TableRow(
-                    decoration: BoxDecoration(color: Color(0xFFF5CEB8)),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "ID",
-                          style: GoogleFonts.inter(
-                            color: ktextcolor,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 152.w),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Status",
-                          style: GoogleFonts.inter(
-                            fontSize: 10,
-                            color: ktextcolor,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "Actions",
-                          style: GoogleFonts.inter(
-                            fontSize: 10,
-                            color: ktextcolor,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  TableRow(
-                    decoration: BoxDecoration(color: kcontainer),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "677655",
-                          style: GoogleFonts.inter(
-                            color: ktextcolor,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 152.w),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.toggle_on, color: Colors.green),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Icon(Icons.edit_square),
-                            SizedBox(width: 8),
-                            Icon(Icons.delete),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  TableRow(
-                    decoration: BoxDecoration(color: kcontainer),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "677656",
-                          style: GoogleFonts.inter(
-                            color: ktextcolor,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 152.w),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.toggle_on, color: Colors.green),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Icon(Icons.edit_square),
-                            SizedBox(width: 8),
-                            Icon(Icons.delete),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  TableRow(
-                    decoration: BoxDecoration(color: kcontainer),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "677657",
-                          style: GoogleFonts.inter(
-                            color: ktextcolor,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 152.w),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.toggle_on, color: Colors.green),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Icon(Icons.edit_square),
-                            SizedBox(width: 8),
-                            Icon(Icons.delete),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  TableRow(
-                    decoration: BoxDecoration(color: kcontainer),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          "677658",
-                          style: GoogleFonts.inter(
-                            color: ktextcolor,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 152.w),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Icon(Icons.toggle_on, color: Colors.green),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            Icon(Icons.edit_square),
-                            SizedBox(width: 8),
-                            Icon(Icons.delete),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -330,21 +332,158 @@ Future<void> opendialog(BuildContext context) async {
   return showDialog(
     context: context,
     builder: (context) {
-      return Column(
-        children: [
-          Text(
-            "Create New Branch Manager",
-            style: GoogleFonts.inter(fontSize: 14),
+      return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+
+        child: Container(
+          height: 500.h,
+          width: 364.w,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            color: kcontainer,
           ),
-          SizedBox(height: 28.h),
-        ],
+          alignment: Alignment.center,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Create New Branch Manager",
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  SizedBox(height: 28.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _textfield(
+                          title: "Employee code",
+                          subtitle: "code",
+                        ),
+                      ),
+                      SizedBox(width: 14.w),
+                      Expanded(
+                        child: _textfield(
+                          title: "Date of joining",
+                          subtitle: "select date",
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 21.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _textfield(title: "Name", subtitle: "name"),
+                      ),
+                      SizedBox(width: 14.w),
+                      Expanded(
+                        child: _textfield(title: "Email", subtitle: "email"),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 21.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _textfield(
+                          title: "Address",
+                          subtitle: "address",
+                        ),
+                      ),
+                      SizedBox(width: 14.w),
+                      Expanded(
+                        child: _textfield(
+                          title: "Phone Number",
+                          subtitle: "phone number",
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 21.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _textfield(
+                          title: "password",
+                          subtitle: "password",
+                        ),
+                      ),
+                      SizedBox(width: 14.w),
+                      Expanded(
+                        child: _textfield(
+                          title: "Confirom password",
+                          subtitle: "confirm password",
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 21.h),
+                  Row(
+                    children: [
+                      _textfield(
+                        title: "Select branch",
+                        subtitle: "Select branch",
+                        height: 30,
+                        width: 88,
+                      ),
+                      SizedBox(width: 12.w),
+                      _textfield(
+                        title: "Point Amount",
+                        subtitle: "amount",
+                        height: 30,
+                        width: 87,
+                      ),
+                      SizedBox(width: 12.w),
+                      _textfield(
+                        title: "salary",
+                        subtitle: "salary",
+                        height: 30,
+                        width: 88,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 22.h),
+                  Container(
+                    height: 30,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: kPrimaryColor,
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Create",
+                      style: GoogleFonts.inter(fontSize: 12),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       );
     },
   );
 }
 
-Widget _textfield({required String title, required String subtitle}) {
+Widget _textfield({
+  required String title,
+  required String subtitle,
+
+  double height = 30,
+  double width = 155,
+}) {
   return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       RichText(
         textAlign: TextAlign.start,
@@ -362,21 +501,31 @@ Widget _textfield({required String title, required String subtitle}) {
           ],
         ),
       ),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
+      SizedBox(height: 13.h),
+      SizedBox(
+        width: width.w,
+        height: height.h,
         child: TextField(
+          textAlign: TextAlign.center,
           decoration: InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 10),
             hintText: subtitle,
-            hintStyle: GoogleFonts.inter(fontSize: 12, color: kBorderColor),
+            hintStyle: GoogleFonts.inter(fontSize: 12, color: ktextcolor),
             fillColor: Colors.white,
             filled: true,
+
             focusedBorder: OutlineInputBorder(
+              borderSide: BorderSide.none,
+
               borderRadius: BorderRadius.circular(6),
             ),
             enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide.none,
+
               borderRadius: BorderRadius.circular(6),
             ),
           ),
+          obscureText: (title == "password" || title == "confirm password"),
         ),
       ),
     ],

@@ -3,7 +3,6 @@ import 'package:audit_info/ui/Dashboard.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Customdrawer extends StatelessWidget {
@@ -43,7 +42,8 @@ class Customdrawer extends StatelessWidget {
           ),
 
           _Draweritems(
-            icon: Icons.dashboard,
+            icon: null,
+            svgpath: "assets/icon/Dashbord.png",
             title: 'Dashboard',
             index: 0,
             selectedIndex: SelectedIndex,
@@ -60,7 +60,7 @@ class Customdrawer extends StatelessWidget {
           SizedBox(height: 2.h),
           _Draweritems(
             icon: null,
-            svgpath: "assets/icon/Rectangle.svg",
+            svgpath: "assets/icon/Branch Manager.png",
             title: 'Branch Manager',
             index: 1,
             selectedIndex: SelectedIndex,
@@ -76,6 +76,7 @@ class Customdrawer extends StatelessWidget {
           SizedBox(height: 2.h),
 
           _Draweritems(
+            svgpath: "assets/icon/Accountant.png",
             title: "Accountant",
             index: 2,
             onTap: () {
@@ -86,7 +87,8 @@ class Customdrawer extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
           _Draweritems(
-            icon: Icons.verified_user_outlined,
+            icon: null,
+            svgpath: 'assets/icon/SRC.png',
             title: 'SRC',
             index: 3,
             selectedIndex: SelectedIndex,
@@ -97,7 +99,8 @@ class Customdrawer extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
           _Draweritems(
-            icon: Icons.admin_panel_settings_outlined,
+            icon: null,
+            svgpath: "assets/icon/SRO.png",
             title: "SRO",
             index: 4,
             onTap: () {
@@ -109,7 +112,8 @@ class Customdrawer extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
           _Draweritems(
-            icon: Icons.business_center_outlined,
+            icon: null,
+            svgpath: "assets/icon/Office Administration.png",
             title: "Office Administration",
             index: 5,
             onTap: () {
@@ -120,7 +124,8 @@ class Customdrawer extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
           _Draweritems(
-            icon: Icons.person_outline,
+            icon: null,
+            svgpath: "assets/icon/Agent.png",
             title: "Agent",
             index: 6,
             onTap: () {
@@ -131,7 +136,9 @@ class Customdrawer extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
           _Draweritems(
-            icon: Icons.leaderboard_outlined,
+            icon: null,
+            svgpath: "assets/icon/Lead Management.png",
+
             title: "Lead Management",
             index: 7,
             onTap: () {
@@ -142,7 +149,8 @@ class Customdrawer extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
           _Draweritems(
-            icon: Icons.school_outlined,
+            icon: null,
+            svgpath: "assets/icon/Student Management.png",
             title: "Student Management",
             index: 8,
             onTap: () {
@@ -153,7 +161,8 @@ class Customdrawer extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
           _Draweritems(
-            icon: Icons.settings_outlined,
+            icon: null,
+            svgpath: "assets/icon/settings.png",
             title: "Settings",
             index: 9,
             onTap: () {
@@ -164,7 +173,8 @@ class Customdrawer extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
           _Draweritems(
-            icon: Icons.insert_chart_outlined,
+            icon: null,
+            svgpath: "assets/icon/Reports.png",
             title: "Reports",
             index: 10,
             onTap: () {
@@ -175,7 +185,8 @@ class Customdrawer extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
           _Draweritems(
-            icon: Icons.money_off_csred_outlined,
+            icon: null,
+            svgpath: "assets/icon/Expense.png",
             title: "Expense",
             index: 11,
             onTap: () {
@@ -186,7 +197,8 @@ class Customdrawer extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
           _Draweritems(
-            icon: Icons.payment_outlined,
+            icon: null,
+            svgpath: "assets/icon/Payment.png",
             title: "Payment",
             index: 12,
             onTap: () {
@@ -197,7 +209,8 @@ class Customdrawer extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
           _Draweritems(
-            icon: Icons.request_page_outlined,
+            icon: null,
+            svgpath: "assets/icon/Request’s.png",
             title: "Request's",
             index: 13,
             onTap: () {
@@ -233,11 +246,12 @@ Widget _Draweritems({
       child: ListTile(
         leading:
             svgpath != null
-                ? SvgPicture.asset(
+                ? Image.asset(
                   svgpath,
-                  height: 20.h,
-                  width: 20.w,
-                  color: const Color(0x06050780),
+                  height: 24.h,
+                  width: 24.w,
+                  fit: BoxFit.cover,
+                  color: Color(0x80000000),
                 )
                 : Icon(
                   icon,
