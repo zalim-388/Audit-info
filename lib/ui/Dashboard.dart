@@ -4,6 +4,7 @@ import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -13,11 +14,40 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  late List<_ChartData> leadsData;
+  late List<_ChartData> admissionData;
+  late TooltipBehavior _tooltip;
+
   int _selectedIndex = 0;
   void _onitemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void initState() {
+    super.initState();
+    leadsData = [
+      _ChartData(x: 'Jan', y: 0.5),
+      _ChartData(x: 'Feb', y: 3.0),
+      _ChartData(x: 'Mar', y: 1.0),
+      _ChartData(x: 'Apr', y: 2.0),
+      _ChartData(x: 'May', y: 4.0),
+    ];
+    admissionData = [
+      _ChartData(x: 'Jan', y: 1.0),
+      _ChartData(x: 'Feb', y: 1.0),
+      _ChartData(x: 'Mar', y: 2.0),
+      _ChartData(x: 'Apr', y: 0.5),
+      _ChartData(x: 'May', y: 3.0),
+    ];
+
+    _tooltip = TooltipBehavior(
+      enable: true,
+      format: 'point.x : point.y',
+      color: Colors.grey.shade800,
+      textStyle: const TextStyle(color: Colors.white),
+    );
   }
 
   @override
@@ -243,6 +273,27 @@ class _DashboardState extends State<Dashboard> {
                       style: GoogleFonts.inter(fontSize: 10, color: ktextcolor),
                       overflow: TextOverflow.ellipsis,
                     ),
+                    // String selectedBranch = 'Branch 1';
+                    //  DropdownButton<String>(
+                    //   value: selectedBranch,
+                    //   isExpanded: true,
+                    //   underline: const SizedBox(),
+                    //   items:
+                    //       ['Branch 1', 'Branch 2', 'Branch 3']
+                    //           .map(
+                    //             (branch) => DropdownMenuItem<String>(
+                    //               value: branch,
+                    //               child: Text(branch),
+                    //             ),
+                    //           )
+                    //           .toList(),
+                    //   onChanged: (value) {
+                    //     setState(() {
+                    //       selectedBranch = value!;
+                    //     });
+                    //   },
+                    //   hint: const Text('Select Branch'),
+                    // ),
                     GestureDetector(
                       onTap: () {},
                       child: Icon(
@@ -258,6 +309,73 @@ class _DashboardState extends State<Dashboard> {
               SizedBox(height: 17.h),
 
               // chart
+              Container(
+                height: 408.h,
+                width: 358.w,
+                decoration: BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 15,
+                      spreadRadius: 5,
+                      color: Colors.grey.withOpacity(0.1),
+                    ),
+                  ],
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Select Branch Dropdown
+                          SfCartesianChart(
+                            tooltipBehavior: _tooltip,
+                            primaryXAxis: CategoryAxis(
+                              majorGridLines: MajorGridLines(width: 0),
+                            ),
+                            primaryYAxis: NumericAxis(
+                              maximum: 4,
+                              minimum: 0,
+                              interval: 0.5,
+                              majorGridLines: MajorGridLines(width: 0),
+                            ),
+                            legend: Legend(
+                              isVisible: true,
+                              position: LegendPosition.top,
+                            ),
+                            series: <CartesianSeries<_ChartData, String>>[
+                              ColumnSeries<_ChartData, String>(
+                                dataSource: leadsData,
+                                xValueMapper: (datum, _) => datum.x,
+                                yValueMapper: (datum, _) => datum.y,
+                                color: Colors.blue,
+                             width: 0.3, // Fixed: Changed from 19.w to 0.3
+                      spacing: 0.1,
+                                name: 'Leads',
+                              ),
+
+                              ColumnSeries<_ChartData, String>(
+                                dataSource: admissionData,
+                                xValueMapper: (datum, index) => datum.x,
+                                yValueMapper: (datum, index) => datum.y,
+                                color: Colors.green,
+                          width: 0.3, // Fixed: Changed from 19.w to 0.3
+                      spacing: 0.1,
+                                name: 'Admission',
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
               SizedBox(height: 18.h),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 34),
@@ -634,4 +752,11 @@ class _DashboardState extends State<Dashboard> {
       ),
     );
   }
+}
+
+class _ChartData {
+  final String x;
+  final double y;
+
+  _ChartData({required this.x, required this.y});
 }
