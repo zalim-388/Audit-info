@@ -50,6 +50,8 @@ class _DashboardState extends State<Dashboard> {
     );
   }
 
+  String selectedBranch = 'Branch 1';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,7 +64,7 @@ class _DashboardState extends State<Dashboard> {
         leading: Builder(
           builder:
               (context) => IconButton(
-                icon: Icon(Icons.menu, color: kPrimaryColor),
+                icon: Icon(Icons.more_vert, color: Colors.black),
                 onPressed: () {
                   Scaffold.of(context).openDrawer();
                 },
@@ -71,7 +73,11 @@ class _DashboardState extends State<Dashboard> {
 
         title: Text(
           "Dashboard",
-          style: TextStyle(color: ktextcolor, fontSize: 14),
+          style: TextStyle(
+            color: ktextcolor,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
         ),
 
         actions: [
@@ -114,7 +120,7 @@ class _DashboardState extends State<Dashboard> {
 
       backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
+        padding: const EdgeInsets.symmetric(horizontal: 22),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -137,176 +143,64 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
               SizedBox(height: 21.h),
-              Stack(
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  SizedBox(width: 18.w),
                   Container(
-                    height: 71.h,
-                    width: 354.w,
+                    height: 49.h,
+                    width: 90.w,
                     decoration: BoxDecoration(
-                      color: kcontainer,
-                      borderRadius: BorderRadius.circular(15),
+                      color: Color(0xFF0190F9),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                  ),
-                  Positioned(
-                    top: 5,
-                    left: 8,
-                    child: Container(
-                      height: 60.h,
-                      width: 110,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFFFFFFF),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-
-                      child: Row(
-                        children: [
-                          SizedBox(width: 10.w),
-                          Text(
-                            "No of\nLeads",
-                            style: GoogleFonts.inter(
-                              fontSize: 13,
-                              color: ktextcolor,
-                            ),
-                          ),
-                          SizedBox(width: 20.w),
-                          Text(
-                            "6",
-                            style: GoogleFonts.inter(
-                              fontSize: 16,
-                              color: ktextcolor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                    alignment: Alignment.center,
+                    child: Text(
+                      "No of Leads\n       6",
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        color: Colors.white,
                       ),
                     ),
                   ),
-
-                  Positioned(
-                    top: 5,
-                    left: 128,
-                    child: Container(
-                      height: 60.h,
-                      width: 110,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFFFFFFF),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-
-                      child: Row(
-                        children: [
-                          SizedBox(width: 10.w),
-                          Text(
-                            "No of\nAdmission",
-                            style: GoogleFonts.inter(
-                              fontSize: 13,
-                              color: ktextcolor,
-                            ),
-                          ),
-                          SizedBox(width: 10.w),
-                          Text(
-                            "2",
-                            style: GoogleFonts.inter(
-                              fontSize: 16,
-                              color: ktextcolor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                  SizedBox(width: 15.w),
+                  Container(
+                    height: 49.h,
+                    width: 114,
+                    decoration: BoxDecoration(
+                      color: Color(0xFF00E396),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "No of Admission\n          2",
+                      style: GoogleFonts.inter(
+                        fontSize: 13,
+                        color: Colors.white,
                       ),
                     ),
                   ),
-
-                  Positioned(
-                    top: 5,
-                    left: 247,
-                    child: Container(
-                      height: 60.h,
-                      width: 110,
-                      decoration: BoxDecoration(
-                        color: Color(0xFFFFFFFF),
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(width: 10.w),
-                          Text(
-                            "No of\nBranches",
-                            style: GoogleFonts.inter(
-                              fontSize: 13,
-                              color: ktextcolor,
-                            ),
-                          ),
-                          SizedBox(width: 10.w),
-                          Text(
-                            "2",
-                            style: GoogleFonts.inter(
-                              fontSize: 16,
-                              color: ktextcolor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                  SizedBox(width: 15.w),
+                  Container(
+                    height: 49.h,
+                    width: 93.w,
+                    decoration: BoxDecoration(
+                      color: kPrimaryColor,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "No of Branches \n          2",
+                      style: GoogleFonts.inter(
+                        fontSize: 12,
+                        color: Colors.white,
                       ),
                     ),
                   ),
                 ],
               ),
 
-              SizedBox(height: 13.h),
-              Container(
-                width: 109.w,
-                height: 20.h,
-                decoration: BoxDecoration(
-                  color: kcontainer,
-                  borderRadius: BorderRadius.circular(7),
-                ),
-                padding: EdgeInsets.symmetric(horizontal: 6),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "select branch",
-                      style: GoogleFonts.inter(fontSize: 10, color: ktextcolor),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    // String selectedBranch = 'Branch 1';
-                    //  DropdownButton<String>(
-                    //   value: selectedBranch,
-                    //   isExpanded: true,
-                    //   underline: const SizedBox(),
-                    //   items:
-                    //       ['Branch 1', 'Branch 2', 'Branch 3']
-                    //           .map(
-                    //             (branch) => DropdownMenuItem<String>(
-                    //               value: branch,
-                    //               child: Text(branch),
-                    //             ),
-                    //           )
-                    //           .toList(),
-                    //   onChanged: (value) {
-                    //     setState(() {
-                    //       selectedBranch = value!;
-                    //     });
-                    //   },
-                    //   hint: const Text('Select Branch'),
-                    // ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: Icon(
-                        Icons.keyboard_arrow_down,
-                        size: 16,
-                        color: ktextcolor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              SizedBox(height: 17.h),
+              SizedBox(height: 12.h),
 
               // chart
               Container(
@@ -332,46 +226,161 @@ class _DashboardState extends State<Dashboard> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Select Branch Dropdown
-                          SfCartesianChart(
-                            tooltipBehavior: _tooltip,
-                            primaryXAxis: CategoryAxis(
-                              majorGridLines: MajorGridLines(width: 0),
-                            ),
-                            primaryYAxis: NumericAxis(
-                              maximum: 4,
-                              minimum: 0,
-                              interval: 0.5,
-                              majorGridLines: MajorGridLines(width: 0),
-                            ),
-                            legend: Legend(
-                              isVisible: true,
-                              position: LegendPosition.top,
-                            ),
-                            series: <CartesianSeries<_ChartData, String>>[
-                              ColumnSeries<_ChartData, String>(
-                                dataSource: leadsData,
-                                xValueMapper: (datum, _) => datum.x,
-                                yValueMapper: (datum, _) => datum.y,
-                                color: Colors.blue,
-                             width: 0.3, // Fixed: Changed from 19.w to 0.3
-                      spacing: 0.1,
-                                name: 'Leads',
-                              ),
+                          SizedBox(height: 12.h),
+                          Row(
+                            children: [
+                              SizedBox(height: 8.h),
+                              Container(
+                                width: 120.w,
+                                height: 27.h,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(13),
+                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 6),
+                                child: GestureDetector(
+                                  onTapDown: (TapDownDetails details) async {
+                                    final selected = await showMenu<String>(
+                                      context: context,
+                                      position: RelativeRect.fromLTRB(
+                                        details.globalPosition.dx,
+                                        details.globalPosition.dy,
+                                        details.globalPosition.dx,
+                                        details.globalPosition.dy,
+                                      ),
+                                      items:
+                                          [
+                                            'Branch 1',
+                                            'Branch 2',
+                                            'Branch 3',
+                                          ].map((item) {
+                                            return PopupMenuItem<String>(
+                                              value: item,
+                                              child: Text(
+                                                item,
+                                                style: GoogleFonts.inter(
+                                                  fontSize: 12,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            );
+                                          }).toList(),
+                                      color: Colors.white,
+                                    );
 
-                              ColumnSeries<_ChartData, String>(
-                                dataSource: admissionData,
-                                xValueMapper: (datum, index) => datum.x,
-                                yValueMapper: (datum, index) => datum.y,
-                                color: Colors.green,
-                          width: 0.3, // Fixed: Changed from 19.w to 0.3
-                      spacing: 0.1,
-                                name: 'Admission',
+                                    if (selected != null) {
+                                      setState(() {
+                                        selectedBranch = selected;
+                                      });
+                                    }
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        selectedBranch ?? 'Select Branch',
+                                        style: GoogleFonts.inter(
+                                          fontSize: 10,
+                                          color: Color(0xFF868686),
+                                        ),
+                                      ),
+                                      Icon(
+                                        Icons.keyboard_arrow_down,
+                                        size: 16,
+                                        color: ktextcolor,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 53.h),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        height: 8.h,
+                                        width: 8.w,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFF0190F9),
+                                        ),
+                                      ),
+                                      Text(
+                                        "Leads",
+                                        style: GoogleFonts.inter(fontSize: 8),
+                                      ),
+                                    ],
+                                  ),
+
+                                  Row(
+                                    children: [
+                                      Container(
+                                        height: 8.h,
+                                        width: 8.w,
+                                        decoration: BoxDecoration(
+                                          color: Color(0xFF00E396),
+                                        ),
+                                      ),
+                                      Text(
+                                        "Admission",
+                                        style: GoogleFonts.inter(fontSize: 8),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
                             ],
                           ),
+                          SizedBox(height: 21.h),
+                    SfCartesianChart(
+          tooltipBehavior: _tooltip,
+          primaryXAxis: const CategoryAxis(
+            majorGridLines: MajorGridLines(width: 0),
+            labelStyle: TextStyle(fontSize: 12),
+          ),
+          primaryYAxis: const NumericAxis(
+            maximum: 4,
+            minimum: 0,
+            interval: 0.5,
+            majorGridLines: MajorGridLines(width: 0),
+            labelStyle: TextStyle(fontSize: 12),
+          ),
+          legend: const Legend(
+            isVisible: true,
+            position: LegendPosition.top,
+            textStyle: TextStyle(fontSize: 12),
+          ),
+          series: <CartesianSeries<_ChartData, String>>[
+            ColumnSeries<_ChartData, String>(
+              dataSource: leadsData,
+              xValueMapper: (datum, _) => datum.x,
+              yValueMapper: (datum, _) => datum.y,
+              color: Colors.blue,
+              width: 0.3, // Bar width
+              spacing: 0.1, // Spacing between bars in the same group
+              name: 'Leads',
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+            ),
+            ColumnSeries<_ChartData, String>(
+              dataSource: admissionData,
+              xValueMapper: (datum, _) => datum.x,
+              yValueMapper: (datum, _) => datum.y,
+              color: Colors.green,
+              width: 0.3, // Bar width
+              spacing: 0.1, // Spacing between bars in the same group
+              name: 'Admission',
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+            ),
+                    
+                      
                         ],
                       ),
+                        ]
                     ),
+                    )
                   ],
                 ),
               ),
