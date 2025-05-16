@@ -2,6 +2,7 @@ import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -17,6 +18,7 @@ class _DashboardState extends State<Dashboard> {
   late List<_ChartData> leadsData;
   late List<_ChartData> admissionData;
   late TooltipBehavior _tooltip;
+  int _currentMonthGroup = 1;
 
   int _selectedIndex = 0;
   void _onitemTapped(int index) {
@@ -33,6 +35,13 @@ class _DashboardState extends State<Dashboard> {
       _ChartData(x: 'Mar', y: 1.0),
       _ChartData(x: 'Apr', y: 2.0),
       _ChartData(x: 'May', y: 4.0),
+      _ChartData(x: 'Jun', y: 1.5),
+      _ChartData(x: 'Jul', y: 1.0),
+      _ChartData(x: 'Aug', y: 2.5),
+      _ChartData(x: 'Sep', y: 3.5),
+      _ChartData(x: 'Oct', y: 1.5),
+      _ChartData(x: 'Nov', y: 0.5),
+      _ChartData(x: 'Dec', y: 2.0),
     ];
     admissionData = [
       _ChartData(x: 'Jan', y: 1.0),
@@ -40,6 +49,13 @@ class _DashboardState extends State<Dashboard> {
       _ChartData(x: 'Mar', y: 2.0),
       _ChartData(x: 'Apr', y: 0.5),
       _ChartData(x: 'May', y: 3.0),
+      _ChartData(x: 'Jun', y: 2.0),
+      _ChartData(x: 'Jul', y: 0.5),
+      _ChartData(x: 'Aug', y: 1.5),
+      _ChartData(x: 'Sep', y: 2.0),
+      _ChartData(x: 'Oct', y: 1.0),
+      _ChartData(x: 'Nov', y: 0.0),
+      _ChartData(x: 'Dec', y: 1.0),
     ];
 
     _tooltip = TooltipBehavior(
@@ -48,6 +64,32 @@ class _DashboardState extends State<Dashboard> {
       color: Colors.grey.shade800,
       textStyle: const TextStyle(color: Colors.white),
     );
+  }
+
+  List<_ChartData> _getCurrentLeadsData() {
+    int startIndex = _currentMonthGroup * 6;
+    return leadsData.sublist(startIndex, startIndex + 6);
+  }
+
+  List<_ChartData> _getCurrentAdmissionData() {
+    int startIndex = _currentMonthGroup * 6;
+    return admissionData.sublist(startIndex, startIndex + 6);
+  }
+
+  void _previousMonths() {
+    if (_currentMonthGroup > 0) {
+      setState(() {
+        _currentMonthGroup--;
+      });
+    }
+  }
+
+  void _nextMonths() {
+    if (_currentMonthGroup < 1) {
+      setState(() {
+        _currentMonthGroup++;
+      });
+    }
   }
 
   String selectedBranch = 'Branch 1';
@@ -61,6 +103,10 @@ class _DashboardState extends State<Dashboard> {
       ),
       appBar: AppBar(
         backgroundColor: Colors.white,
+
+        elevation: 4,
+        shadowColor: Colors.grey.withOpacity(0.4),
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
         leading: Builder(
           builder:
               (context) => IconButton(
@@ -74,7 +120,7 @@ class _DashboardState extends State<Dashboard> {
         title: Text(
           "Dashboard",
           style: TextStyle(
-            color: ktextcolor,
+            color: Colors.black,
             fontSize: 14,
             fontWeight: FontWeight.bold,
           ),
@@ -95,17 +141,13 @@ class _DashboardState extends State<Dashboard> {
               },
               child: Container(
                 height: 20.h,
-                width: 66.w,
+                width: 22.w,
                 padding: EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
-                  color: kPrimaryColor,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                alignment: Alignment.center,
-                child: Text(
-                  "update\npassword",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white, fontSize: 9),
+                  image: DecorationImage(
+                    image: AssetImage("assets/icon/updatepass.png"),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
@@ -124,24 +166,6 @@ class _DashboardState extends State<Dashboard> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              TextField(
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search, color: ktextcolor),
-                  hintText: "search",
-                  hintStyle: TextStyle(color: ktextcolor),
-
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide.none,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  fillColor: kcontainer,
-                  filled: true,
-                ),
-              ),
               SizedBox(height: 21.h),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -217,11 +241,9 @@ class _DashboardState extends State<Dashboard> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(15),
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Stack(
                   children: [
                     Expanded(
-                      flex: 2,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -229,7 +251,7 @@ class _DashboardState extends State<Dashboard> {
                           SizedBox(height: 12.h),
                           Row(
                             children: [
-                              SizedBox(height: 8.h),
+                              SizedBox(width: 8.w),
                               Container(
                                 width: 120.w,
                                 height: 27.h,
@@ -295,7 +317,7 @@ class _DashboardState extends State<Dashboard> {
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 53.h),
+                              SizedBox(width: 53.w),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -334,53 +356,89 @@ class _DashboardState extends State<Dashboard> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 21.h),
-                    SfCartesianChart(
-          tooltipBehavior: _tooltip,
-          primaryXAxis: const CategoryAxis(
-            majorGridLines: MajorGridLines(width: 0),
-            labelStyle: TextStyle(fontSize: 12),
-          ),
-          primaryYAxis: const NumericAxis(
-            maximum: 4,
-            minimum: 0,
-            interval: 0.5,
-            majorGridLines: MajorGridLines(width: 0),
-            labelStyle: TextStyle(fontSize: 12),
-          ),
-          legend: const Legend(
-            isVisible: true,
-            position: LegendPosition.top,
-            textStyle: TextStyle(fontSize: 12),
-          ),
-          series: <CartesianSeries<_ChartData, String>>[
-            ColumnSeries<_ChartData, String>(
-              dataSource: leadsData,
-              xValueMapper: (datum, _) => datum.x,
-              yValueMapper: (datum, _) => datum.y,
-              color: Colors.blue,
-              width: 0.3, // Bar width
-              spacing: 0.1, // Spacing between bars in the same group
-              name: 'Leads',
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-            ),
-            ColumnSeries<_ChartData, String>(
-              dataSource: admissionData,
-              xValueMapper: (datum, _) => datum.x,
-              yValueMapper: (datum, _) => datum.y,
-              color: Colors.green,
-              width: 0.3, // Bar width
-              spacing: 0.1, // Spacing between bars in the same group
-              name: 'Admission',
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-            ),
-                    
-                      
+                          SizedBox(height: 60.h),
+
+                          SfCartesianChart(
+                            tooltipBehavior: _tooltip,
+                            primaryXAxis: const CategoryAxis(
+                              majorGridLines: MajorGridLines(width: 0),
+                              labelStyle: TextStyle(fontSize: 12),
+                            ),
+                            primaryYAxis: const NumericAxis(
+                              maximum: 4,
+                              minimum: 0,
+                              interval: 0.5,
+                              majorGridLines: MajorGridLines(width: 0),
+                              labelStyle: TextStyle(fontSize: 12),
+                            ),
+                            legend: const Legend(
+                              isVisible: false,
+                              position: LegendPosition.top,
+                              textStyle: TextStyle(fontSize: 12),
+                            ),
+                            series: <CartesianSeries<_ChartData, String>>[
+                              ColumnSeries<_ChartData, String>(
+                                dataSource: _getCurrentLeadsData(),
+                                xValueMapper: (datum, _) => datum.x,
+                                yValueMapper: (datum, _) => datum.y,
+                                color: Colors.blue,
+                                width: 0.4,
+                                spacing: 0.1,
+                                name: 'Leads',
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(10),
+                                ),
+                              ),
+
+                              ColumnSeries<_ChartData, String>(
+                                dataSource: _getCurrentAdmissionData(),
+                                xValueMapper: (datum, _) => datum.x,
+                                yValueMapper: (datum, _) => datum.y,
+                                color: Colors.green,
+                                width: 0.4,
+                                spacing: 0.1,
+                                name: 'Admission',
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(10),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
-                        ]
                     ),
-                    )
+
+                    Positioned(
+                      right: 320,
+                      bottom: 0,
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.arrow_back_ios_new_outlined,
+
+                          size: 18,
+                        ),
+                        onPressed: _previousMonths,
+                        color:
+                            _currentMonthGroup > 0
+                                ? Colors.black
+                                : Colors.transparent,
+                      ),
+                    ),
+                    Positioned(
+                      left: 335,
+                      bottom: 0,
+                      child: IconButton(
+                        icon: const Icon(
+                          Icons.arrow_forward_ios_outlined,
+                          size: 18,
+                        ),
+                        onPressed: _nextMonths,
+                        color:
+                            _currentMonthGroup < 1
+                                ? Colors.black
+                                : Colors.transparent,
+                      ),
+                    ),
                   ],
                 ),
               ),

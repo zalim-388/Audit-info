@@ -66,20 +66,7 @@ flutter:
   assets:
     - assets/image/
     - assets/icon/
-    - assets/icon/Branch Manager.png
-    - assets/icon/Accountant.png
-    - assets/icon/SRC.png
-    - assets/icon/SRO.png
-    - assets/icon/Office Administration.png
-    - assets/icon/Agent.png
-    - assets/icon/Lead Management.png
-    - assets/icon/Student Management.png
-    - assets/icon/Reports.png
-    - assets/icon/Expense.png
-    - assets/icon/Payment.png
-    - assets/icon/Request’s.png
-    - assets/icon/Dashbord.png
-    - assets/icon/settings.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

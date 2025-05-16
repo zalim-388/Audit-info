@@ -17,33 +17,17 @@ class Customdrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
+      backgroundColor: const Color(0xFF414143),
       child: ListView(
         scrollDirection: Axis.vertical,
         children: [
           DrawerHeader(
-            decoration: BoxDecoration(color: Colors.transparent),
-
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 6),
-              child: Container(
-                width: 216.w,
-                height: 79.h,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                alignment: Alignment.center,
-                child: Image.asset(
-                  "assets/image/Artboard-1 1.png",
-                  height: 190.h,
-                ),
-              ),
-            ),
+            decoration: BoxDecoration(color: Color(0xFF414143)),
+            child: Text(""),
           ),
-
           _Draweritems(
-            icon: null,
-            svgpath: "assets/icon/Dashbord.png",
+            icon: Icons.dashboard,
+            svgpath: null,
             title: 'Dashboard',
             index: 0,
             selectedIndex: SelectedIndex,
@@ -100,7 +84,7 @@ class Customdrawer extends StatelessWidget {
           SizedBox(height: 2.h),
           _Draweritems(
             icon: null,
-            svgpath: "assets/icon/SRO.png",
+            svgpath: "assets/icon/SRC.png",
             title: "SRO",
             index: 4,
             onTap: () {
@@ -161,8 +145,8 @@ class Customdrawer extends StatelessWidget {
           ),
           SizedBox(height: 2.h),
           _Draweritems(
-            icon: null,
-            svgpath: "assets/icon/settings.png",
+            icon: Icons.settings,
+
             title: "Settings",
             index: 9,
             onTap: () {
@@ -236,12 +220,14 @@ Widget _Draweritems({
   final bool isSelected = selectedIndex == index;
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 6),
-    child: Container(
-      height: 48.h,
-      width: 216.w,
+    child: isSelected?
+    
+    Container(
+      height: 40.h,
+      width: 320.w,
       decoration: BoxDecoration(
-        color: isSelected ? kPrimaryColor : Colors.grey.shade300,
-        borderRadius: BorderRadius.circular(4),
+        color: isSelected ? kPrimaryColor : const Color(0xFF414143),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: ListTile(
         leading:
@@ -251,7 +237,7 @@ Widget _Draweritems({
                   height: 24.h,
                   width: 24.w,
                   fit: BoxFit.cover,
-                  color: Color(0x80000000),
+                  color: Colors.white,
                 )
                 : Icon(
                   icon,
@@ -259,23 +245,17 @@ Widget _Draweritems({
                 ),
         title: Text(
           title,
-          style: GoogleFonts.inter(
-            color: isSelected ? Colors.white : const Color(0xBF000000),
-            fontSize: 14.sp,
-          ),
+          style: GoogleFonts.inter(color: Colors.white, fontSize: 14.sp),
         ),
         trailing:
             (title == "Reports" || title == "Settings")
-                ? Icon(
-                  Icons.keyboard_arrow_down,
-                  color: isSelected ? Colors.white : const Color(0xBF000000),
-                )
+                ? Icon(Icons.keyboard_arrow_down, color: Colors.white)
                 : null,
         selected: isSelected,
         selectedTileColor: kPrimaryColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         onTap: onTap,
       ),
-    ),
+    )
   );
 }
