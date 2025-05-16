@@ -1,5 +1,6 @@
 import 'package:audit_info/ui/Branch_manager.dart';
 import 'package:audit_info/ui/Dashboard.dart';
+import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,8 +24,37 @@ class Customdrawer extends StatelessWidget {
         children: [
           DrawerHeader(
             decoration: BoxDecoration(color: Color(0xFF414143)),
-            child: Text(""),
+            child: Text.rich(
+              TextSpan(
+                text: 'AU',
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                ),
+                children: [
+                  TextSpan(
+                    text: 'D',
+                  style: GoogleFonts.poppins(
+                    color: Colors.white,
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                  )
+       
+                  ),
+                  TextSpan(
+                    text: 'IT INFO',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 20.sp,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
+
           _Draweritems(
             icon: Icons.dashboard,
             svgpath: null,
@@ -220,13 +250,11 @@ Widget _Draweritems({
   final bool isSelected = selectedIndex == index;
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 6),
-    child: isSelected?
-    
-    Container(
+    child: Container(
       height: 40.h,
       width: 320.w,
       decoration: BoxDecoration(
-        color: isSelected ? kPrimaryColor : const Color(0xFF414143),
+        color: isSelected ? AppColors.kPrimaryColor : const Color(0xFF414143),
         borderRadius: BorderRadius.circular(20),
       ),
       child: ListTile(
@@ -234,28 +262,25 @@ Widget _Draweritems({
             svgpath != null
                 ? Image.asset(
                   svgpath,
-                  height: 24.h,
-                  width: 24.w,
+                  height: 14.h,
+                  width: 14.w,
                   fit: BoxFit.cover,
                   color: Colors.white,
                 )
-                : Icon(
-                  icon,
-                  color: isSelected ? Colors.white : const Color(0xBF000000),
-                ),
+                : Icon(icon, color: Colors.white),
         title: Text(
           title,
-          style: GoogleFonts.inter(color: Colors.white, fontSize: 14.sp),
+          style: GoogleFonts.inter(color: Colors.white, fontSize: 12.sp),
         ),
         trailing:
             (title == "Reports" || title == "Settings")
                 ? Icon(Icons.keyboard_arrow_down, color: Colors.white)
                 : null,
         selected: isSelected,
-        selectedTileColor: kPrimaryColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+        selectedTileColor: AppColors.kPrimaryColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         onTap: onTap,
       ),
-    )
+    ),
   );
 }

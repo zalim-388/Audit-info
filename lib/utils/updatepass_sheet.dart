@@ -170,7 +170,7 @@ class _UpdatepassSheetState extends State<UpdatepassSheet> {
                 height: 33.h,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  color: kPrimaryColor,
+                  color: AppColors.kPrimaryColor,
                   borderRadius: BorderRadius.circular(6),
                 ),
                 alignment: Alignment.center,

@@ -13,9 +13,6 @@ class BranchManager extends StatefulWidget {
 }
 
 class _BranchMangerState extends State<BranchManager> {
-
-
-
   int _selectedIndex = 1;
   void _onitemTapped(int index) {
     setState(() {
@@ -35,7 +32,7 @@ class _BranchMangerState extends State<BranchManager> {
         leading: Builder(
           builder:
               (context) => IconButton(
-                icon: Icon(Icons.menu, color: kPrimaryColor),
+                icon: Icon(Icons.menu, color: AppColors.kPrimaryColor),
                 onPressed: () {
                   Scaffold.of(context).openDrawer();
                 },
@@ -44,7 +41,7 @@ class _BranchMangerState extends State<BranchManager> {
 
         title: Text(
           "Branch Manager",
-          style: TextStyle(color: ktextcolor, fontSize: 14),
+          style: TextStyle(color: AppColors.kTextColor, fontSize: 14),
         ),
 
         actions: [
@@ -65,7 +62,7 @@ class _BranchMangerState extends State<BranchManager> {
                 width: 66.w,
                 padding: EdgeInsets.symmetric(horizontal: 8),
                 decoration: BoxDecoration(
-                  color: kPrimaryColor,
+                  color: AppColors.kPrimaryColor,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 alignment: Alignment.center,
@@ -94,9 +91,9 @@ class _BranchMangerState extends State<BranchManager> {
               SizedBox(height: 30.h),
               TextField(
                 decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.search, color: ktextcolor),
+                  prefixIcon: Icon(Icons.search, color: AppColors.kTextColor),
                   hintText: "search",
-                  hintStyle: TextStyle(color: ktextcolor),
+                  hintStyle: TextStyle(color: AppColors.kTextColor),
 
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide.none,
@@ -106,7 +103,7 @@ class _BranchMangerState extends State<BranchManager> {
                     borderSide: BorderSide.none,
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  fillColor: kcontainer,
+                  fillColor: AppColors.kTextColor,
                   filled: true,
                 ),
               ),
@@ -142,24 +139,30 @@ class _BranchMangerState extends State<BranchManager> {
                 height: 30.h,
                 width: 350.w,
                 decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: kBorderColor),
-                  color: kcontainer,
+                  border: Border.all(width: 1, color: AppColors.kBorderColor),
+                  color: AppColors.kContainerColor,
                 ),
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "  Branch Manager",
-                  style: GoogleFonts.inter(fontSize: 10, color: ktextcolor),
+                  style: GoogleFonts.inter(
+                    fontSize: 10,
+                    color: AppColors.kTextColor,
+                  ),
                 ),
               ),
               Container(
                 height: 30.h,
                 width: 350.w,
                 decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: kBorderColor),
+                  border: Border.all(width: 1, color: AppColors.kTextColor),
                 ),
 
                 child: Table(
-                  border: TableBorder.all(width: 1, color: kBorderColor),
+                  border: TableBorder.all(
+                    width: 1,
+                    color: AppColors.kTextColor,
+                  ),
                   children: [
                     TableRow(
                       decoration: BoxDecoration(color: Color(0xFFF5CEB8)),
@@ -169,7 +172,7 @@ class _BranchMangerState extends State<BranchManager> {
                           child: Text(
                             "ID",
                             style: GoogleFonts.inter(
-                              color: ktextcolor,
+                              color: AppColors.kTextColor,
                               fontSize: 10,
                             ),
                           ),
@@ -181,7 +184,7 @@ class _BranchMangerState extends State<BranchManager> {
                             "Status",
                             style: GoogleFonts.inter(
                               fontSize: 10,
-                              color: ktextcolor,
+                              color: AppColors.kTextColor,
                             ),
                           ),
                         ),
@@ -191,7 +194,7 @@ class _BranchMangerState extends State<BranchManager> {
                             "Actions",
                             style: GoogleFonts.inter(
                               fontSize: 10,
-                              color: ktextcolor,
+                              color: AppColors.kTextColor,
                             ),
                           ),
                         ),
@@ -199,14 +202,14 @@ class _BranchMangerState extends State<BranchManager> {
                     ),
 
                     TableRow(
-                      decoration: BoxDecoration(color: kcontainer),
+                      decoration: BoxDecoration(color: AppColors.kTextColor),
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             "677655",
                             style: GoogleFonts.inter(
-                              color: ktextcolor,
+                              color: AppColors.kTextColor,
                               fontSize: 10,
                             ),
                           ),
@@ -229,14 +232,16 @@ class _BranchMangerState extends State<BranchManager> {
                       ],
                     ),
                     TableRow(
-                      decoration: BoxDecoration(color: kcontainer),
+                      decoration: BoxDecoration(
+                        color: AppColors.kContainerColor,
+                      ),
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             "677656",
                             style: GoogleFonts.inter(
-                              color: ktextcolor,
+                              color: AppColors.kTextColor,
                               fontSize: 10,
                             ),
                           ),
@@ -260,14 +265,14 @@ class _BranchMangerState extends State<BranchManager> {
                     ),
 
                     TableRow(
-                      decoration: BoxDecoration(color: kcontainer),
+                      decoration: BoxDecoration(color: AppColors.kTextColor),
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             "677657",
                             style: GoogleFonts.inter(
-                              color: ktextcolor,
+                              color: AppColors.kTextColor,
                               fontSize: 10,
                             ),
                           ),
@@ -291,14 +296,14 @@ class _BranchMangerState extends State<BranchManager> {
                     ),
 
                     TableRow(
-                      decoration: BoxDecoration(color: kcontainer),
+                      decoration: BoxDecoration(color: AppColors.kTextColor),
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
                             "677658",
                             style: GoogleFonts.inter(
-                              color: ktextcolor,
+                              color: AppColors.kTextColor,
                               fontSize: 10,
                             ),
                           ),
@@ -343,7 +348,7 @@ Future<void> opendialog(BuildContext context) async {
           width: 364.w,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
-            color: kcontainer,
+            color: AppColors.kTextColor,
           ),
           alignment: Alignment.center,
           child: Padding(
@@ -459,7 +464,7 @@ Future<void> opendialog(BuildContext context) async {
                     height: 30,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: kPrimaryColor,
+                      color: AppColors.kPrimaryColor,
                       borderRadius: BorderRadius.circular(6),
                     ),
                     alignment: Alignment.center,
@@ -513,7 +518,10 @@ Widget _textfield({
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(vertical: 10),
             hintText: subtitle,
-            hintStyle: GoogleFonts.inter(fontSize: 12, color: ktextcolor),
+            hintStyle: GoogleFonts.inter(
+              fontSize: 12,
+              color: AppColors.kTextColor,
+            ),
             fillColor: Colors.white,
             filled: true,
 

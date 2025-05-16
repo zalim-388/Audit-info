@@ -209,7 +209,7 @@ class _DashboardState extends State<Dashboard> {
                     height: 49.h,
                     width: 93.w,
                     decoration: BoxDecoration(
-                      color: kPrimaryColor,
+                      color: AppColors.kPrimaryColor,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     alignment: Alignment.center,
@@ -311,7 +311,7 @@ class _DashboardState extends State<Dashboard> {
                                       Icon(
                                         Icons.keyboard_arrow_down,
                                         size: 16,
-                                        color: ktextcolor,
+                                        color: AppColors.kTextColor,
                                       ),
                                     ],
                                   ),
@@ -455,7 +455,7 @@ class _DashboardState extends State<Dashboard> {
                       width: 337.w,
                       height: 30.h,
                       decoration: BoxDecoration(
-                        color: kcontainer,
+                        color: AppColors.kContainerColor,
                         border: Border.all(color: const Color(0x41414333)),
                       ),
                       alignment: Alignment.centerLeft,
@@ -465,7 +465,7 @@ class _DashboardState extends State<Dashboard> {
                           'Branch Manager',
                           style: GoogleFonts.inter(
                             fontSize: 10.sp,
-                            color: ktextcolor,
+                            color: AppColors.kContainerColor,
                           ),
                         ),
                       ),
@@ -503,7 +503,7 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -515,7 +515,7 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -529,7 +529,7 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -537,7 +537,7 @@ class _DashboardState extends State<Dashboard> {
                             ],
                           ),
                           TableRow(
-                            decoration: BoxDecoration(color: kcontainer),
+                            decoration: BoxDecoration(color: AppColors.kContainerColor,),
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -548,7 +548,7 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                   ),
                                 ),
                               ),
@@ -561,7 +561,7 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                   ),
                                 ),
                               ),
@@ -574,14 +574,14 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                   ),
                                 ),
                               ),
                             ],
                           ),
                           TableRow(
-                            decoration: BoxDecoration(color: kcontainer),
+                            decoration: BoxDecoration(color: AppColors.kContainerColor,),
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -592,7 +592,7 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                   ),
                                 ),
                               ),
@@ -605,7 +605,7 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                   ),
                                 ),
                               ),
@@ -618,7 +618,7 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                   ),
                                 ),
                               ),
@@ -632,7 +632,7 @@ class _DashboardState extends State<Dashboard> {
                       width: 337.w,
                       height: 30.h,
                       decoration: BoxDecoration(
-                        color: kcontainer,
+                        color: AppColors.kContainerColor,
 
                         border: Border.all(color: const Color(0x41414333)),
                       ),
@@ -643,7 +643,7 @@ class _DashboardState extends State<Dashboard> {
                           'SRC',
                           style: GoogleFonts.inter(
                             fontSize: 10.sp,
-                            color: ktextcolor,
+                            color: AppColors.kTextColor,
                           ),
                         ),
                       ),
@@ -678,7 +678,7 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -692,7 +692,7 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -706,7 +706,7 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -727,7 +727,7 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                   ),
                                 ),
                               ),
@@ -740,7 +740,7 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                   ),
                                 ),
                               ),
@@ -753,7 +753,7 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                   ),
                                 ),
                               ),
@@ -773,7 +773,7 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                   ),
                                 ),
                               ),
@@ -786,7 +786,7 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                   ),
                                 ),
                               ),
@@ -799,7 +799,7 @@ class _DashboardState extends State<Dashboard> {
                                   textAlign: TextAlign.center,
                                   style: GoogleFonts.inter(
                                     fontSize: 10.sp,
-                                    color: ktextcolor,
+                                    color: AppColors.kTextColor,
                                   ),
                                 ),
                               ),
