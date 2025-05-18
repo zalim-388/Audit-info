@@ -1,4 +1,5 @@
 import 'package:audit_info/ui/Dashboard.dart';
+import 'package:audit_info/utils/FontStyle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,6 +13,7 @@ class Loginpage extends StatefulWidget {
 
 class _LoginpageState extends State<Loginpage> {
   String? selectedItem;
+  bool showDropdown = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,246 +26,191 @@ class _LoginpageState extends State<Loginpage> {
             children: [
               SizedBox(height: 176.h),
               Image.asset("assets/image/Artboard-1 1.png", height: 190.h),
-              // SizedBox(height: 42.h),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RichText(
-                    textAlign: TextAlign.start,
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '*  ',
-                          style: GoogleFonts.inter(
-                            color: Colors.red,
-                            fontSize: 12,
-                          ),
-                        ),
+              SizedBox(height: 47.h),
 
-                        TextSpan(
-                          text: ' Position',
-
-                          style: GoogleFonts.inter(
-                            color: Colors.black,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ],
+              Container(
+                width: 298.w,
+                padding: EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      blurRadius: 15,
+                      spreadRadius: 5,
+                      color: Colors.grey.withOpacity(0.1),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 21.h),
-              GestureDetector(
-                onTapDown: (TapDownDetails details) async {
-                  final selected = await showMenu<String>(
-                    context: context,
-                    position: RelativeRect.fromLTRB(
-                      details.globalPosition.dx,
-                      details.globalPosition.dy,
-                      details.globalPosition.dx,
-                      details.globalPosition.dy,
+                  ],
+                ),
+
+                child: Column(
+                  children: [
+                    Text(
+                      "Position",
+                      style: FontStyles.body,
+                      textAlign: TextAlign.start,
                     ),
-                    items:
-                        [
-                          'Admin',
-                          'Manager',
-                          'SRC',
-                          'SRO',
-                          'Accountant',
-                          'Administrator',
-                        ].map((item) {
-                          return PopupMenuItem<String>(
-                            value: item,
 
-                            child: Container(
-                              height: 24.h,
-                              width: 126.w,
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          showDropdown = !showDropdown;
+                        });
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 13,
+                          vertical: 12,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(7),
+                          border: Border.all(color: Color(0xFFCECECE)),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              selectedItem ?? "Select Your Position",
+                              style: FontStyles.body,
+                            ),
+                            selectedItem != null
+                                ? GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedItem = null;
+                                      showDropdown = false;
+                                    });
+                                  },
+                                  child: Icon(
+                                    Icons.clear,
+                                    color: Color(0xFFD9D9D9),
+                                  ),
+                                )
+                                : showDropdown
+                                ? Icon(Icons.keyboard_arrow_up)
+                                : Icon(Icons.keyboard_arrow_down_outlined),
+                          ],
+                        ),
+                      ),
+                    ),
 
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                border: Border.all(color: Color(0xFFD9D9D9)),
-
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                item,
-                                style: GoogleFonts.inter(
-                                  fontSize: 12,
-                                  color: Colors.grey,
-                                ),
+                    if (showDropdown)
+                      Column(
+                        children: [
+                          ...[
+                            'Admin',
+                            'Manager',
+                            'SRC',
+                            'SRO',
+                            'Accountant',
+                            'Administrator',
+                          ].map(
+                            (item) => GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectedItem = item;
+                                  showDropdown = false;
+                                });
+                              },
+                              child: Container(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                alignment: Alignment.centerLeft,
+                                child: Text(item, style: FontStyles.body),
                               ),
                             ),
-                          );
-                        }).toList(),
-                    color: Colors.white,
-                  );
+                          ),
+                        ],
+                      ),
 
-                  if (selected != null) {
-                    setState(() {
-                      selectedItem = selected;
-                    });
-                  }
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 13, vertical: 6),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xFFD9D9D9)),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        selectedItem ?? 'Select Position',
-                        style: GoogleFonts.inter(
-                          fontSize: 10,
-                          color:
-                              selectedItem == null
-                                  ?Colors.black
-                                  : Colors.black,
+                    if (selectedItem != null) ...[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text("Email", style: FontStyles.body),
+                      ),
+                      SizedBox(height: 4.h),
+                      TextField(
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 6,
+                            horizontal: 13,
+                          ),
+                          filled: true,
+                          fillColor: Color(0xFFE7F1FD),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Color(0xFFD9D9D9)),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Color(0xFFD9D9D9)),
+                          ),
                         ),
                       ),
-                      Icon(
-                        Icons.keyboard_arrow_down_outlined,
-                        color: Color(0x1A000000),
-                        size: 22,
+                      SizedBox(height: 12.h),
+
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text("Password", style: FontStyles.body),
+                      ),
+                      SizedBox(height: 4.h),
+                      TextField(
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 4,
+                            horizontal: 13,
+                          ),
+                          filled: true,
+                          fillColor: Color(0xFFE7F1FD),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Color(0xFFD9D9D9)),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: BorderSide(color: Color(0xFFD9D9D9)),
+                          ),
+                        ),
+                        obscureText: true,
                       ),
                     ],
-                  ),
+                  ],
                 ),
-              ),
-
-              SizedBox(height: 8.h),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RichText(
-                    textAlign: TextAlign.start,
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '*  ',
-                          style: GoogleFonts.inter(
-                            color: Colors.red,
-                            fontSize: 12,
-                          ),
-                        ),
-
-                        TextSpan(
-                          text: ' Email',
-                          style: GoogleFonts.inter(
-                            color: Colors.black,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-
-              SizedBox(height: 21.h),
-
-              TextField(
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 6,
-                    horizontal: 13,
-                  ),
-                  filled: true,
-                  fillColor: Color(0xFFE7F1FD),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Color(0xFFD9D9D9)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Color(0xFFD9D9D9)),
-                  ),
-                ),
-              ),
-              SizedBox(height: 8.h),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RichText(
-                    textAlign: TextAlign.start,
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '*  ',
-                          style: GoogleFonts.inter(
-                            color: Colors.red,
-                            fontSize: 12,
-                          ),
-                        ),
-
-                        TextSpan(
-                          text: ' passwrod',
-                          style: GoogleFonts.inter(
-                            color: Colors.black,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 21.h),
-
-              TextField(
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 4,
-                    horizontal: 13,
-                  ),
-                  filled: true,
-                  fillColor: Color(0xFFE7F1FD),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Color(0xFFD9D9D9)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: Color(0xFFD9D9D9)),
-                  ),
-                ),
-                obscureText: true,
               ),
               SizedBox(height: 46.h),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => Dashboard()),
-                  );
-                },
-                child: Container(
-                  width:double.infinity ,
-                  height: 33,
-                  decoration: BoxDecoration(
-                    color: Color(0xFFF58C1F),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Login",
-                    style: GoogleFonts.inter(color: Colors.white, fontSize: 10),
+              if (selectedItem != null) ...[
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Dashboard()),
+                    );
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    height: 33,
+                    decoration: BoxDecoration(
+                      color: Color(0xFFF58C1F),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    alignment: Alignment.center,
+                    child: Text(
+                      "Login",
+                      style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontSize: 10,
+                      ),
+                    ),
                   ),
                 ),
-              ),
+                SizedBox(height: 214.h),
 
-              SizedBox(height: 214.h),
-
-              Image.asset(
-                "assets/image/Artboard-1 1 (1).png",
-                fit: BoxFit.cover,
-              ),
+                Image.asset(
+                  "assets/image/Artboard-1 1 (1).png",
+                  fit: BoxFit.cover,
+                ),
+              ],
             ],
           ),
         ),

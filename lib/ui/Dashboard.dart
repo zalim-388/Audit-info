@@ -537,7 +537,9 @@ class _DashboardState extends State<Dashboard> {
                             ],
                           ),
                           TableRow(
-                            decoration: BoxDecoration(color: AppColors.kContainerColor,),
+                            decoration: BoxDecoration(
+                              color: AppColors.kContainerColor,
+                            ),
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(
@@ -581,7 +583,9 @@ class _DashboardState extends State<Dashboard> {
                             ],
                           ),
                           TableRow(
-                            decoration: BoxDecoration(color: AppColors.kContainerColor,),
+                            decoration: BoxDecoration(
+                              color: AppColors.kContainerColor,
+                            ),
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(
