@@ -1,3 +1,4 @@
+import 'package:audit_info/ui/Dashboard.dart';
 import 'package:audit_info/ui/loginpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: Loginpage(),
+          // home: Loginpage(),
+          home: Dashboard(),
         );
       },
     );

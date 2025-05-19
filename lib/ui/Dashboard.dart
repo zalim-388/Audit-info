@@ -1,3 +1,4 @@
+import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
@@ -443,380 +444,172 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ),
 
-              SizedBox(height: 18.h),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 34),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Leaderboard", style: GoogleFonts.inter(fontSize: 13)),
-                    SizedBox(height: 27.h),
-                    Container(
-                      width: 337.w,
-                      height: 30.h,
-                      decoration: BoxDecoration(
-                        color: AppColors.kContainerColor,
-                        border: Border.all(color: const Color(0x41414333)),
+              SizedBox(height: 21.h),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Leaderboard", style: FontStyles.heading),
+                  SizedBox(height: 9.h),
+              
+                  Container(
+                    width: 356.w,
+                    height: 26.h,
+                    decoration: BoxDecoration(
+                      color: AppColors.kContainerColor,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(9),
+                        topRight: Radius.circular(9),
                       ),
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          'Branch Manager',
-                          style: GoogleFonts.inter(
-                            fontSize: 10.sp,
-                            color: AppColors.kContainerColor,
-                          ),
-                        ),
-                      ),
+                      border: Border.all(color: AppColors.kBorderColor),
                     ),
-                    Container(
-                      width: 337.w,
-                      height: 90.h,
-                      decoration: BoxDecoration(
-                        // border: BorderDirectional(
-                        //   top: BorderSide(
-                        //     color: const Color(0x41414333),
-                        //     width: 1,
-                        // //   ),
-                        // ),
-                      ),
-                      child: Table(
-                        border: TableBorder.all(color: Color(0x41414333)),
-                        columnWidths: {
-                          0: FixedColumnWidth(70),
-                          1: FixedColumnWidth(160),
-                          2: FixedColumnWidth(70),
-                        },
-                        children: [
-                          TableRow(
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFEBC2AF),
-                            ),
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
+                    child: Column(
+                      children: [
+                        Text('Branch Manager', style: FontStyles.body),
+                        Table(
+                          border: TableBorder.all(
+                            color: AppColors.kBorderColor,
+                          ),
+                          columnWidths: {
+                            0: FixedColumnWidth(65),
+                            1: FixedColumnWidth(160),
+                            2: FixedColumnWidth(120),
+                          },
+                          children: [
+                            TableRow(
+                              decoration: BoxDecoration(
+                                // color: Colors.grey[400],
+                              ),
+                              children: [
+                                Text(
                                   'No of',
                                   textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10,
                                     color: AppColors.kTextColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.0),
-                                child: Text(
+                                Text(
                                   'Manager',
                                   textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10,
                                     color: AppColors.kTextColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
+                                Text(
                                   'Admissions',
                                   textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10,
                                     color: AppColors.kTextColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          TableRow(
-                            decoration: BoxDecoration(
-                              color: AppColors.kContainerColor,
+                              ],
                             ),
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
-                                  '1',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
+                    
+                            TableRow(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                              ),
+                    
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0,
+                                  ),
+                                  child: Text(
+                                    '1',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.inter(
+                                      fontSize: 10.sp,
+                                      color: AppColors.kTextColor,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
-                                  'Fabio',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0,
+                                  ),
+                                  child: Text(
+                                    'ashiq',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.inter(
+                                      fontSize: 10.sp,
+                                      color: AppColors.kTextColor,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
-                                  '1',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0,
+                                  ),
+                                  child: Text(
+                                    '2',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.inter(
+                                      fontSize: 10.sp,
+                                      color: AppColors.kTextColor,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          TableRow(
-                            decoration: BoxDecoration(
-                              color: AppColors.kContainerColor,
+                              ],
                             ),
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
-                                  '2',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
+                            TableRow(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                              ),
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0,
+                                  ),
+                                  child: Text(
+                                    '2',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.inter(
+                                      fontSize: 10.sp,
+                                      color: AppColors.kTextColor,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
-                                  'Carvalho',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0,
+                                  ),
+                                  child: Text(
+                                    'farhan',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.inter(
+                                      fontSize: 10.sp,
+                                      color: AppColors.kTextColor,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
-                                  '0',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0,
+                                  ),
+                                  child: Text(
+                                    '3',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.inter(
+                                      fontSize: 10.sp,
+                                      color: AppColors.kTextColor,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 30.h),
-                    Container(
-                      width: 337.w,
-                      height: 30.h,
-                      decoration: BoxDecoration(
-                        color: AppColors.kContainerColor,
-
-                        border: Border.all(color: const Color(0x41414333)),
-                      ),
-                      alignment: Alignment.centerLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(
-                          'SRC',
-                          style: GoogleFonts.inter(
-                            fontSize: 10.sp,
-                            color: AppColors.kTextColor,
-                          ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ),
+                      ],
                     ),
-                    Container(
-                      width: 337.w,
-                      height: 90.h,
-                      decoration: BoxDecoration(
-                        border: BorderDirectional(
-                          top: BorderSide(color: Color(0x41414333)),
-                        ),
-                      ),
-                      child: Table(
-                        border: TableBorder.all(color: Color(0x41414333)),
-                        columnWidths: const {
-                          0: FixedColumnWidth(70),
-                          1: FixedColumnWidth(160),
-                          2: FixedColumnWidth(70),
-                        },
-                        children: [
-                          TableRow(
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFEBC2AF),
-                            ),
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
-                                  'No of',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
-                                  'Manager',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
-                                  'Admissions',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          TableRow(
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFEBC2AF),
-                            ),
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
-                                  '1',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
-                                  'sreya',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
-                                  '1',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          TableRow(
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFEBC2AF),
-                            ),
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
-                                  '2',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
-                                  'sahad',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                ),
-                                child: Text(
-                                  '2',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 30.h),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              SizedBox(height: 20.h),
             ],
           ),
         ),
@@ -831,3 +624,186 @@ class _ChartData {
 
   _ChartData({required this.x, required this.y});
 }
+
+
+                    // SizedBox(height: 30.h),
+                    // Container(
+                    //   width: 337.w,
+                    //   height: 30.h,
+                    //   decoration: BoxDecoration(
+                    //     color: AppColors.kContainerColor,
+
+                    //     border: Border.all(color: const Color(0x41414333)),
+                    //   ),
+                    //   alignment: Alignment.centerLeft,
+                    //   child: Padding(
+                    //     padding: const EdgeInsets.only(left: 8.0),
+                    //     child: Text(
+                    //       'SRC',
+                    //       style: GoogleFonts.inter(
+                    //         fontSize: 10.sp,
+                    //         color: AppColors.kTextColor,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // Container(
+                    //   width: 337.w,
+                    //   height: 90.h,
+                    //   decoration: BoxDecoration(
+                    //     border: BorderDirectional(
+                    //       top: BorderSide(color: Color(0x41414333)),
+                    //     ),
+                    //   ),
+                    //   child: Table(
+                    //     border: TableBorder.all(color: Color(0x41414333)),
+                    //     columnWidths: const {
+                    //       0: FixedColumnWidth(70),
+                    //       1: FixedColumnWidth(160),
+                    //       2: FixedColumnWidth(70),
+                    //     },
+                    //     children: [
+                    //       TableRow(
+                    //         decoration: const BoxDecoration(
+                    //           color: Color(0xFFEBC2AF),
+                    //         ),
+                    //         children: [
+                    //           Padding(
+                    //             padding: const EdgeInsets.symmetric(
+                    //               vertical: 8.0,
+                    //             ),
+                    //             child: Text(
+                    //               'No of',
+                    //               textAlign: TextAlign.center,
+                    //               style: GoogleFonts.inter(
+                    //                 fontSize: 10.sp,
+                    //                 color: AppColors.kTextColor,
+                    //                 fontWeight: FontWeight.bold,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           Padding(
+                    //             padding: const EdgeInsets.symmetric(
+                    //               vertical: 8.0,
+                    //             ),
+                    //             child: Text(
+                    //               'Manager',
+                    //               textAlign: TextAlign.center,
+                    //               style: GoogleFonts.inter(
+                    //                 fontSize: 10.sp,
+                    //                 color: AppColors.kTextColor,
+                    //                 fontWeight: FontWeight.bold,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           Padding(
+                    //             padding: const EdgeInsets.symmetric(
+                    //               vertical: 8.0,
+                    //             ),
+                    //             child: Text(
+                    //               'Admissions',
+                    //               textAlign: TextAlign.center,
+                    //               style: GoogleFonts.inter(
+                    //                 fontSize: 10.sp,
+                    //                 color: AppColors.kTextColor,
+                    //                 fontWeight: FontWeight.bold,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //       TableRow(
+                    //         decoration: const BoxDecoration(
+                    //           color: Color(0xFFEBC2AF),
+                    //         ),
+                    //         children: [
+                    //           Padding(
+                    //             padding: const EdgeInsets.symmetric(
+                    //               vertical: 8.0,
+                    //             ),
+                    //             child: Text(
+                    //               '1',
+                    //               textAlign: TextAlign.center,
+                    //               style: GoogleFonts.inter(
+                    //                 fontSize: 10.sp,
+                    //                 color: AppColors.kTextColor,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           Padding(
+                    //             padding: const EdgeInsets.symmetric(
+                    //               vertical: 8.0,
+                    //             ),
+                    //             child: Text(
+                    //               'sreya',
+                    //               textAlign: TextAlign.center,
+                    //               style: GoogleFonts.inter(
+                    //                 fontSize: 10.sp,
+                    //                 color: AppColors.kTextColor,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           Padding(
+                    //             padding: const EdgeInsets.symmetric(
+                    //               vertical: 8.0,
+                    //             ),
+                    //             child: Text(
+                    //               '1',
+                    //               textAlign: TextAlign.center,
+                    //               style: GoogleFonts.inter(
+                    //                 fontSize: 10.sp,
+                    //                 color: AppColors.kTextColor,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //       TableRow(
+                    //         decoration: const BoxDecoration(
+                    //           color: Color(0xFFEBC2AF),
+                    //         ),
+                    //         children: [
+                    //           Padding(
+                    //             padding: const EdgeInsets.symmetric(
+                    //               vertical: 8.0,
+                    //             ),
+                    //             child: Text(
+                    //               '2',
+                    //               textAlign: TextAlign.center,
+                    //               style: GoogleFonts.inter(
+                    //                 fontSize: 10.sp,
+                    //                 color: AppColors.kTextColor,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           Padding(
+                    //             padding: const EdgeInsets.symmetric(
+                    //               vertical: 8.0,
+                    //             ),
+                    //             child: Text(
+                    //               'sahad',
+                    //               textAlign: TextAlign.center,
+                    //               style: GoogleFonts.inter(
+                    //                 fontSize: 10.sp,
+                    //                 color: AppColors.kTextColor,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //           Padding(
+                    //             padding: const EdgeInsets.symmetric(
+                    //               vertical: 8.0,
+                    //             ),
+                    //             child: Text(
+                    //               '2',
+                    //               textAlign: TextAlign.center,
+                    //               style: GoogleFonts.inter(
+                    //                 fontSize: 10.sp,
+                    //                 color: AppColors.kTextColor,
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),

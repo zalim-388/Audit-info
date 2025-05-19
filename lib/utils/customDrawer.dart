@@ -1,14 +1,14 @@
 import 'package:audit_info/ui/Branch_manager.dart';
 import 'package:audit_info/ui/Dashboard.dart';
-import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class Customdrawer extends StatelessWidget {
+class Customdrawer extends StatefulWidget {
   final int SelectedIndex;
   final Function(int) onitemTapped;
+
   const Customdrawer({
     super.key,
     required this.onitemTapped,
@@ -16,53 +16,66 @@ class Customdrawer extends StatelessWidget {
   });
 
   @override
+  State<Customdrawer> createState() => _CustomdrawerState();
+}
+
+class _CustomdrawerState extends State<Customdrawer> {
+  @override
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor: const Color(0xFF414143),
       child: ListView(
-        scrollDirection: Axis.vertical,
         children: [
-          DrawerHeader(
-            decoration: BoxDecoration(color: Color(0xFF414143)),
-            child: Text.rich(
-              TextSpan(
-                text: 'AU',
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontSize: 20.sp,
-                  fontWeight: FontWeight.bold,
-                ),
-                children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 21),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 30.h),
+                Text.rich(
                   TextSpan(
-                    text: 'D',
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 20.sp,
-                    fontWeight: FontWeight.bold,
-                  )
-       
-                  ),
-                  TextSpan(
-                    text: 'IT INFO',
+                    text: 'AU',
                     style: GoogleFonts.poppins(
                       color: Colors.white,
-                      fontSize: 20.sp,
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
+                    children: [
+                      TextSpan(
+                        text: 'D',
+                        style: GoogleFonts.poppins(
+                          color: AppColors.kPrimaryColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextSpan(
+                        text: 'IT INFO',
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                SizedBox(height: 19.h),
+                Divider(),
+                SizedBox(height: 16.h),
+              ],
             ),
           ),
 
+          // Static drawer items
           _Draweritems(
             icon: Icons.dashboard,
             svgpath: null,
             title: 'Dashboard',
             index: 0,
-            selectedIndex: SelectedIndex,
+            selectedIndex: widget.SelectedIndex,
             onTap: () {
-              onitemTapped(0);
+              widget.onitemTapped(0);
               Navigator.pop(context);
               Navigator.pushReplacement(
                 context,
@@ -70,16 +83,16 @@ class Customdrawer extends StatelessWidget {
               );
             },
           ),
+          SizedBox(height: 25.h),
 
-          SizedBox(height: 2.h),
           _Draweritems(
             icon: null,
             svgpath: "assets/icon/Branch Manager.png",
             title: 'Branch Manager',
             index: 1,
-            selectedIndex: SelectedIndex,
+            selectedIndex: widget.SelectedIndex,
             onTap: () {
-              onitemTapped(2);
+              widget.onitemTapped(1);
               Navigator.pop(context);
               Navigator.pushReplacement(
                 context,
@@ -87,151 +100,170 @@ class Customdrawer extends StatelessWidget {
               );
             },
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 30.h),
 
           _Draweritems(
+            icon: null,
             svgpath: "assets/icon/Accountant.png",
             title: "Accountant",
             index: 2,
+            selectedIndex: widget.SelectedIndex,
             onTap: () {
-              onitemTapped(2);
+              widget.onitemTapped(2);
+              Navigator.pop(context);
             },
-            selectedIndex: SelectedIndex,
-            icon: null,
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 20.h),
+
           _Draweritems(
             icon: null,
             svgpath: 'assets/icon/SRC.png',
             title: 'SRC',
             index: 3,
-            selectedIndex: SelectedIndex,
+            selectedIndex: widget.SelectedIndex,
             onTap: () {
-              onitemTapped(3);
+              widget.onitemTapped(3);
               Navigator.pop(context);
             },
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 20.h),
+
           _Draweritems(
             icon: null,
-            svgpath: "assets/icon/SRC.png",
-            title: "SRO",
+            svgpath: 'assets/icon/SRC.png',
+            title: 'SRO',
             index: 4,
+            selectedIndex: widget.SelectedIndex,
             onTap: () {
-              onitemTapped(4);
+              widget.onitemTapped(4);
               Navigator.pop(context);
             },
-
-            selectedIndex: SelectedIndex,
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 20.h),
+
           _Draweritems(
             icon: null,
             svgpath: "assets/icon/Office Administration.png",
             title: "Office Administration",
             index: 5,
+            selectedIndex: widget.SelectedIndex,
             onTap: () {
-              onitemTapped(5);
+              widget.onitemTapped(5);
               Navigator.pop(context);
             },
-            selectedIndex: SelectedIndex,
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 20.h),
+
           _Draweritems(
             icon: null,
             svgpath: "assets/icon/Agent.png",
             title: "Agent",
             index: 6,
+            selectedIndex: widget.SelectedIndex,
             onTap: () {
-              onitemTapped(6);
+              widget.onitemTapped(6);
               Navigator.pop(context);
             },
-            selectedIndex: SelectedIndex,
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 20.h),
+
           _Draweritems(
             icon: null,
             svgpath: "assets/icon/Lead Management.png",
-
             title: "Lead Management",
             index: 7,
+            selectedIndex: widget.SelectedIndex,
             onTap: () {
-              onitemTapped(7);
+              widget.onitemTapped(7);
               Navigator.pop(context);
             },
-            selectedIndex: SelectedIndex,
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 20.h),
+
           _Draweritems(
             icon: null,
             svgpath: "assets/icon/Student Management.png",
             title: "Student Management",
             index: 8,
+            selectedIndex: widget.SelectedIndex,
             onTap: () {
-              onitemTapped(8);
+              widget.onitemTapped(8);
               Navigator.pop(context);
             },
-            selectedIndex: SelectedIndex,
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 20.h),
+
+          // Settings with PopupMenuButton
           _Draweritems(
             icon: Icons.settings,
-
             title: "Settings",
             index: 9,
-            onTap: () {
-              onitemTapped(9);
-              Navigator.pop(context);
-            },
-            selectedIndex: SelectedIndex,
+            selectedIndex: widget.SelectedIndex,
+            onTap: () {},
+            isPopupMenu: true,
+            popupItems: [
+              "Branch Management",
+              "College Management",
+              "School Management",
+              "Particular Management",
+            ],
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 20.h),
+
+          // Reports with PopupMenuButton
           _Draweritems(
             icon: null,
             svgpath: "assets/icon/Reports.png",
             title: "Reports",
             index: 10,
-            onTap: () {
-              onitemTapped(10);
-              Navigator.pop(context);
-            },
-            selectedIndex: SelectedIndex,
+            selectedIndex: widget.SelectedIndex,
+            onTap: () {},
+            isPopupMenu: true,
+            popupItems: [
+              "Accounts",
+              "College Accounts",
+              "Employee Accounts",
+              "Agent Accounts",
+            ],
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 20.h),
+
           _Draweritems(
             icon: null,
             svgpath: "assets/icon/Expense.png",
             title: "Expense",
             index: 11,
+            selectedIndex: widget.SelectedIndex,
             onTap: () {
-              onitemTapped(11);
+              widget.onitemTapped(11);
               Navigator.pop(context);
             },
-            selectedIndex: SelectedIndex,
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 20.h),
+
           _Draweritems(
             icon: null,
             svgpath: "assets/icon/Payment.png",
             title: "Payment",
             index: 12,
+            selectedIndex: widget.SelectedIndex,
             onTap: () {
-              onitemTapped(12);
+              widget.onitemTapped(12);
               Navigator.pop(context);
             },
-            selectedIndex: SelectedIndex,
           ),
-          SizedBox(height: 2.h),
+          SizedBox(height: 25.h),
+
           _Draweritems(
             icon: null,
             svgpath: "assets/icon/Request’s.png",
             title: "Request's",
             index: 13,
+            selectedIndex: widget.SelectedIndex,
             onTap: () {
-              onitemTapped(13);
+              widget.onitemTapped(13);
               Navigator.pop(context);
             },
-            selectedIndex: SelectedIndex,
           ),
         ],
       ),
@@ -246,41 +278,106 @@ Widget _Draweritems({
   required int index,
   required Function() onTap,
   required int selectedIndex,
+  bool isPopupMenu = false,
+  List<String>? popupItems,
 }) {
   final bool isSelected = selectedIndex == index;
-  return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 6),
-    child: Container(
-      height: 40.h,
-      width: 320.w,
-      decoration: BoxDecoration(
-        color: isSelected ? AppColors.kPrimaryColor : const Color(0xFF414143),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: ListTile(
-        leading:
-            svgpath != null
-                ? Image.asset(
-                  svgpath,
-                  height: 14.h,
-                  width: 14.w,
-                  fit: BoxFit.cover,
-                  color: Colors.white,
-                )
-                : Icon(icon, color: Colors.white),
-        title: Text(
-          title,
-          style: GoogleFonts.inter(color: Colors.white, fontSize: 12.sp),
-        ),
-        trailing:
-            (title == "Reports" || title == "Settings")
-                ? Icon(Icons.keyboard_arrow_down, color: Colors.white)
-                : null,
-        selected: isSelected,
-        selectedTileColor: AppColors.kPrimaryColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        onTap: onTap,
-      ),
+  return Container(
+    height: 40.h,
+    width: 320.w,
+    decoration: BoxDecoration(
+      color: isSelected ? AppColors.kPrimaryColor : const Color(0xFF414143),
+      borderRadius: BorderRadius.circular(20),
     ),
+    child:
+        isPopupMenu
+            ? PopupMenuButton<String>(
+              onSelected: (String value) {
+                // Handle selection of submenu item here
+                // Close the drawer
+              },
+              itemBuilder:
+                  (BuildContext context) =>
+                      popupItems!
+                          .map(
+                            (String item) => PopupMenuItem<String>(
+                              value: item,
+                              child: _SubMenuItems([item]),
+                            ),
+                          )
+                          .toList(),
+              child: ListTile(
+                leading:
+                    svgpath != null
+                        ? Image.asset(
+                          svgpath,
+                          height: 14.h,
+                          width: 14.w,
+                          fit: BoxFit.cover,
+                          color: Colors.white,
+                        )
+                        : Icon(icon, color: Colors.white),
+                title: Text(
+                  title,
+                  style: GoogleFonts.poppins(color: Colors.white, fontSize: 12),
+                ),
+                trailing: Icon(Icons.keyboard_arrow_down, color: Colors.white),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+            )
+            : ListTile(
+              leading:
+                  svgpath != null
+                      ? Image.asset(
+                        svgpath,
+                        height: 14.h,
+                        width: 14.w,
+                        fit: BoxFit.cover,
+                        color: Colors.white,
+                      )
+                      : Icon(icon, color: Colors.white),
+              title: Text(
+                title,
+                style: GoogleFonts.poppins(color: Colors.white, fontSize: 12),
+              ),
+              trailing:
+                  (title == "Reports" || title == "Settings")
+                      ? Icon(Icons.keyboard_arrow_down, color: Colors.white)
+                      : null,
+              selected: isSelected,
+              selectedTileColor: AppColors.kPrimaryColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              onTap: onTap,
+            ),
+  );
+}
+
+Widget _SubMenuItems(List<String> items) {
+  return Column(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children:
+        items.map((item) {
+          return Column(
+            children: [
+              Text(
+                item,
+                style: GoogleFonts.poppins(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Divider(),
+              ),
+            ],
+          );
+        }).toList(),
   );
 }
