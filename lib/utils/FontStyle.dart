@@ -8,12 +8,13 @@ class FontStyles {
   
   static TextStyle heading = GoogleFonts.poppins(fontSize: 14,
   fontWeight: FontWeight.bold,
+  
 
-  color: AppColors.kBorderColor
+  color: AppColors.kTextColor
   );
   static TextStyle bold = GoogleFonts.poppins(fontWeight: FontWeight.bold);
   static TextStyle body = GoogleFonts.poppins(
-    fontSize: 10,
+    fontSize: 12,
     color: AppColors.kTextColor,
   );
 }
