@@ -6,6 +6,7 @@ import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Agent extends StatefulWidget {
   const Agent({super.key});
@@ -15,15 +16,20 @@ class Agent extends StatefulWidget {
 }
 
 class _AgentState extends State<Agent> {
-    int _selectedIndex = 7;
+  int _selectedIndex = 7;
   void _onitemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(drawer: Customdrawer(onitemTapped: _onitemTapped, SelectedIndex:_selectedIndex ),
+    return Scaffold(
+      drawer: Customdrawer(
+        onitemTapped: _onitemTapped,
+        SelectedIndex: _selectedIndex,
+      ),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 4,
@@ -38,9 +44,7 @@ class _AgentState extends State<Agent> {
                 },
               ),
         ),
-        title: Text(
-          " Agent",
- style: FontStyles.heading        ),
+        title: Text(" Agent", style: FontStyles.heading),
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
@@ -134,9 +138,210 @@ class _AgentState extends State<Agent> {
                 ],
               ),
 
-              SizedBox(height: 20.h),]
-          )
-        ))
+              SizedBox(height: 13.h),
+
+              Container(
+                width: 358.w,
+
+                decoration: BoxDecoration(
+                  color: AppColors.kContainerColor,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(4),
+                    topRight: Radius.circular(4),
+                  ),
+                  border: Border(
+                    top: BorderSide(color: Colors.black),
+                    left: BorderSide(color: Colors.black),
+                    right: BorderSide(color: Colors.black),
+                  ),
+                ),
+                child: Table(
+                  border: TableBorder(
+                    borderRadius: BorderRadius.circular(4),
+                    horizontalInside: BorderSide(color: AppColors.kBorderColor),
+                    verticalInside: BorderSide(color: AppColors.kBorderColor),
+                    bottom: BorderSide(color: Colors.black),
+                  ),
+                  columnWidths: const <int, TableColumnWidth>{
+                    0: FixedColumnWidth(55), // Si.no
+                    1: FixedColumnWidth(80), // Name (with icon)
+                    2: FixedColumnWidth(74), // Phone number (long)
+                    3: FixedColumnWidth(60), // Address
+                    4: FixedColumnWidth(60), // Actions (two buttons)
+                  },
+
+                  children: [
+                    TableRow(
+                      decoration: BoxDecoration(color: Colors.grey[300]),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'SI.NO',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'Name',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'Phone number',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'Address',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'Actions',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // for (int i = 1; i <= 4; i++)
+                    _AgentRow(
+                      code: "1",
+                      name: "Salim",
+
+                      phone: "9562791690",
+                      Address: "kottakkal",
+                      onEdit: () {},
+                      onDelete: () {},
+                    ),
+                    _AgentRow(
+                      code: "1",
+                      name: "Ashiq",
+
+                      phone: "46465",
+                      Address: "kottakkal",
+                      onEdit: () {},
+                      onDelete: () {},
+                    ),
+                    _AgentRow(
+                      code: "1",
+                      name: "Ali",
+                      phone: "95668690",
+                      Address: "kottakkal",
+                      onEdit: () {},
+                      onDelete: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
+}
+
+TableRow _AgentRow({
+  required String code,
+  required String name,
+  required String phone,
+  required String Address,
+  required VoidCallback onEdit,
+  required VoidCallback onDelete,
+}) {
+  return TableRow(
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Center(child: Text(code, style: FontStyles.body)),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Center(child: Text(name, style: FontStyles.body)),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Center(child: Text(phone, style: FontStyles.body)),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Center(child: Text(Address, style: FontStyles.body)),
+      ),
+
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 25.w,
+              height: 25.h,
+              decoration: BoxDecoration(
+                color: const Color(0xFF4A60E4),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: onEdit,
+                child: Icon(Icons.edit, color: Colors.white, size: 16.sp),
+              ),
+            ),
+            SizedBox(width: 6.w),
+            Container(
+              width: 25.w,
+              height: 25.h,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFF4C4C),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: onDelete,
+                child: Icon(
+                  Icons.delete_outline,
+                  color: Colors.white,
+                  size: 16.sp,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
 }

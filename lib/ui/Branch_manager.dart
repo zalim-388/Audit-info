@@ -43,10 +43,7 @@ class _BranchMangerState extends State<BranchManager> {
                 },
               ),
         ),
-        title: Text(
-          " Branch Manager",
-          style: FontStyles.heading
-        ),
+        title: Text(" Branch Manager", style: FontStyles.heading),
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
@@ -100,7 +97,7 @@ class _BranchMangerState extends State<BranchManager> {
                             Icons.search,
                             color: Color(0xFF404A80),
                           ),
-                          hintText: "search",
+                          hintText: "search manager",
                           hintStyle: FontStyles.body,
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
@@ -140,7 +137,7 @@ class _BranchMangerState extends State<BranchManager> {
                 ],
               ),
 
-              SizedBox(height: 20.h),
+              SizedBox(height: 13.h),
 
               Container(
                 width: 354.w,
@@ -237,15 +234,48 @@ TableRow _TableRow(String Id) {
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Text(Id, style: FontStyles.body),
       ),
-      Icon(Icons.toggle_on, color: Colors.green),
+      Icon(Icons.toggle_on, color: Colors.green, size: 31),
 
       Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(Icons.edit_square, color: Colors.blue),
-            SizedBox(width: 18),
-            Icon(Icons.delete, color: Colors.red),
+            Container(
+              width: 25.w,
+              height: 25.h,
+              decoration: BoxDecoration(
+                color: Color(0xFF4A60E4),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: () {
+                  // Handle edit
+                },
+                child: Icon(Icons.edit, color: Colors.white, size: 16.sp),
+              ),
+            ),
+            SizedBox(width: 18.w),
+            Container(
+              width: 25.w,
+              height: 25.h,
+              decoration: BoxDecoration(
+                color: Color(0xFFFF4C4C),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: () {
+                  // Handle delete
+                },
+                child: Icon(
+                  Icons.delete_outline,
+                  color: Colors.white,
+                  size: 16.sp,
+                ),
+              ),
+            ),
           ],
         ),
       ),

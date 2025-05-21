@@ -6,6 +6,7 @@ import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Src extends StatefulWidget {
   const Src({super.key});
@@ -15,17 +16,21 @@ class Src extends StatefulWidget {
 }
 
 class _SrcState extends State<Src> {
-    int _selectedIndex = 3;
+  int _selectedIndex = 3;
   void _onitemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: Customdrawer(onitemTapped:_onitemTapped , SelectedIndex: _selectedIndex),
-            appBar: AppBar(
+      drawer: Customdrawer(
+        onitemTapped: _onitemTapped,
+        SelectedIndex: _selectedIndex,
+      ),
+      appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 4,
         shadowColor: Colors.grey.withOpacity(0.4),
@@ -39,10 +44,7 @@ class _SrcState extends State<Src> {
                 },
               ),
         ),
-        title: Text(
-          " SRC",
-           style: FontStyles.heading
-        ),
+        title: Text(" SRC", style: FontStyles.heading),
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
@@ -74,7 +76,8 @@ class _SrcState extends State<Src> {
             icon: const Icon(Icons.logout_rounded, color: Color(0xFF414143)),
           ),
         ],
-      ),      backgroundColor: Colors.white,
+      ),
+      backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 23),
         child: SingleChildScrollView(
@@ -134,11 +137,254 @@ class _SrcState extends State<Src> {
                 ],
               ),
 
-              SizedBox(height: 20.h),]
-          )
-        ))
-    
+              SizedBox(height: 13.h),
 
+              Container(
+                width: 358.w,
+
+                decoration: BoxDecoration(
+                  color: AppColors.kContainerColor,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(4),
+                    topRight: Radius.circular(4),
+                  ),
+                  border: Border(
+                    top: BorderSide(color: Colors.black),
+                    left: BorderSide(color: Colors.black),
+                    right: BorderSide(color: Colors.black),
+                  ),
+                ),
+                child: Table(
+                  border: TableBorder(
+                    borderRadius: BorderRadius.circular(4),
+                    horizontalInside: BorderSide(color: AppColors.kBorderColor),
+                    verticalInside: BorderSide(color: AppColors.kBorderColor),
+                    bottom: BorderSide(color: Colors.black),
+                  ),
+                  columnWidths: const <int, TableColumnWidth>{
+                    0: FixedColumnWidth(50), // E.CODE
+                    1: FixedColumnWidth(50), // Name
+                    2: FixedColumnWidth(40), // Branch Name
+                    3: FixedColumnWidth(70), // Phone Number
+                    4: FixedColumnWidth(40), // Point Amount
+                    5: FixedColumnWidth(40), // Status (toggle)
+                    6: FixedColumnWidth(80), // Actions (icons)
+                  },
+
+                  children: [
+                    TableRow(
+                      decoration: BoxDecoration(color: Colors.grey[300]),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'E.Code',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'Name',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'Branch name',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'phone number',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'Point Amount',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'Status',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'Actions',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // for (int i = 1; i <= 4; i++)
+                    _SrcRow(
+                      code: "1",
+                      name: "Salim",
+                      Branchname: "",
+                      phone: "9562791690",
+                      onEdit: () {},
+                      PointAmount: "",
+                      onDelete: () {},
+                    ),
+                    _SrcRow(
+                      code: "2",
+                      name: "Ashiq",
+                      Branchname: "",
+
+                      phone: "46465",
+                      PointAmount: "",
+                      onEdit: () {},
+                      onDelete: () {},
+                    ),
+                    _SrcRow(
+                      code: "3",
+                      name: "Ali",
+                      Branchname: "",
+                      phone: "95668690",
+                      PointAmount: "",
+                      onEdit: () {},
+                      onDelete: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
+}
+
+TableRow _SrcRow({
+  required String code,
+  required String name,
+  required String Branchname,
+  required String phone,
+  required String PointAmount,
+  required VoidCallback onEdit,
+  required VoidCallback onDelete,
+}) {
+  return TableRow(
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Center(child: Text(code, style: FontStyles.body)),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Center(child: Text(name, style: FontStyles.body)),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Center(child: Text(Branchname, style: FontStyles.body)),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Center(child: Text(phone, style: FontStyles.body)),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Center(child: Text(PointAmount, style: FontStyles.body)),
+      ),
+      // Padding(
+      //   padding: EdgeInsets.symmetric(vertical: 6.h),
+      //   child: Center(
+      //     child: Switch(
+      //       value: true,
+      //       onChanged: (val) {},
+      //       activeColor: Colors.green,
+      //     ),
+      //   ),
+      // ),
+      Icon(Icons.toggle_on, color: Colors.green, size: 31),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 25.w,
+              height: 25.h,
+              decoration: BoxDecoration(
+                color: const Color(0xFF4A60E4),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: onEdit,
+                child: Icon(Icons.edit, color: Colors.white, size: 16.sp),
+              ),
+            ),
+            SizedBox(width: 6.w),
+            Container(
+              width: 25.w,
+              height: 25.h,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFF4C4C),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: onDelete,
+                child: Icon(
+                  Icons.delete_outline,
+                  color: Colors.white,
+                  size: 16.sp,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
 }

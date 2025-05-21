@@ -6,6 +6,7 @@ import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Accountant extends StatefulWidget {
   const Accountant({super.key});
@@ -14,16 +15,22 @@ class Accountant extends StatefulWidget {
   State<Accountant> createState() => _AccountantState();
 }
 
-class _AccountantState extends State<Accountant> {  int _selectedIndex = 2;
+class _AccountantState extends State<Accountant> {
+  int _selectedIndex = 2;
   void _onitemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(drawer:Customdrawer(onitemTapped: _onitemTapped, SelectedIndex: _selectedIndex) ,
-            appBar: AppBar(
+    return Scaffold(
+      drawer: Customdrawer(
+        onitemTapped: _onitemTapped,
+        SelectedIndex: _selectedIndex,
+      ),
+      appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 4,
         shadowColor: Colors.grey.withOpacity(0.4),
@@ -37,16 +44,10 @@ class _AccountantState extends State<Accountant> {  int _selectedIndex = 2;
                 },
               ),
         ),
-        title: Text(
-          " Accountant",
-          style: FontStyles.heading
-          
-          
-          
-        ),
+        title: Text(" Accountant", style: FontStyles.heading),
         actions: [
           Padding(
-             padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
+            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
             child: GestureDetector(
               onTap: () {
                 Navigator.push(
@@ -96,7 +97,7 @@ class _AccountantState extends State<Accountant> {  int _selectedIndex = 2;
                             Icons.search,
                             color: Color(0xFF404A80),
                           ),
-                          hintText: "search",
+                          hintText: "search Accountant",
                           hintStyle: FontStyles.body,
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
@@ -135,11 +136,232 @@ class _AccountantState extends State<Accountant> {  int _selectedIndex = 2;
                   ),
                 ],
               ),
+              SizedBox(height: 13.h),
 
-              SizedBox(height: 20.h),]
-          )
-        ))
-  
+              Container(
+                width: 358.w,
+
+                decoration: BoxDecoration(
+                  color: AppColors.kContainerColor,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(4),
+                    topRight: Radius.circular(4),
+                  ),
+                  border: Border(
+                    top: BorderSide(color: Colors.black),
+                    left: BorderSide(color: Colors.black),
+                    right: BorderSide(color: Colors.black),
+                  ),
+                ),
+                child: Table(
+                  border: TableBorder(
+                    borderRadius: BorderRadius.circular(4),
+                    horizontalInside: BorderSide(color: AppColors.kBorderColor),
+                    verticalInside: BorderSide(color: AppColors.kBorderColor),
+                    bottom: BorderSide(color: Colors.black),
+                  ),
+                  columnWidths: const <int, TableColumnWidth>{
+                    0: FixedColumnWidth(50), // E.Code
+                    1: FixedColumnWidth(60), // Name
+                    2: FixedColumnWidth(70), // Email
+                    3: FixedColumnWidth(74), // Phone
+                    4: FixedColumnWidth(40), // Status
+                    5: FixedColumnWidth(60), // Actions
+                  },
+
+                  children: [
+                    TableRow(
+                      decoration: BoxDecoration(color: Colors.grey[300]),
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'E.Code',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'Name',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'Email',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'phone number',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'Status',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10.0),
+                          child: Text(
+                            'Actions',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // for (int i = 1; i <= 4; i++)
+                    _accountantRow(
+                      code: "1",
+                      name: "Salim",
+                      email: "salim77634@gamil.com",
+                      phone: "9562791690",
+                      onEdit: () {},
+                      onDelete: () {},
+                    ),
+                    _accountantRow(
+                      code: "1",
+                      name: "Ashiq",
+                      email: "@gamil.com",
+                      phone: "46465",
+                      onEdit: () {},
+                      onDelete: () {},
+                    ),
+                    _accountantRow(
+                      code: "1",
+                      name: "Ali",
+                      email: "Ali774@gmail.com",
+                      phone: "95668690",
+                      onEdit: () {},
+                      onDelete: () {},
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
+}
+
+TableRow _accountantRow({
+  required String code,
+  required String name,
+  required String email,
+  required String phone,
+  required VoidCallback onEdit,
+  required VoidCallback onDelete,
+}) {
+  return TableRow(
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Center(child: Text(code, style: FontStyles.body)),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Center(child: Text(name, style: FontStyles.body)),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Center(child: Text(email, style: FontStyles.body)),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Center(child: Text(phone, style: FontStyles.body)),
+      ),
+      // Padding(
+      //   padding: EdgeInsets.symmetric(vertical: 6.h),
+      //   child: Center(
+      //     child: Switch(
+      //       value: true,
+      //       onChanged: (val) {},
+      //       activeColor: Colors.green,
+      //     ),
+      //   ),
+      // ),
+      Icon(Icons.toggle_on, color: Colors.green, size: 31),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 25.w,
+              height: 25.h,
+              decoration: BoxDecoration(
+                color: const Color(0xFF4A60E4),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: onEdit,
+                child: Icon(Icons.edit, color: Colors.white, size: 16.sp),
+              ),
+            ),
+            SizedBox(width: 6.w),
+            Container(
+              width: 25.w,
+              height: 25.h,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFF4C4C),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: onDelete,
+                child: Icon(
+                  Icons.delete_outline,
+                  color: Colors.white,
+                  size: 16.sp,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
+  );
 }
