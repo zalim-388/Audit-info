@@ -1,4 +1,3 @@
-import 'package:audit_info/ui/Branch_manager.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
@@ -120,7 +119,7 @@ class _SrcState extends State<Src> {
                   SizedBox(width: 7.w),
                   GestureDetector(
                     onTap: () {
-                      openDialog(context);
+                      SRCopenDialog(context);
                     },
                     child: Container(
                       height: 28.h,
@@ -383,6 +382,156 @@ TableRow _SrcRow({
               ),
             ),
           ],
+        ),
+      ),
+    ],
+  );
+}
+
+Future<void> SRCopenDialog(BuildContext context) async {
+  return showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        child: Container(
+          width: 358.w,
+          height: 683.h,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(18),
+            color: Colors.white,
+          ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 17.w, vertical: 20.h),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text("Create New SRC", style: FontStyles.heading),
+                      InkWell(
+                        onTap: () => Navigator.pop(context),
+                        child: Icon(Icons.close, color: AppColors.kBorderColor),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 23.h),
+
+                  _fullTextField(title: "Employee Code"),
+                    SizedBox(height: 10.h),
+                  _fullTextField(
+                    title: "Date of Joining",
+
+                    icon: Icons.calendar_today,
+                  ),
+                    SizedBox(height: 10.h),
+                  _fullTextField(title: "Name"),
+                  SizedBox(height: 10.h),
+                  _fullTextField(title: "Email"),
+                  SizedBox(height: 10.h),
+                  _fullTextField(title: "Address"),
+                  SizedBox(height: 10.h),
+                  _fullTextField(title: "Phone Number"),
+                  SizedBox(height: 10.h),
+                  _fullTextField(title: "Password", isPassword: true),
+                  SizedBox(height: 10.h),
+                  _fullTextField(title: "Confirm Password", isPassword: true),
+
+                  SizedBox(height: 10.h),
+                  _fullTextField(
+                    title: "Select branch",
+
+                    icon: Icons.keyboard_arrow_down,
+                  ),
+                    SizedBox(height: 10.h),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _fullTextField(
+                          title: "Salary",
+                          width: double.infinity,
+                          keyboardType: TextInputType.number
+                        ),
+                      ),
+                      SizedBox(width: 13.w),
+                      Expanded(
+                        child: _fullTextField(
+                          title: "point Amount",
+                          width: double.infinity,
+                          keyboardType: TextInputType.number
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 21.h),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 30.h,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                      ),
+                      onPressed: () {},
+                      child: Text(
+                        "Create",
+                        style: GoogleFonts.inter(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+Widget _fullTextField({
+  required String title,
+  IconData? icon,
+  bool isPassword = false,
+  double? width,
+  TextInputType keyboardType = TextInputType.text,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(title, style: FontStyles.body),
+      SizedBox(height: 4.h),
+      SizedBox(
+        height: 30.h,
+        width: width ?? 324.w,
+
+        child: TextField(
+          keyboardType: keyboardType,
+          obscureText: isPassword,
+          decoration: InputDecoration(
+            hintStyle: GoogleFonts.poppins(fontSize: 12),
+            suffixIcon: icon != null ? Icon(icon, size: 18) : null,
+            contentPadding: EdgeInsets.symmetric(horizontal: 12),
+            filled: true,
+            fillColor: Colors.white,
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: BorderSide(color: AppColors.kBorderColor),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: BorderSide(color: AppColors.kBorderColor),
+            ),
+          ),
         ),
       ),
     ],

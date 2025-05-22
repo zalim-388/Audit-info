@@ -1,3 +1,4 @@
+import 'package:audit_info/utils/FontStyle.dart' show FontStyles;
 import 'package:audit_info/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,147 +28,93 @@ class _UpdatepassSheetState extends State<UpdatepassSheet> {
         padding: const EdgeInsets.symmetric(horizontal: 37),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 38.h),
-
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RichText(
-                    textAlign: TextAlign.start,
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '*  ',
-                          style: GoogleFonts.inter(
-                            color: Colors.red,
-                            fontSize: 12,
-                          ),
-                        ),
-
-                        TextSpan(
-                          text: ' password',
-
-                          style: GoogleFonts.inter(
-                            color: Colors.black,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              Text("password", style: FontStyles.body),
               SizedBox(height: 19.h),
 
               /// Password field
-              TextField(
-                obscureText: !_showPassword,
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.symmetric(
-                    vertical: 10.h,
-                    horizontal: 12.w,
-                  ),
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: "  password",
-                  hintStyle: GoogleFonts.inter(
-                    fontSize: 10,
-                    color: const Color(0x42000000),
-                  ),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _showPassword = !_showPassword;
-                      });
-                    },
-                    icon: Icon(
-                      _showPassword ? Icons.visibility : Icons.visibility_off,
+              SizedBox(
+                height: 30.h,
+                width: 324.w,
+                child: TextField(
+                  obscureText: !_showPassword,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 10.h,
+                      horizontal: 12.w,
                     ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Color(0xFFD9D9D9)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Color(0xFFD9D9D9)),
+                    filled: true,
+                    fillColor: Colors.white,
+
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _showPassword = !_showPassword;
+                        });
+                      },
+                      icon: Icon(
+                        _showPassword ? Icons.visibility : Icons.visibility_off,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Color(0xFFD9D9D9)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Color(0xFFD9D9D9)),
+                    ),
                   ),
                 ),
               ),
               SizedBox(height: 15.h),
 
               /// Confirm password label
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  RichText(
-                    textAlign: TextAlign.start,
-                    text: TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '*  ',
-                          style: GoogleFonts.inter(
-                            color: Colors.red,
-                            fontSize: 12,
-                          ),
-                        ),
-
-                        TextSpan(
-                          text: ' confirm password',
-
-                          style: GoogleFonts.inter(
-                            color: Colors.black,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              Text("Confirm password", style: FontStyles.body),
               SizedBox(height: 28.h),
 
-              TextField(
-                obscureText: !_showConfirmPassword,
-                decoration: InputDecoration(
-                  isDense: true,
-                  contentPadding: EdgeInsets.symmetric(vertical: 8),
-                  filled: true,
-                  fillColor: const Color(0xFFE7F1FD),
-                  hintText: "  Confirm password",
-                  hintStyle: GoogleFonts.inter(
-                    fontSize: 10,
-                    color: const Color(0x42000000),
-                  ),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _showConfirmPassword = !_showConfirmPassword;
-                      });
-                    },
-                    icon: Icon(
-                      size: 18,
-                      _showConfirmPassword
-                          ? Icons.visibility
-                          : Icons.visibility_off,
+              SizedBox(
+                height: 30.h,
+                width: 324.w,
+                child: TextField(
+                  obscureText: !_showConfirmPassword,
+                  decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: EdgeInsets.symmetric(vertical: 12),
+                    filled: true,
+                    fillColor: Colors.white,
+
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _showConfirmPassword = !_showConfirmPassword;
+                        });
+                      },
+                      icon: Icon(
+                        size: 18,
+                        _showConfirmPassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
                     ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Color(0xFFD9D9D9)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Color(0xFFD9D9D9)),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Color(0xFFD9D9D9)),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: const BorderSide(color: Color(0xFFD9D9D9)),
+                    ),
                   ),
                 ),
               ),
               SizedBox(height: 15.h),
 
               Container(
-                height: 33.h,
+                height: 30.h,
                 width: double.infinity,
                 decoration: BoxDecoration(
                   color: AppColors.kPrimaryColor,
@@ -176,7 +123,7 @@ class _UpdatepassSheetState extends State<UpdatepassSheet> {
                 alignment: Alignment.center,
                 child: Text(
                   "Update",
-                  style: GoogleFonts.inter(fontSize: 10, color: Colors.white),
+                  style: GoogleFonts.poppins(fontSize: 10, color: Colors.white),
                 ),
               ),
               SizedBox(height: 38.h),

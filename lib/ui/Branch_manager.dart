@@ -22,6 +22,8 @@ class _BranchMangerState extends State<BranchManager> {
     });
   }
 
+  String? selectedBranch = 'Branch 1';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,7 +122,11 @@ class _BranchMangerState extends State<BranchManager> {
                   SizedBox(width: 7.w),
                   GestureDetector(
                     onTap: () {
-                      openDialog(context);
+                      BranchManageropenDialog(context, selectedBranch, (value) {
+                        setState(() {
+                          selectedBranch = value;
+                        });
+                      });
                     },
                     child: Container(
                       height: 28.h,
@@ -283,7 +289,11 @@ TableRow _TableRow(String Id) {
   );
 }
 
-Future<void> openDialog(BuildContext context) async {
+Future<void> BranchManageropenDialog(
+  BuildContext context,
+  String? selectedBranch,
+  Function(String) onBranchSelected,
+) async {
   return showDialog(
     context: context,
     builder: (context) {
@@ -297,77 +307,85 @@ Future<void> openDialog(BuildContext context) async {
             color: Colors.white,
           ),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+            padding: EdgeInsets.symmetric(horizontal: 17.w, vertical: 20.h),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         "Create New Branch Manager",
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: FontStyles.heading,
                       ),
                       InkWell(
                         onTap: () => Navigator.pop(context),
-                        child: Icon(Icons.close),
+                        child: Icon(Icons.close, color: AppColors.kBorderColor),
                       ),
                     ],
                   ),
-                  SizedBox(height: 20.h),
+                  SizedBox(height: 23.h),
 
                   _fullTextField(title: "Employee Code"),
+                  SizedBox(height: 10.h),
                   _fullTextField(
                     title: "Date of Joining",
 
                     icon: Icons.calendar_today,
                   ),
                   _fullTextField(title: "Name"),
+                  SizedBox(height: 10.h),
                   _fullTextField(title: "Email"),
+                  SizedBox(height: 10.h),
                   _fullTextField(title: "Address"),
-                  _fullTextField(title: "Phone Number"),
+                  SizedBox(height: 10.h),
+                  _fullTextField(
+                    title: "Phone Number",
+                    keyboardType: TextInputType.phone,
+                  ),
+                  SizedBox(height: 10.h),
                   _fullTextField(title: "Password", isPassword: true),
+                  SizedBox(height: 10.h),
                   _fullTextField(title: "Confirm Password", isPassword: true),
-
-                  SizedBox(height: 20.h),
-                  Row(
-                    children: [
-                      Expanded(child: _smallTextField(title: "Address")),
-                      SizedBox(width: 14.w),
-                      Expanded(child: _smallTextField(title: "Phone Number")),
-                    ],
+                  SizedBox(height: 10.h),
+                  customDropdown(
+                    context: context,
+                    title: "Select Branch",
+                    selectedValue: selectedBranch,
+                    items: ['Branch 1', 'Branch 2', 'Branch 3'],
+                    onSelected: (value) {
+                      onBranchSelected(value);
+                    },
                   ),
 
-                  SizedBox(height: 21.h),
+                  SizedBox(height: 10.h),
+
                   Row(
                     children: [
-                      Expanded(child: _smallTextField(title: "password")),
-                      SizedBox(width: 14.w),
                       Expanded(
-                        child: _smallTextField(title: "Confirom password"),
+                        child: _fullTextField(
+                          title: "Point Amount",
+                          width: double.infinity,
+                          keyboardType: TextInputType.number,
+                        ),
+                      ),
+                      SizedBox(width: 13.w),
+                      Expanded(
+                        child: _fullTextField(
+                          title: "Salary",
+                          width: double.infinity,
+                          keyboardType: TextInputType.number,
+                        ),
                       ),
                     ],
                   ),
+
                   SizedBox(height: 21.h),
-
-                  Row(
-                    children: [
-                      _smallTextField(title: "Select branch"),
-                      SizedBox(width: 10.w),
-                      _smallTextField(title: "Point Amount"),
-                      SizedBox(width: 10.w),
-                      _smallTextField(title: "Salary"),
-                    ],
-                  ),
-
-                  SizedBox(height: 25.h),
                   SizedBox(
                     width: double.infinity,
-                    height: 44.h,
+                    height: 30.h,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.orange,
@@ -397,71 +415,98 @@ Future<void> openDialog(BuildContext context) async {
 
 Widget _fullTextField({
   required String title,
-
   IconData? icon,
   bool isPassword = false,
+  double? width,
+  TextInputType keyboardType = TextInputType.text,
 }) {
-  return Padding(
-    padding: EdgeInsets.only(bottom: 18.h),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title),
-        SizedBox(height: 6.h),
-        SizedBox(
-          height: 40.h,
-          child: TextField(
-            obscureText: isPassword,
-            decoration: InputDecoration(
-              hintStyle: GoogleFonts.poppins(fontSize: 12),
-              suffixIcon: icon != null ? Icon(icon, size: 18) : null,
-              contentPadding: EdgeInsets.symmetric(horizontal: 12),
-              filled: true,
-              fillColor: Colors.white,
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
-                borderSide: BorderSide(color: AppColors.kBorderColor),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
-                borderSide: BorderSide(color: AppColors.kBorderColor),
-              ),
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(title, style: FontStyles.body),
+      SizedBox(height: 4.h),
+      SizedBox(
+        height: 30.h,
+        width: width ?? 324.w,
+        child: TextField(
+          keyboardType: keyboardType,
+          obscureText: isPassword,
+          decoration: InputDecoration(
+            hintStyle: GoogleFonts.poppins(fontSize: 12),
+            suffixIcon: icon != null ? Icon(icon, size: 18) : null,
+            contentPadding: EdgeInsets.symmetric(horizontal: 12),
+            filled: true,
+            fillColor: Colors.white,
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: BorderSide(color: AppColors.kBorderColor),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: BorderSide(color: AppColors.kBorderColor),
             ),
           ),
         ),
-      ],
-    ),
+      ),
+    ],
   );
 }
 
-Widget _smallTextField({required String title}) {
-  return Expanded(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: GoogleFonts.inter(fontSize: 12)),
-        SizedBox(height: 6.h),
-        Container(
-          height: 30.h,
-          child: TextField(
-            decoration: InputDecoration(
-              hintStyle: GoogleFonts.inter(fontSize: 12),
-              contentPadding: EdgeInsets.symmetric(horizontal: 10),
-              filled: true,
-              fillColor: Colors.white,
-
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
-                borderSide: BorderSide(color: AppColors.kBorderColor),
+Widget customDropdown({
+  required BuildContext context,
+  required String title,
+  required String? selectedValue,
+  required void Function(String value) onSelected,
+  required List<String> items,
+  double? width,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(title, style: FontStyles.body),
+      SizedBox(height: 4.h),
+      Container(
+        height: 27.h,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 6),
+        child: GestureDetector(
+          onTapDown: (details) async {
+            final selected = await showMenu<String>(
+              context: context,
+              position: RelativeRect.fromLTRB(
+                details.globalPosition.dx,
+                details.globalPosition.dy,
+                details.globalPosition.dx,
+                details.globalPosition.dy,
               ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(6),
-                borderSide: BorderSide(color: AppColors.kBorderColor),
+              items:
+                  items.map((item) {
+                    return PopupMenuItem<String>(
+                      value: item,
+                      child: Text(item),
+                    );
+                  }).toList(),
+            );
+            if (selected != null) {
+              onSelected(selected);
+            }
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                selectedValue ?? title,
+                style: GoogleFonts.inter(fontSize: 10, color: Colors.grey),
               ),
-            ),
+              const Icon(Icons.keyboard_arrow_down, size: 16),
+            ],
           ),
         ),
-      ],
-    ),
+      ),
+    ],
   );
 }

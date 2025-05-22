@@ -1,4 +1,3 @@
-import 'package:audit_info/ui/Branch_manager.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
@@ -117,7 +116,7 @@ class _StudentManagmentState extends State<StudentManagment> {
                   SizedBox(width: 7.w),
                   GestureDetector(
                     onTap: () {
-                      openDialog(context);
+                      // openDialog(context);
                     },
                     child: Container(
                       height: 28.h,

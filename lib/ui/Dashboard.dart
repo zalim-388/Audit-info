@@ -300,7 +300,7 @@ class _DashboardState extends State<Dashboard> {
                                   children: [
                                     Text(
                                       selectedBranch ?? 'Select Branch',
-                                      style: GoogleFonts.inter(
+                                      style: GoogleFonts.poppins(
                                         fontSize: 10,
                                         color: const Color(0xFF868686),
                                       ),
