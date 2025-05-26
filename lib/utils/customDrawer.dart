@@ -378,7 +378,7 @@ Widget _Draweritems({
                       ? Icon(Icons.keyboard_arrow_down, color: Colors.white)
                       : null,
               selected: isSelected,
-              selectedTileColor: AppColors.kPrimaryColor,
+              // selectedTileColor: AppColors.kPrimaryColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),

@@ -17,9 +17,33 @@ class LeadManagment extends StatefulWidget {
 
 class _LeadManagmentState extends State<LeadManagment> {
   int _selectedIndex = 8;
+  bool showDropdown = false;
+  Map<int, bool> expandAction = {}; // To store selected items
+
+  String? selectedItem;
+  String? selectedSchool;
+  String? selectedStatus;
+  String? selectedBranch;
+
+  final List<String> schools = ['School 1', 'School 2', 'School 3'];
+  final List<String> statuses = ['REGISTERED', 'PENDING', 'REJECTED'];
+  final List<String> branches = ['Branch A', 'Branch B', 'Branch C'];
+
   void _onitemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+    });
+  }
+
+  void _filterleads() {
+    setState(() {
+      showDropdown = !showDropdown;
+    });
+  }
+
+  void _ActionRow(int index) {
+    setState(() {
+      expandAction[index] = !(expandAction[index] ?? false);
     });
   }
 
@@ -37,12 +61,28 @@ class _LeadManagmentState extends State<LeadManagment> {
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         leading: Builder(
           builder:
-              (context) => IconButton(
-                icon: const Icon(Icons.more_vert, color: Colors.black),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-              ),
+              (context) =>
+                  showDropdown
+                      ? IconButton(
+                        icon: const Icon(Icons.arrow_back, color: Colors.black),
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LeadManagment(),
+                            ),
+                          );
+                          setState(() {
+                            showDropdown = false;
+                          });
+                        },
+                      )
+                      : IconButton(
+                        icon: const Icon(Icons.more_vert, color: Colors.black),
+                        onPressed: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                      ),
         ),
         title: Text(" Lead Managment", style: FontStyles.heading),
         actions: [
@@ -94,8 +134,10 @@ class _LeadManagmentState extends State<LeadManagment> {
                       borderRadius: BorderRadius.circular(4),
                     ),
                     alignment: Alignment.center,
+
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: _filterleads,
+
                       child: Icon(
                         Icons.filter_list_alt,
                         size: 16,
@@ -104,104 +146,189 @@ class _LeadManagmentState extends State<LeadManagment> {
                     ),
                   ),
 
-                  SizedBox(width: 143.w),
-                  Container(
-                    height: 28.h,
-                    width: 88.w,
-                    decoration: BoxDecoration(
-                      color: AppColors.kPrimaryColor,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(width: 6.w),
-                        Text(
-                          "Upload lead",
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 10,
-                          ),
-                        ),
-                        SizedBox(width: 3.w),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              ModalBottomSheetRoute(
-                                builder:
-                                    (context) => _modalBottomSheet(context),
-                                isScrollControlled: true,
-                              ),
-                            );
-                          },
-                          child: Container(
-                            height: 18.h,
-                            width: 18.w,
-                            decoration: BoxDecoration(
+                  if (!showDropdown) ...[
+                    Spacer(),
+                    Container(
+                      height: 28.h,
+                      width: 88.w,
+                      decoration: BoxDecoration(
+                        color: AppColors.kPrimaryColor,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(width: 6.w),
+                          Text(
+                            "Upload lead",
+                            style: GoogleFonts.poppins(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                            alignment: Alignment.center,
-                            child: Icon(
-                              Icons.add,
-                              color: AppColors.kPrimaryColor,
-                              size: 15,
+                              fontSize: 10,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(width: 8.w),
-                  Container(
-                    height: 28.h,
-                    width: 88.w,
-
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(width: 8.w),
-                        Text(
-                          "Add lead",
-                          style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 10,
-                          ),
-                        ),
-                        SizedBox(width: 11.w),
-                        GestureDetector(
-                          onTap: () {
-                            Addlead(context);
-                          },
-                          child: Container(
-                            height: 28.h,
-                            width: 28.w,
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            decoration: const BoxDecoration(
-                              image: DecorationImage(
-                                image: AssetImage("assets/icon/Group 189.png"),
-                                fit: BoxFit.cover,
+                          SizedBox(width: 3.w),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                ModalBottomSheetRoute(
+                                  builder:
+                                      (context) => _modalBottomSheet(context),
+                                  isScrollControlled: true,
+                                ),
+                              );
+                            },
+                            child: Container(
+                              height: 18.h,
+                              width: 18.w,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                              alignment: Alignment.center,
+                              child: Icon(
+                                Icons.add,
+                                color: AppColors.kPrimaryColor,
+                                size: 15,
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
+
+                    SizedBox(width: 8.w),
+                    Container(
+                      height: 28.h,
+                      width: 88.w,
+
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(width: 8.w),
+                          Text(
+                            "Add lead",
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 10,
+                            ),
+                          ),
+                          SizedBox(width: 11.w),
+                          GestureDetector(
+                            onTap: () {
+                              Addlead(context);
+                            },
+                            child: Container(
+                              height: 28.h,
+                              width: 28.w,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                              ),
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image: AssetImage(
+                                    "assets/icon/Group 189.png",
+                                  ),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ],
               ),
+              if (showDropdown) ...[
+                SizedBox(height: 20.h),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10.h),
+
+                    _fullTextField(
+                      title: "Start date - End date",
+                      width: 360.w,
+                      icon: Icons.calendar_today,
+                    ),
+
+                    SizedBox(height: 5.h),
+                    _buildDropdownField(
+                      "Select school",
+                      selectedSchool,
+                      schools,
+                      "Select school",
+                      (value) => setState(() => selectedSchool = value),
+                      context,
+                    ),
+                    SizedBox(height: 10.h),
+                    _buildDropdownField(
+                      "Select status",
+                      selectedStatus,
+                      statuses,
+                      "Select status",
+                      (value) => setState(() => selectedStatus = value),
+                      context,
+                    ),
+                    SizedBox(height: 10.h),
+                    _buildDropdownField(
+                      "Select branch",
+                      selectedBranch,
+                      branches,
+                      "Select branch",
+                      (value) => setState(() => selectedBranch = value),
+                      context,
+                    ),
+                    SizedBox(height: 20.h),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 250),
+                      child: GestureDetector(
+                        onTap: () {
+                          // Add your show functionality here
+                          print('Show button tapped');
+                        },
+                        child: Container(
+                          height: 30.h,
+                          width: 120.w,
+                          decoration: BoxDecoration(
+                            color: AppColors.kPrimaryColor,
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Show",
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 6.h),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Results",
+                        style: GoogleFonts.poppins(
+                          fontSize: 12.sp,
+                          color: AppColors.kTextColor,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
 
               SizedBox(height: 13.h),
 
               Container(
                 width: 358.w,
-
                 decoration: BoxDecoration(
                   color: AppColors.kContainerColor,
                   borderRadius: const BorderRadius.only(
@@ -217,19 +344,19 @@ class _LeadManagmentState extends State<LeadManagment> {
                 child: Table(
                   border: TableBorder(
                     borderRadius: BorderRadius.circular(9),
-
                     horizontalInside: BorderSide(color: AppColors.kBorderColor),
                     verticalInside: BorderSide(color: AppColors.kBorderColor),
                     bottom: BorderSide(color: Colors.black),
                   ),
                   columnWidths: const <int, TableColumnWidth>{
-                    0: FixedColumnWidth(55), // Si.no
-                    1: FixedColumnWidth(80), // Name (with icon)
-                    2: FixedColumnWidth(74), // Phone number (long)
-                    3: FixedColumnWidth(60), // Address
-                    4: FixedColumnWidth(60), // Actions (two buttons)
+                    0: FixedColumnWidth(55), // Date
+                    1: FixedColumnWidth(70), // Name
+                    2: FixedColumnWidth(74), // School Name
+                    3: FixedColumnWidth(60), // SRC
+                    4: FixedColumnWidth(65), // Phone Number
+                    5: FixedColumnWidth(65), // Status
+                    6: FixedColumnWidth(80), // Actions (new column)
                   },
-
                   children: [
                     TableRow(
                       decoration: BoxDecoration(
@@ -246,7 +373,6 @@ class _LeadManagmentState extends State<LeadManagment> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-
                         Padding(
                           padding: const EdgeInsets.all(10),
                           child: Text(
@@ -259,11 +385,22 @@ class _LeadManagmentState extends State<LeadManagment> {
                             ),
                           ),
                         ),
-
                         Padding(
                           padding: const EdgeInsets.all(10),
                           child: Text(
-                            'SChool Name',
+                            'School Name',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Text(
+                            'SRC',
                             textAlign: TextAlign.center,
                             style: GoogleFonts.poppins(
                               fontSize: 10.sp,
@@ -284,19 +421,6 @@ class _LeadManagmentState extends State<LeadManagment> {
                             ),
                           ),
                         ),
-
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            'SRC',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
                         Padding(
                           padding: const EdgeInsets.all(10),
                           child: Text(
@@ -309,7 +433,27 @@ class _LeadManagmentState extends State<LeadManagment> {
                             ),
                           ),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Text(
+                            'Actions',
+                            textAlign: TextAlign.center,
+                            style: GoogleFonts.poppins(
+                              fontSize: 10.sp,
+                              color: AppColors.kTextColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ],
+                    ),
+                    _leadRow(
+                      Date: "1/2/2022",
+                      name: "SAlim",
+                      Schoolname: "",
+                      Src: "",
+                      phonenumber: "65347595",
+                      Status: 'Registered',
                     ),
                     _leadRow(
                       Date: "1/2/2022",
@@ -338,6 +482,7 @@ TableRow _leadRow({
   required String phonenumber,
   required String Status,
 }) {
+    bool _isExpanded = false;
   return TableRow(
     children: [
       Padding(
@@ -356,7 +501,6 @@ TableRow _leadRow({
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Center(child: Text(Src, style: FontStyles.body)),
       ),
-
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Center(child: Text(phonenumber, style: FontStyles.body)),
@@ -370,35 +514,80 @@ TableRow _leadRow({
           ),
         ),
       ),
-    ],
-  );
-}
-
-// Actions Row
-TableRow _actionsRow(VoidCallback DownArrow) {
-  return TableRow(
-    children: [
-      Container(
-        height: 12.h,
-        width: 352.w,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(2),
-          color: Color(0xFFF2F2F2),
-        ),
-        alignment: Alignment.centerLeft,
-        child: Row(
-          children: [
-            Text("Actions", style: FontStyles.bold),
-
-            SizedBox(width: 285.w),
-            IconButton(
-              onPressed: DownArrow,
-              icon: Icon(Icons.keyboard_arrow_down),
-            ),
-          ],
-        ),
-      ),
-    ],
+      // Add the Actions column with ExpansionTile
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Center(
+          child:  GestureDetector(
+          onTap: () {
+            // setState(() {
+            //   _isExpanded = !_isExpanded;
+            // });
+          },
+          child: Image.asset(
+            _isExpanded
+                ? 'assets/arrow_up.png'
+                : 'assets/arrow_down.png',
+            height: 18,
+            width: 18,
+          ),
+          
+        )
+        if (_isExpanded)
+          Padding(
+            padding: const EdgeInsets.only(top: 6.0),
+            child:  Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.remove_red_eye,
+                      color: Colors.orange,
+                    ),
+                    onPressed: () {
+                      // Add your view action here
+                    },
+                    iconSize: 20,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.grid_view, color: Colors.blue),
+                    onPressed: () {
+                      // Add your grid action here
+                    },
+                    iconSize: 20,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.pink),
+                    onPressed: () {
+                      // Add your delete action here
+                    },
+                    iconSize: 20,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.note, color: Colors.orange),
+                    onPressed: () {
+                      // Add your note action here
+                    },
+                    iconSize: 20,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.phone, color: Colors.green),
+                    onPressed: () {
+                      // Add your call action here
+                    },
+                    iconSize: 20,
+                  ),
+                ],
+              ),
+          ),
+        )
+      )
+            ],
+            
+          
+        
+      
+  
   );
 }
 
