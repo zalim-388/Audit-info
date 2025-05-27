@@ -1,3 +1,5 @@
+import 'package:audit_info/ui/leadcall.dart';
+import 'package:audit_info/ui/leadhistory.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
@@ -18,7 +20,7 @@ class LeadManagment extends StatefulWidget {
 class _LeadManagmentState extends State<LeadManagment> {
   int _selectedIndex = 8;
   bool showDropdown = false;
-  Map<int, bool> expandAction = {}; // To store selected items
+  bool _isVisible = false;
 
   String? selectedItem;
   String? selectedSchool;
@@ -41,9 +43,9 @@ class _LeadManagmentState extends State<LeadManagment> {
     });
   }
 
-  void _ActionRow(int index) {
+  void _toggleVisibility() {
     setState(() {
-      expandAction[index] = !(expandAction[index] ?? false);
+      _isVisible = !_isVisible;
     });
   }
 
@@ -86,6 +88,7 @@ class _LeadManagmentState extends State<LeadManagment> {
         ),
         title: Text(" Lead Managment", style: FontStyles.heading),
         actions: [
+             if (!showDropdown)
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
             child: GestureDetector(
@@ -111,6 +114,7 @@ class _LeadManagmentState extends State<LeadManagment> {
               ),
             ),
           ),
+             if (!showDropdown)
           IconButton(
             onPressed: () {},
             icon: const Icon(Icons.logout_rounded, color: Color(0xFF414143)),
@@ -121,350 +125,491 @@ class _LeadManagmentState extends State<LeadManagment> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 23),
         child: SingleChildScrollView(
-          child: Column(
+          child: Stack(
             children: [
-              SizedBox(height: 13.h),
-              Row(
+              Column(
                 children: [
-                  Container(
-                    width: 25.w,
-                    height: 25.h,
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    alignment: Alignment.center,
+                  SizedBox(height: 13.h),
+                  Row(
+                    children: [
+                      Container(
+                        width: 25.w,
+                        height: 25.h,
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        alignment: Alignment.center,
 
-                    child: GestureDetector(
-                      onTap: _filterleads,
+                        child: GestureDetector(
+                          onTap: _filterleads,
 
-                      child: Icon(
-                        Icons.filter_list_alt,
-                        size: 16,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-
-                  if (!showDropdown) ...[
-                    Spacer(),
-                    Container(
-                      height: 28.h,
-                      width: 88.w,
-                      decoration: BoxDecoration(
-                        color: AppColors.kPrimaryColor,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(width: 6.w),
-                          Text(
-                            "Upload lead",
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 10,
-                            ),
+                          child: Icon(
+                            Icons.filter_list_alt,
+                            size: 16,
+                            color: Colors.white,
                           ),
-                          SizedBox(width: 3.w),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                ModalBottomSheetRoute(
-                                  builder:
-                                      (context) => _modalBottomSheet(context),
-                                  isScrollControlled: true,
-                                ),
-                              );
-                            },
-                            child: Container(
-                              height: 18.h,
-                              width: 18.w,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                              alignment: Alignment.center,
-                              child: Icon(
-                                Icons.add,
-                                color: AppColors.kPrimaryColor,
-                                size: 15,
-                              ),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                    ),
 
-                    SizedBox(width: 8.w),
-                    Container(
-                      height: 28.h,
-                      width: 88.w,
-
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(width: 8.w),
-                          Text(
-                            "Add lead",
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 10,
-                            ),
-                          ),
-                          SizedBox(width: 11.w),
-                          GestureDetector(
-                            onTap: () {
-                              Addlead(context);
-                            },
-                            child: Container(
-                              height: 28.h,
-                              width: 28.w,
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                              ),
-                              decoration: const BoxDecoration(
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                    "assets/icon/Group 189.png",
-                                  ),
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-              if (showDropdown) ...[
-                SizedBox(height: 20.h),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 10.h),
-
-                    _fullTextField(
-                      title: "Start date - End date",
-                      width: 360.w,
-                      icon: Icons.calendar_today,
-                    ),
-
-                    SizedBox(height: 5.h),
-                    _buildDropdownField(
-                      "Select school",
-                      selectedSchool,
-                      schools,
-                      "Select school",
-                      (value) => setState(() => selectedSchool = value),
-                      context,
-                    ),
-                    SizedBox(height: 10.h),
-                    _buildDropdownField(
-                      "Select status",
-                      selectedStatus,
-                      statuses,
-                      "Select status",
-                      (value) => setState(() => selectedStatus = value),
-                      context,
-                    ),
-                    SizedBox(height: 10.h),
-                    _buildDropdownField(
-                      "Select branch",
-                      selectedBranch,
-                      branches,
-                      "Select branch",
-                      (value) => setState(() => selectedBranch = value),
-                      context,
-                    ),
-                    SizedBox(height: 20.h),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 250),
-                      child: GestureDetector(
-                        onTap: () {
-                          // Add your show functionality here
-                          print('Show button tapped');
-                        },
-                        child: Container(
-                          height: 30.h,
-                          width: 120.w,
+                      if (!showDropdown) ...[
+                        Spacer(),
+                        Container(
+                          height: 28.h,
+                          width: 88.w,
                           decoration: BoxDecoration(
                             color: AppColors.kPrimaryColor,
-                            borderRadius: BorderRadius.circular(7),
+                            borderRadius: BorderRadius.circular(4),
                           ),
-                          alignment: Alignment.center,
-                          child: Text(
-                            "Show",
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 12,
-                            ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(width: 6.w),
+                              Text(
+                                "Upload lead",
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                ),
+                              ),
+                              SizedBox(width: 3.w),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    ModalBottomSheetRoute(
+                                      builder:
+                                          (context) =>
+                                              _modalBottomSheet(context),
+                                      isScrollControlled: true,
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  height: 18.h,
+                                  width: 18.w,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                  alignment: Alignment.center,
+                                  child: Icon(
+                                    Icons.add,
+                                    color: AppColors.kPrimaryColor,
+                                    size: 15,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    ),
-                    SizedBox(height: 6.h),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Results",
-                        style: GoogleFonts.poppins(
-                          fontSize: 12.sp,
-                          color: AppColors.kTextColor,
+
+                        SizedBox(width: 8.w),
+                        Container(
+                          height: 28.h,
+                          width: 88.w,
+
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SizedBox(width: 8.w),
+                              Text(
+                                "Add lead",
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                ),
+                              ),
+                              SizedBox(width: 11.w),
+                              GestureDetector(
+                                onTap: () {
+                                  Addlead(context);
+                                },
+                                child: Container(
+                                  height: 28.h,
+                                  width: 28.w,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  decoration: const BoxDecoration(
+                                    image: DecorationImage(
+                                      image: AssetImage(
+                                        "assets/icon/Group 189.png",
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-
-              SizedBox(height: 13.h),
-
-              Container(
-                width: 358.w,
-                decoration: BoxDecoration(
-                  color: AppColors.kContainerColor,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(9),
-                    topRight: Radius.circular(9),
+                      ],
+                    ],
                   ),
-                  border: Border(
-                    top: BorderSide(color: Colors.black),
-                    left: BorderSide(color: Colors.black),
-                    right: BorderSide(color: Colors.black),
-                  ),
-                ),
-                child: Table(
-                  border: TableBorder(
-                    borderRadius: BorderRadius.circular(9),
-                    horizontalInside: BorderSide(color: AppColors.kBorderColor),
-                    verticalInside: BorderSide(color: AppColors.kBorderColor),
-                    bottom: BorderSide(color: Colors.black),
-                  ),
-                  columnWidths: const <int, TableColumnWidth>{
-                    0: FixedColumnWidth(55), // Date
-                    1: FixedColumnWidth(70), // Name
-                    2: FixedColumnWidth(74), // School Name
-                    3: FixedColumnWidth(60), // SRC
-                    4: FixedColumnWidth(65), // Phone Number
-                    5: FixedColumnWidth(65), // Status
-                    6: FixedColumnWidth(80), // Actions (new column)
-                  },
-                  children: [
-                    TableRow(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(9),
-                        color: Colors.grey[300],
-                      ),
+                  if (showDropdown) ...[
+                    SizedBox(height: 20.h),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Date',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            fontSize: 10.sp,
-                            color: AppColors.kTextColor,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        SizedBox(height: 10.h),
+
+                        _fullTextField(
+                          title: "Start date - End date",
+                          width: 360.w,
+                          icon: Icons.calendar_today,
                         ),
+
+                        SizedBox(height: 5.h),
+                        _buildDropdownField(
+                          "Select school",
+                          selectedSchool,
+                          schools,
+                          "Select school",
+                          (value) => setState(() => selectedSchool = value),
+                          context,
+                        ),
+                        SizedBox(height: 10.h),
+                        _buildDropdownField(
+                          "Select status",
+                          selectedStatus,
+                          statuses,
+                          "Select status",
+                          (value) => setState(() => selectedStatus = value),
+                          context,
+                        ),
+                        SizedBox(height: 10.h),
+                        _buildDropdownField(
+                          "Select branch",
+                          selectedBranch,
+                          branches,
+                          "Select branch",
+                          (value) => setState(() => selectedBranch = value),
+                          context,
+                        ),
+                        SizedBox(height: 20.h),
                         Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            'Name',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
+                          padding: const EdgeInsets.only(left: 250),
+                          child: GestureDetector(
+                            onTap: () {
+                              // Add your show functionality here
+                              print('Show button tapped');
+                            },
+                            child: Container(
+                              height: 30.h,
+                              width: 120.w,
+                              decoration: BoxDecoration(
+                                color: AppColors.kPrimaryColor,
+                                borderRadius: BorderRadius.circular(7),
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                "Show",
+                                style: GoogleFonts.poppins(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                              ),
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(10),
+                        SizedBox(height: 6.h),
+                        Align(
+                          alignment: Alignment.centerLeft,
                           child: Text(
-                            'School Name',
-                            textAlign: TextAlign.center,
+                            "Results",
                             style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
+                              fontSize: 12.sp,
                               color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            'SRC',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            'Phone number',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            'Status',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Text(
-                            'Actions',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ],
                     ),
-                    _leadRow(
-                      Date: "1/2/2022",
-                      name: "SAlim",
-                      Schoolname: "",
-                      Src: "",
-                      phonenumber: "65347595",
-                      Status: 'Registered',
-                    ),
-                    _leadRow(
-                      Date: "1/2/2022",
-                      name: "SAlim",
-                      Schoolname: "",
-                      Src: "",
-                      phonenumber: "65347595",
-                      Status: 'Registered',
-                    ),
                   ],
-                ),
+
+                  SizedBox(height: 13.h),
+
+                  Container(
+                    width: 358.w,
+                    decoration: BoxDecoration(
+                      color: AppColors.kContainerColor,
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(9),
+                        topRight: Radius.circular(9),
+                      ),
+                      border: Border(
+                        top: BorderSide(color: Colors.black),
+                        left: BorderSide(color: Colors.black),
+                        right: BorderSide(color: Colors.black),
+                      ),
+                    ),
+                    child: Table(
+                      border: TableBorder(
+                        borderRadius: BorderRadius.circular(9),
+                        horizontalInside: BorderSide(color: Color(0xFFF2F2F2)),
+                        verticalInside: BorderSide(color: Color(0xFFF2F2F2)),
+                        // bottom: BorderSide(color: Colors.black),
+                      ),
+                      columnWidths: const <int, TableColumnWidth>{
+                        0: FixedColumnWidth(55), // Date
+                        1: FixedColumnWidth(70), // Name
+                        2: FixedColumnWidth(65), // School Name
+                        3: FixedColumnWidth(60), // SRC
+                        4: FixedColumnWidth(65), // Phone Number
+                        5: FixedColumnWidth(60), // Status
+                      },
+                      children: [
+                        TableRow(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(9),
+                            color: Colors.grey[300],
+                          ),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: Text(
+                                'Date',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 10.sp,
+                                  color: AppColors.kTextColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: Text(
+                                'Name',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 10.sp,
+                                  color: AppColors.kTextColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: Text(
+                                'School Name',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 10.sp,
+                                  color: AppColors.kTextColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: Text(
+                                'SRC',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 10.sp,
+                                  color: AppColors.kTextColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: Text(
+                                'Phone number',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 10.sp,
+                                  color: AppColors.kTextColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6),
+                              child: Text(
+                                'Status',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 10.sp,
+                                  color: AppColors.kTextColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        _leadRow(
+                          Date: "1/2/2022",
+                          name: "SAlim",
+                          Schoolname: "",
+                          Src: "",
+                          phonenumber: "65347595",
+                          Status: 'Registered',
+                        ),
+
+                        // _leadRow(
+                        //   Date: "1/2/2022",
+                        //   name: "SAlim",
+                        //   Schoolname: "",
+                        //   Src: "",
+                        //   phonenumber: "65347595",
+                        //   Status: 'Registered',
+                        // ),
+                        // _leadRow(
+                        //   Date: "1/2/2022",
+                        //   name: "SAlim",
+                        //   Schoolname: "",
+                        //   Src: "",
+                        //   phonenumber: "65347595",
+                        //   Status: 'Registered',
+                        // ),
+                      ],
+                    ),
+                  ),
+
+                  SizedBox(height: 10.h),
+                  Positioned(
+                    top: 100,
+                    child: Column(
+                      children: [
+                        _buildActions(
+                          isVisible: _isVisible,
+                          toggleVisibility: _toggleVisibility,
+                        ),
+                        if (_isVisible)
+                          Container(
+                            height: 35.h,
+                            width: double.infinity,
+                            // padding: const EdgeInsets.symmetric(vertical: 8),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => LeadHistory(context),
+                                      ),
+                                    );
+                                    print('Show button tapped');
+                                  },
+                                  child: Container(
+                                    height: 25.h,
+                                    width: 25.w,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFFF6212),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Icon(
+                                      Icons.visibility,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+
+                                GestureDetector(
+                                  onTap: () => print('Edit button tapped'),
+                                  child: Container(
+                                    height: 25.h,
+                                    width: 25.w,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF4D5CFF),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Icon(
+                                      Icons.edit,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  child: Container(
+                                    height: 25.h,
+                                    width: 25.w,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFEF615B),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Icon(
+                                      Icons.delete,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  child: Container(
+                                    height: 25.h,
+                                    width: 25.w,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFFB952C),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Icon(
+                                      Icons.description,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder:
+                                            (context) => Leadcall(),
+                                      ),
+                                    );
+                                  },
+                                  child: Container(
+                                    height: 25.h,
+                                    width: 25.w,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF19A246),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    alignment: Alignment.center,
+                                    child: Icon(
+                                      Icons.phone,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  // Positioned(
+                  //   child: _buildActions(
+                  //     isVisible: _isVisible,
+                  //     toggleVisibility: _toggleVisibility,
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   child: _buildActions(
+                  //     isVisible: _isVisible,
+                  //     toggleVisibility: _toggleVisibility,
+                  //   ),
+                  // ),
+                ],
               ),
             ],
           ),
@@ -482,8 +627,11 @@ TableRow _leadRow({
   required String phonenumber,
   required String Status,
 }) {
-    bool _isExpanded = false;
   return TableRow(
+    decoration: BoxDecoration(
+      color: Colors.white,
+      border: Border(bottom: BorderSide.none),
+    ),
     children: [
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -514,80 +662,48 @@ TableRow _leadRow({
           ),
         ),
       ),
-      // Add the Actions column with ExpansionTile
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(
-          child:  GestureDetector(
-          onTap: () {
-            // setState(() {
-            //   _isExpanded = !_isExpanded;
-            // });
-          },
-          child: Image.asset(
-            _isExpanded
-                ? 'assets/arrow_up.png'
-                : 'assets/arrow_down.png',
-            height: 18,
-            width: 18,
+    ],
+  );
+}
+
+Widget _buildActions({
+  required bool isVisible,
+  required VoidCallback toggleVisibility,
+}) {
+  return Column(
+    children: [
+      GestureDetector(
+        onTap: toggleVisibility,
+        child: Container(
+          height: 12.h,
+          width: 352.w,
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(4),
           ),
-          
-        )
-        if (_isExpanded)
-          Padding(
-            padding: const EdgeInsets.only(top: 6.0),
-            child:  Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.remove_red_eye,
-                      color: Colors.orange,
-                    ),
-                    onPressed: () {
-                      // Add your view action here
-                    },
-                    iconSize: 20,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.grid_view, color: Colors.blue),
-                    onPressed: () {
-                      // Add your grid action here
-                    },
-                    iconSize: 20,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete, color: Colors.pink),
-                    onPressed: () {
-                      // Add your delete action here
-                    },
-                    iconSize: 20,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.note, color: Colors.orange),
-                    onPressed: () {
-                      // Add your note action here
-                    },
-                    iconSize: 20,
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.phone, color: Colors.green),
-                    onPressed: () {
-                      // Add your call action here
-                    },
-                    iconSize: 20,
-                  ),
-                ],
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 16),
+                child: Text(
+                  "Actions",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
+                ),
               ),
-          ),
-        )
-      )
+              Spacer(),
+              Center(
+                child: Icon(
+                  isVisible
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down,
+                ),
+              ),
             ],
-            
-          
-        
-      
-  
+          ),
+        ),
+      ),
+    ],
   );
 }
 

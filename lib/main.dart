@@ -1,4 +1,5 @@
-import 'package:audit_info/ui/Dashboard.dart';
+import 'package:audit_info/ui/leadcall.dart';
+import 'package:audit_info/ui/student_managment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           // home: Loginpage(),
-          home: Dashboard(),
+          home: StudentManagment(),
 
           // home: LeadManagment(),
         );
