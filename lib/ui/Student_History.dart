@@ -1,6 +1,5 @@
 import 'package:audit_info/ui/student_managment.dart';
 import 'package:audit_info/utils/FontStyle.dart';
-import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,15 +24,16 @@ class _StudentHistoryState extends State<StudentHistory> {
         shadowColor: Colors.grey.withOpacity(0.4),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => StudentManagment()),
-              );
-            },
-          ),
+          builder:
+              (context) => IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => StudentManagment()),
+                  );
+                },
+              ),
         ),
         title: Text("StudentHistory", style: FontStyles.heading),
         actions: [
@@ -75,131 +75,269 @@ class _StudentHistoryState extends State<StudentHistory> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 22.h),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildInfoText('Student Name: Babu'),
-                  _buildInfoText('Phone Number: 9875647465'),
-                  _buildInfoText('Address: Nil'),
-                  _buildInfoText('School: PKM'),
-                  _buildInfoText('College: MSP'),
-                  _buildInfoText('Course: Bc'),
-                  _buildInfoText('SRC: -'),
-                  _buildInfoText('SRO: -'),
-                  _buildInfoText('Branch: -'),
-                  SizedBox(height: 10.h),
-                  _buildCheckBoxRow(),
-                  SizedBox(height: 20.h),
-                  _buildCommentBox(),
-                ],
+            buildInfoRow('Student Name', 'Babu'),
+            buildInfoRow('Phone Number', '9875647465'),
+            buildInfoRow('Address', 'Nil'),
+            buildInfoRow('SRC Name', 'N/A'),
+            buildInfoRow('School Name', 'PKM'),
+            buildInfoRow('College', 'msp'),
+            buildInfoRow('Course', ''),
+            buildInfoRow('SRC', ''),
+            buildInfoRow('SRO', ''),
+            buildInfoRow("Certificates", ""),
+
+            Row(
+              children: [
+                Column(children: [_Certificates("SSLC"), _Certificates("CC")]),
+                Column(
+                  children: [
+                    _Certificates("plus two"),
+                    _Certificates("Migration"),
+                  ],
+                ),
+                Column(children: [_Certificates("TC"), _Certificates("Photo")]),
+              ],
+            ),
+            SizedBox(height: 10.h),
+            Text(
+              'Comment',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 4.h),
+            TextField(
+              maxLines: 3,
+              decoration: InputDecoration(
+                hintText: 'Type your message',
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+
+                contentPadding: EdgeInsets.all(12),
               ),
             ),
-            _buildSectionTitle("College Fee", onPressed: () {}),
-            _buildFeeTable(),
-            SizedBox(height: 16.h),
-            _buildSectionTitle("Service", onPressed: () {}),
-            _buildServiceTable(),
+
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    _buildTransactionSection(
+                      title: "College fee",
+                      lebal: " Add Fees",
+                      total: "Total fee : 65000",
+                      balance: "Fee balance : 65000",
+                      onAdd: () {},
+                    ),
+                    _buildTransactionSection(
+                      title: "Service",
+                      total: "Total service charge : 65000",
+                      balance: "Service balance : 65000",
+                      lebal: "Add Service amount",
+                      onAdd: () {},
+                      width: 132.w,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _buildInfoText(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Text(
-        text,
-        style: GoogleFonts.poppins(
-          fontSize: 12.sp,
-          color: AppColors.kTextColor,
+Widget buildInfoRow(String label, String value) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 5),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 70.w,
+          child: Text(
+            '$label  :',
+            style: FontStyles.body.copyWith(
+              fontWeight: FontWeight.bold,
+              fontSize: 10,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: FontStyles.body.copyWith(
+              fontWeight: FontWeight.bold,
+              fontSize: 10,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _Certificates(String label) {
+  return Row(
+    // mainAxisSize: MainAxisSize.min,
+
+    // crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Checkbox(
+        checkColor: Color(0xFF868686),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+        value: false,
+        onChanged: (value) {},
+      ),
+      Text(label, style: FontStyles.body.copyWith(fontSize: 10)),
+    ],
+  );
+}
+
+Widget _buildTransactionSection({
+  required String title,
+  required String total,
+  required String balance,
+  required VoidCallback onAdd,
+  required String lebal,
+  double? width,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      SizedBox(height: 36.h),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(title, style: FontStyles.heading.copyWith(fontSize: 16)),
+          Container(
+            height: 28.h,
+            width: width ?? 88.w,
+
+            decoration: BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(width: 8.w),
+                Text(
+                  lebal,
+                  style: GoogleFonts.poppins(color: Colors.white, fontSize: 10),
+                ),
+                SizedBox(width: 11.w),
+                GestureDetector(
+                  onTap: onAdd,
+                  child: Container(
+                    height: 28.h,
+                    width: 28.w,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/icon/Group 189.png"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 8.h),
+      Text(total, style: FontStyles.body.copyWith(fontSize: 12)),
+      Text(balance, style: FontStyles.body.copyWith(fontSize: 12)),
+      SizedBox(height: 10.h),
+      Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.shade400),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(10),
+                ),
+              ),
+              child: Row(
+                children: const [
+                  Expanded(
+                    child: Text(
+                      "Date",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      "Amount",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      "Particular",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      "Paid",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Text(
+                      "Action",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              height: 100.h,
+              alignment: Alignment.center,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset('assets/icon/Group 99.png', height: 40.h),
+                  SizedBox(height: 4.h),
+                  Text(
+                    "No data available",
+                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
-    );
-  }
-
-  Widget _buildCheckBoxRow() {
-    return Row(
-      children: [
-        _buildCheckBox("SSLC"),
-        _buildCheckBox("CC"),
-        _buildCheckBox("PlusTwo"),
-        _buildCheckBox("Migration"),
-        _buildCheckBox("TC"),
-        _buildCheckBox("Photo"),
-      ],
-    );
-  }
-
-  Widget _buildCheckBox(String label) {
-    return Row(
-      children: [
-        Checkbox(value: false, onChanged: (val) {}),
-        Text(label, style: GoogleFonts.poppins(fontSize: 10.sp)),
-      ],
-    );
-  }
-
-  Widget _buildCommentBox() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Comment", style: GoogleFonts.poppins(fontSize: 12.sp, fontWeight: FontWeight.w500)),
-        SizedBox(height: 5),
-        TextField(
-          maxLines: 3,
-          decoration: InputDecoration(
-            hintText: "Type your message",
-            hintStyle: GoogleFonts.poppins(fontSize: 12.sp),
-            border: OutlineInputBorder(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSectionTitle(String title, {required VoidCallback onPressed}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(title, style: GoogleFonts.poppins(fontSize: 14.sp, fontWeight: FontWeight.bold)),
-        ElevatedButton(
-          onPressed: onPressed,
-          child: Text("Add ${title.contains('Fee') ? 'Fees' : 'Service amount'}"),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildFeeTable() {
-    return _buildEmptyTable("College fee balance: 65000");
-  }
-
-  Widget _buildServiceTable() {
-    return _buildEmptyTable("Service balance: 65000");
-  }
-
-  Widget _buildEmptyTable(String balanceText) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: 5.h),
-        Text(balanceText, style: GoogleFonts.poppins(fontSize: 12.sp)),
-        SizedBox(height: 8.h),
-        Container(
-          width: double.infinity,
-          padding: EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey.shade300),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Center(
-            child: Image.asset("assets/icon/no_data.png", height: 40.h),
-          ),
-        ),
-      ],
-    );
-  }
+      SizedBox(height: 20.h),
+    ],
+  );
 }

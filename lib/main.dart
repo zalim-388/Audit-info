@@ -1,7 +1,8 @@
-import 'package:audit_info/ui/leadcall.dart';
-import 'package:audit_info/ui/student_managment.dart';
+import 'package:audit_info/ui/Lead_managment.dart';
+import 'package:audit_info/ui/loginpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -19,39 +20,15 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          // home: Loginpage(),
-          home: StudentManagment(),
 
-          // home: LeadManagment(),
+          // home: Loginpage(),
+          // home: StudentHistory(),
+          home: LeadManagment(),
         );
       },
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

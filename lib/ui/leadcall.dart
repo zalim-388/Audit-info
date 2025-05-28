@@ -196,35 +196,104 @@ class _LeadcallState extends State<Leadcall> {
             ),
             SizedBox(height: 4.h),
 
-            _fullTextField(title: "Message",
-            width: 360.w
-            ),
+            _fullTextField(title: "Message", width: 360.w),
             SizedBox(height: 10.h),
-             Padding(
-                          padding: const EdgeInsets.only(right: 250),
-                          child: GestureDetector(
-                            onTap: () {
-                              // Add your show functionality here
-                              print('Show button tapped');
-                            },
-                            child: Container(
-                              height: 30.h,
-                              width: 120.w,
-                              decoration: BoxDecoration(
-                                color: AppColors.kPrimaryColor,
-                                borderRadius: BorderRadius.circular(7),
-                              ),
-                              alignment: Alignment.center,
-                              child: Text(
-                                "Submit",
-                                style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                ),
-                              ),
+            Padding(
+              padding: const EdgeInsets.only(right: 250),
+              child: GestureDetector(
+                onTap: () {
+                  // Add your show functionality here
+                  print('Show button tapped');
+                },
+                child: Container(
+                  height: 30.h,
+                  width: 120.w,
+                  decoration: BoxDecoration(
+                    color: AppColors.kPrimaryColor,
+                    borderRadius: BorderRadius.circular(7),
+                  ),
+                  alignment: Alignment.center,
+                  child: Text(
+                    "Submit",
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            SizedBox(height: 34.h),
+
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey.shade400),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: const BorderRadius.vertical(
+                        top: Radius.circular(10),
+                      ),
+                    ),
+                    child: Row(
+                      children: const [
+                        Expanded(
+                          child: Text(
+                            "Date",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
                             ),
                           ),
                         ),
+                        Expanded(
+                          child: Text(
+                            "Status",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Text(
+                            "Message",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 100.h,
+                    alignment: Alignment.center,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/icon/Group 99.png', height: 40.h),
+                        SizedBox(height: 4.h),
+                        Text(
+                          "No data available",
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),

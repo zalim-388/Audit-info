@@ -20,7 +20,8 @@ class LeadManagment extends StatefulWidget {
 class _LeadManagmentState extends State<LeadManagment> {
   int _selectedIndex = 8;
   bool showDropdown = false;
-  bool _isVisible = false;
+  // bool _isVisible = false;
+  List<bool> _isVisibleList = List.generate(4, (_) => false);
 
   String? selectedItem;
   String? selectedSchool;
@@ -43,9 +44,9 @@ class _LeadManagmentState extends State<LeadManagment> {
     });
   }
 
-  void _toggleVisibility() {
+  void _toggleVisibility(int index) {
     setState(() {
-      _isVisible = !_isVisible;
+      _isVisibleList[index] = !_isVisibleList[index];
     });
   }
 
@@ -88,37 +89,37 @@ class _LeadManagmentState extends State<LeadManagment> {
         ),
         title: Text(" Lead Managment", style: FontStyles.heading),
         actions: [
-             if (!showDropdown)
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  ModalBottomSheetRoute(
-                    builder: (context) => const UpdatepassSheet(),
-                    isScrollControlled: true,
-                  ),
-                );
-              },
-              child: Container(
-                height: 20.h,
-                width: 22.w,
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/icon/updatepass.png"),
-                    fit: BoxFit.cover,
+          if (!showDropdown)
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    ModalBottomSheetRoute(
+                      builder: (context) => const UpdatepassSheet(),
+                      isScrollControlled: true,
+                    ),
+                  );
+                },
+                child: Container(
+                  height: 20.h,
+                  width: 22.w,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/icon/updatepass.png"),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-             if (!showDropdown)
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.logout_rounded, color: Color(0xFF414143)),
-          ),
+          if (!showDropdown)
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.logout_rounded, color: Color(0xFF414143)),
+            ),
         ],
       ),
       backgroundColor: Colors.white,
@@ -334,281 +335,444 @@ class _LeadManagmentState extends State<LeadManagment> {
 
                   SizedBox(height: 13.h),
 
+                  // Container(
+                  //   width: 358.w,
+                  //   decoration: BoxDecoration(
+                  //     color: AppColors.kContainerColor,
+                  //     borderRadius: const BorderRadius.only(
+                  //       topLeft: Radius.circular(9),
+                  //       topRight: Radius.circular(9),
+                  //     ),
+                  //     border: Border(
+                  //       top: BorderSide(color: Colors.black),
+                  //       left: BorderSide(color: Colors.black),
+                  //       right: BorderSide(color: Colors.black),
+                  //     ),
+                  //   ),
+                  //   child: Table(
+                  //     border: TableBorder(
+                  //       borderRadius: BorderRadius.circular(9),
+                  //       horizontalInside: BorderSide(color: Color(0xFFF2F2F2)),
+                  //       verticalInside: BorderSide(color: Color(0xFFF2F2F2)),
+                  //       // bottom: BorderSide(color: Colors.black),
+                  //     ),
+                  //     columnWidths: const <int, TableColumnWidth>{
+                  //       0: FixedColumnWidth(55), // Date
+                  //       1: FixedColumnWidth(70), // Name
+                  //       2: FixedColumnWidth(65), // School Name
+                  //       3: FixedColumnWidth(60), // SRC
+                  //       4: FixedColumnWidth(65), // Phone Number
+                  //       5: FixedColumnWidth(60), // Status
+                  //     },
+                  //     children: [
+                  //       TableRow(
+                  //         decoration: BoxDecoration(
+                  //           borderRadius: BorderRadius.circular(9),
+                  //           color: Colors.grey[300],
+                  //         ),
+                  //         children: [
+                  //           Padding(
+                  //             padding: const EdgeInsets.symmetric(vertical: 6),
+                  //             child: Text(
+                  //               'Date',
+                  //               textAlign: TextAlign.center,
+                  //               style: GoogleFonts.poppins(
+                  //                 fontSize: 10.sp,
+                  //                 color: AppColors.kTextColor,
+                  //                 fontWeight: FontWeight.bold,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //           Padding(
+                  //             padding: const EdgeInsets.symmetric(vertical: 6),
+                  //             child: Text(
+                  //               'Name',
+                  //               textAlign: TextAlign.center,
+                  //               style: GoogleFonts.poppins(
+                  //                 fontSize: 10.sp,
+                  //                 color: AppColors.kTextColor,
+                  //                 fontWeight: FontWeight.bold,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //           Padding(
+                  //             padding: const EdgeInsets.symmetric(vertical: 6),
+                  //             child: Text(
+                  //               'School Name',
+                  //               textAlign: TextAlign.center,
+                  //               style: GoogleFonts.poppins(
+                  //                 fontSize: 10.sp,
+                  //                 color: AppColors.kTextColor,
+                  //                 fontWeight: FontWeight.bold,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //           Padding(
+                  //             padding: const EdgeInsets.symmetric(vertical: 6),
+                  //             child: Text(
+                  //               'SRC',
+                  //               textAlign: TextAlign.center,
+                  //               style: GoogleFonts.poppins(
+                  //                 fontSize: 10.sp,
+                  //                 color: AppColors.kTextColor,
+                  //                 fontWeight: FontWeight.bold,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //           Padding(
+                  //             padding: const EdgeInsets.symmetric(vertical: 6),
+                  //             child: Text(
+                  //               'Phone number',
+                  //               textAlign: TextAlign.center,
+                  //               style: GoogleFonts.poppins(
+                  //                 fontSize: 10.sp,
+                  //                 color: AppColors.kTextColor,
+                  //                 fontWeight: FontWeight.bold,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //           Padding(
+                  //             padding: const EdgeInsets.symmetric(vertical: 6),
+                  //             child: Text(
+                  //               'Status',
+                  //               textAlign: TextAlign.center,
+                  //               style: GoogleFonts.poppins(
+                  //                 fontSize: 10.sp,
+                  //                 color: AppColors.kTextColor,
+                  //                 fontWeight: FontWeight.bold,
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ],
+                  //       ),
+                  // _leadRow(
+                  //   Date: "1/2/2022",
+                  //   name: "SAlim",
+                  //   Schoolname: "",
+                  //   Src: "",
+                  //   phonenumber: "65347595",
+                  //   Status: 'Registered',
+                  // ),
+
+                  // _leadRow(
+                  //   Date: "1/2/2022",
+                  //   name: "SAlim",
+                  //   Schoolname: "",
+                  //   Src: "",
+                  //   phonenumber: "65347595",
+                  //   Status: 'Registered',
+                  // ),
+                  // _leadRow(
+                  //   Date: "1/2/2022",
+                  //   name: "SAlim",
+                  //   Schoolname: "",
+                  //   Src: "",
+                  //   phonenumber: "65347595",
+                  //   Status: 'Registered',
+                  // ),
+                  //     ],
+                  //   ),
+                  // ),
+
+                  // SizedBox(height: 10.h),
+                  // Positioned(
+                  //   top: 80,
+                  //   left: 0,
+                  //   child: Column(
+                  //     children: [
+                  //       _buildActions(
+                  //         isVisible: _isVisible,
+                  //         toggleVisibility: _toggleVisibility,
+                  //       ),
+                  //       if (_isVisible) downbotton(context),
+                  //     ],
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   top: 220,
+                  //   child: Column(
+                  //     children: [
+                  //       _buildActions(
+                  //         isVisible: _isVisible,
+                  //         toggleVisibility: _toggleVisibility,
+                  //       ),
+                  //       if (_isVisible) downbotton(context),
+                  //     ],
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   child: _buildActions(
+                  //     isVisible: _isVisible,
+                  //     toggleVisibility: _toggleVisibility,
+                  //   ),
+                  // ),
                   Container(
-                    width: 358.w,
                     decoration: BoxDecoration(
-                      color: AppColors.kContainerColor,
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(9),
-                        topRight: Radius.circular(9),
-                      ),
-                      border: Border(
-                        top: BorderSide(color: Colors.black),
-                        left: BorderSide(color: Colors.black),
-                        right: BorderSide(color: Colors.black),
-                      ),
+                      border: Border.all(color: Colors.grey.shade400),
+                      borderRadius: BorderRadius.circular(10),
                     ),
-                    child: Table(
-                      border: TableBorder(
-                        borderRadius: BorderRadius.circular(9),
-                        horizontalInside: BorderSide(color: Color(0xFFF2F2F2)),
-                        verticalInside: BorderSide(color: Color(0xFFF2F2F2)),
-                        // bottom: BorderSide(color: Colors.black),
-                      ),
-                      columnWidths: const <int, TableColumnWidth>{
-                        0: FixedColumnWidth(55), // Date
-                        1: FixedColumnWidth(70), // Name
-                        2: FixedColumnWidth(65), // School Name
-                        3: FixedColumnWidth(60), // SRC
-                        4: FixedColumnWidth(65), // Phone Number
-                        5: FixedColumnWidth(60), // Status
-                      },
-                      children: [
-                        TableRow(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(9),
-                            color: Colors.grey[300],
-                          ),
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 6),
-                              child: Text(
-                                'Date',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 10.sp,
-                                  color: AppColors.kTextColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 6),
-                              child: Text(
-                                'Name',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 10.sp,
-                                  color: AppColors.kTextColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 6),
-                              child: Text(
-                                'School Name',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 10.sp,
-                                  color: AppColors.kTextColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 6),
-                              child: Text(
-                                'SRC',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 10.sp,
-                                  color: AppColors.kTextColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 6),
-                              child: Text(
-                                'Phone number',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 10.sp,
-                                  color: AppColors.kTextColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 6),
-                              child: Text(
-                                'Status',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.poppins(
-                                  fontSize: 10.sp,
-                                  color: AppColors.kTextColor,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        _leadRow(
-                          Date: "1/2/2022",
-                          name: "SAlim",
-                          Schoolname: "",
-                          Src: "",
-                          phonenumber: "65347595",
-                          Status: 'Registered',
-                        ),
-
-                        // _leadRow(
-                        //   Date: "1/2/2022",
-                        //   name: "SAlim",
-                        //   Schoolname: "",
-                        //   Src: "",
-                        //   phonenumber: "65347595",
-                        //   Status: 'Registered',
-                        // ),
-                        // _leadRow(
-                        //   Date: "1/2/2022",
-                        //   name: "SAlim",
-                        //   Schoolname: "",
-                        //   Src: "",
-                        //   phonenumber: "65347595",
-                        //   Status: 'Registered',
-                        // ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: 10.h),
-                  Positioned(
-                    top: 100,
                     child: Column(
                       children: [
-                        _buildActions(
-                          isVisible: _isVisible,
-                          toggleVisibility: _toggleVisibility,
-                        ),
-                        if (_isVisible)
-                          Container(
-                            height: 35.h,
-                            width: double.infinity,
-                            // padding: const EdgeInsets.symmetric(vertical: 8),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) => LeadHistory(context),
-                                      ),
-                                    );
-                                    print('Show button tapped');
-                                  },
-                                  child: Container(
-                                    height: 25.h,
-                                    width: 25.w,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFFF6212),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Icon(
-                                      Icons.visibility,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-
-                                GestureDetector(
-                                  onTap: () => print('Edit button tapped'),
-                                  child: Container(
-                                    height: 25.h,
-                                    width: 25.w,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFF4D5CFF),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Icon(
-                                      Icons.edit,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  child: Container(
-                                    height: 25.h,
-                                    width: 25.w,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFEF615B),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Icon(
-                                      Icons.delete,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  child: Container(
-                                    height: 25.h,
-                                    width: 25.w,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFFFB952C),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Icon(
-                                      Icons.description,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) => Leadcall(),
-                                      ),
-                                    );
-                                  },
-                                  child: Container(
-                                    height: 25.h,
-                                    width: 25.w,
-                                    decoration: BoxDecoration(
-                                      color: Color(0xFF19A246),
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: Icon(
-                                      Icons.phone,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(10),
                             ),
                           ),
+                          child: Row(
+                            children: const [
+                              Expanded(
+                                child: Text(
+                                  "Date",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "Name",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "school Name",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "SRC",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "Phone number",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "Status",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  "21-10-2024",
+                                  style: FontStyles.body,
+                                ),
+                              ),
+                              Expanded(
+                                child: Text("Babu", style: FontStyles.body),
+                              ),
+                              Expanded(
+                                child: Text("PKM", style: FontStyles.body),
+                              ),
+                              Expanded(
+                                child: Text("None", style: FontStyles.body),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "3652154652",
+                                  style: FontStyles.body,
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "Registered",
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.green,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        _buildActions(
+                          isVisible: _isVisibleList[0],
+                          toggleVisibility: () => _toggleVisibility(0),
+                        ),
+                        if (_isVisibleList[0]) downbotton(context),
+
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  "21-10-2024",
+                                  style: FontStyles.body,
+                                ),
+                              ),
+                              Expanded(
+                                child: Text("Sreya", style: FontStyles.body),
+                              ),
+                              Expanded(
+                                child: Text("PKM", style: FontStyles.body),
+                              ),
+                              Expanded(
+                                child: Text("None", style: FontStyles.body),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "3652154652",
+                                  style: FontStyles.body,
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "Registered",
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.green,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        _buildActions(
+                          isVisible: _isVisibleList[1],
+                          toggleVisibility: () => _toggleVisibility(1),
+                        ),
+
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  "21-10-2024",
+                                  style: FontStyles.body,
+                                ),
+                              ),
+                              Expanded(
+                                child: Text("Salim", style: FontStyles.body),
+                              ),
+                              Expanded(
+                                child: Text("PKM", style: FontStyles.body),
+                              ),
+                              Expanded(
+                                child: Text("None", style: FontStyles.body),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "3652154652",
+                                  style: FontStyles.body,
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "Registered",
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.green,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Actions Row 3
+                        _buildActions(
+                          isVisible: _isVisibleList[2],
+                          toggleVisibility: () => _toggleVisibility(2),
+                        ),
+                        if (_isVisibleList[2]) downbotton(context),
+                        // Lead Data Row 4
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 8,
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  "21-10-2024",
+                                  style: FontStyles.body,
+                                ),
+                              ),
+                              Expanded(
+                                child: Text("Sreya", style: FontStyles.body),
+                              ),
+                              Expanded(
+                                child: Text("PKM", style: FontStyles.body),
+                              ),
+                              Expanded(
+                                child: Text("None", style: FontStyles.body),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "3652154652",
+                                  style: FontStyles.body,
+                                ),
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "None",
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.black,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Actions Row 4
+                        _buildActions(
+                          isVisible: _isVisibleList[3],
+                          toggleVisibility: () => _toggleVisibility(3),
+                        ),
+                        if (_isVisibleList[3]) downbotton(context),
                       ],
                     ),
                   ),
-                  // Positioned(
-                  //   child: _buildActions(
-                  //     isVisible: _isVisible,
-                  //     toggleVisibility: _toggleVisibility,
-                  //   ),
-                  // ),
-                  // Positioned(
-                  //   child: _buildActions(
-                  //     isVisible: _isVisible,
-                  //     toggleVisibility: _toggleVisibility,
-                  //   ),
-                  // ),
                 ],
               ),
             ],
@@ -981,6 +1145,99 @@ Future<void> Addlead(BuildContext context) async {
         },
       );
     },
+  );
+}
+
+Widget downbotton(BuildContext context) {
+  return Container(
+    height: 35.h,
+    width: double.infinity,
+    // padding: const EdgeInsets.symmetric(vertical: 8),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(4),
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LeadHistory(context)),
+            );
+            print('Show button tapped');
+          },
+          child: Container(
+            height: 25.h,
+            width: 25.w,
+            decoration: BoxDecoration(
+              color: Color(0xFFFF6212),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            alignment: Alignment.center,
+            child: Icon(Icons.visibility, color: Colors.white),
+          ),
+        ),
+
+        GestureDetector(
+          onTap: () => print('Edit button tapped'),
+          child: Container(
+            height: 25.h,
+            width: 25.w,
+            decoration: BoxDecoration(
+              color: Color(0xFF4D5CFF),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            alignment: Alignment.center,
+            child: Icon(Icons.edit, color: Colors.white),
+          ),
+        ),
+        GestureDetector(
+          child: Container(
+            height: 25.h,
+            width: 25.w,
+            decoration: BoxDecoration(
+              color: Color(0xFFEF615B),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            alignment: Alignment.center,
+            child: Icon(Icons.delete, color: Colors.white),
+          ),
+        ),
+        GestureDetector(
+          child: Container(
+            height: 25.h,
+            width: 25.w,
+            decoration: BoxDecoration(
+              color: Color(0xFFFB952C),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            alignment: Alignment.center,
+            child: Icon(Icons.description, color: Colors.white),
+          ),
+        ),
+
+        GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Leadcall()),
+            );
+          },
+          child: Container(
+            height: 25.h,
+            width: 25.w,
+            decoration: BoxDecoration(
+              color: Color(0xFF19A246),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            alignment: Alignment.center,
+            child: Icon(Icons.phone, color: Colors.white),
+          ),
+        ),
+      ],
+    ),
   );
 }
 
