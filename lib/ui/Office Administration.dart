@@ -43,7 +43,7 @@ class _OfficeadministrationState extends State<Officeadministration> {
                 },
               ),
         ),
-        title: Text(" Office Administration", style: FontStyles.heading),
+        title: Text(" Administrator", style: FontStyles.heading),
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),

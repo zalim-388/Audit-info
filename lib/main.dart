@@ -1,3 +1,4 @@
+import 'package:audit_info/ui/Agent.dart';
 import 'package:audit_info/ui/Lead_managment.dart';
 import 'package:audit_info/ui/loginpage.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
 
           // home: Loginpage(),
           // home: StudentHistory(),
-          home: LeadManagment(),
+          home: Agent(),
         );
       },
     );

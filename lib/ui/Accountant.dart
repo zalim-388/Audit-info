@@ -409,8 +409,9 @@ Future<void> AccountantopenDialog(BuildContext context) async {
                   SizedBox(height: 10.h),
                   _fullTextField(title: "Address"),
                   SizedBox(height: 10.h),
-                  _fullTextField(title: "Phone Number",
-                  keyboardType: TextInputType.phone
+                  _fullTextField(
+                    title: "Phone Number",
+                    keyboardType: TextInputType.phone,
                   ),
                   SizedBox(height: 10.h),
                   _fullTextField(title: "Password", isPassword: true),
@@ -423,7 +424,10 @@ Future<void> AccountantopenDialog(BuildContext context) async {
 
                     icon: Icons.keyboard_arrow_down,
                   ),
-                  _fullTextField(title: "Salary" ,keyboardType: TextInputType.number),
+                  _fullTextField(
+                    title: "Salary",
+                    keyboardType: TextInputType.number,
+                  ),
 
                   SizedBox(height: 21.h),
                   SizedBox(
@@ -461,8 +465,7 @@ Widget _fullTextField({
   IconData? icon,
   bool isPassword = false,
   double? width,
-   TextInputType keyboardType = TextInputType.text,
-  
+  TextInputType keyboardType = TextInputType.text,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -473,7 +476,7 @@ Widget _fullTextField({
         height: 30.h,
         width: width ?? 324.w,
         child: TextField(
-           keyboardType: keyboardType,
+          keyboardType: keyboardType,
           obscureText: isPassword,
           decoration: InputDecoration(
             hintStyle: GoogleFonts.poppins(fontSize: 12),
@@ -489,9 +492,7 @@ Widget _fullTextField({
               borderRadius: BorderRadius.circular(6),
               borderSide: BorderSide(color: AppColors.kBorderColor),
             ),
-            
           ),
-       
         ),
       ),
     ],

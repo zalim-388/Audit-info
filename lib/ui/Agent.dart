@@ -1,4 +1,5 @@
-import 'package:audit_info/ui/Branch_manager.dart';
+import 'dart:convert';
+
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Agent extends StatefulWidget {
   const Agent({super.key});
@@ -16,6 +18,61 @@ class Agent extends StatefulWidget {
 }
 
 class _AgentState extends State<Agent> {
+  List<Map<String, dynamic>> Agentlist = [];
+  TextEditingController _namecontroller = TextEditingController();
+  TextEditingController _phonecontroller = TextEditingController();
+  TextEditingController _addresscontroller = TextEditingController();
+
+  void initState() {
+    super.initState();
+    getdataAgent();
+  }
+
+  @override
+  void dispose() {
+    _namecontroller.dispose();
+    _phonecontroller.dispose();
+    _addresscontroller.dispose();
+    super.dispose();
+  }
+
+  Future<void> getdataAgent() async {
+    final prerf = await SharedPreferences.getInstance();
+    final String? data = prerf.getString("agents");
+    if (data != null) {
+      setState(() {
+        Agentlist = List<Map<String, dynamic>>.from(jsonDecode(data));
+      });
+    }
+  }
+
+  Future<void> setAgentdata() async {
+    // if (_namecontroller.text.isEmpty ||
+    //     _phonecontroller.text.isEmpty ||
+    //     _addresscontroller.text.isEmpty) {
+    //   ScaffoldMessenger.of(
+    //     context,
+    //   ).showSnackBar(const SnackBar(content: Text("Please fill all fields")));
+    //   return;
+    // }
+
+    final prefs = await SharedPreferences.getInstance();
+    final agent = {
+      'name': _namecontroller.text.trim(),
+      'phone': _phonecontroller.text.trim(),
+      'address': _addresscontroller.text.trim(),
+    };
+    setState(() {
+      Agentlist.add(agent);
+    });
+
+    await prefs.setString('agents', jsonEncode(Agentlist));
+
+    _namecontroller.clear();
+    _phonecontroller.clear();
+    _addresscontroller.clear();
+  }
+
   int _selectedIndex = 7;
   void _onitemTapped(int index) {
     setState(() {
@@ -44,18 +101,16 @@ class _AgentState extends State<Agent> {
                 },
               ),
         ),
-        title: Text(" Agent", style: FontStyles.heading),
+        title: Text("Agent", style: FontStyles.heading),
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
             child: GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  ModalBottomSheetRoute(
-                    builder: (context) => const UpdatepassSheet(),
-                    isScrollControlled: true,
-                  ),
+                showModalBottomSheet(
+                  context: context,
+                  isScrollControlled: true,
+                  builder: (context) => const UpdatepassSheet(),
                 );
               },
               child: Container(
@@ -77,7 +132,6 @@ class _AgentState extends State<Agent> {
           ),
         ],
       ),
-
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 23),
@@ -91,7 +145,6 @@ class _AgentState extends State<Agent> {
                     child: SizedBox(
                       width: 322.w,
                       height: 30.h,
-
                       child: TextField(
                         decoration: InputDecoration(
                           prefixIcon: Icon(
@@ -118,31 +171,61 @@ class _AgentState extends State<Agent> {
                       ),
                     ),
                   ),
-                  SizedBox(width: 7.w),
+                  SizedBox(width: 6.w),
+                  Container(
+                    height: 20.h,
+                    width: 22.w,
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/icon/Group 199.png"),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 6.w),
                   GestureDetector(
                     onTap: () {
-                      AgentsopenDialog(context);
+                      _namecontroller.clear();
+                      _phonecontroller.clear();
+                      _addresscontroller.clear();
+                      _AgentopenDialog(
+                        context,
+                        _namecontroller,
+                        _phonecontroller,
+                        _addresscontroller,
+                        setAgentdata,
+                        isEdit: false,
+                      );
                     },
                     child: Container(
-                      height: 28.h,
-                      width: 28.w,
+                      height: 20.h,
+                      width: 22.w,
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       decoration: const BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage("assets/icon/Group 189.png"),
+                          image: AssetImage("assets/icon/Group 199.png"),
                           fit: BoxFit.cover,
+                        ),
+                      ),
+                      child: Container(
+                        height: 28.h,
+                        width: 28.w,
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage("assets/icon/Group 189.png"),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
                   ),
                 ],
               ),
-
               SizedBox(height: 13.h),
-
               Container(
                 width: 358.w,
-
                 decoration: BoxDecoration(
                   color: AppColors.kContainerColor,
                   borderRadius: const BorderRadius.only(
@@ -163,13 +246,12 @@ class _AgentState extends State<Agent> {
                     bottom: BorderSide(color: Colors.black),
                   ),
                   columnWidths: const <int, TableColumnWidth>{
-                    0: FixedColumnWidth(55), // Si.no
-                    1: FixedColumnWidth(80), // Name (with icon)
-                    2: FixedColumnWidth(74), // Phone number (long)
-                    3: FixedColumnWidth(60), // Address
-                    4: FixedColumnWidth(60), // Actions (two buttons)
+                    0: FixedColumnWidth(55),
+                    1: FixedColumnWidth(80),
+                    2: FixedColumnWidth(74),
+                    3: FixedColumnWidth(60),
+                    4: FixedColumnWidth(60),
                   },
-
                   children: [
                     TableRow(
                       decoration: BoxDecoration(color: Colors.grey[300]),
@@ -210,7 +292,6 @@ class _AgentState extends State<Agent> {
                             ),
                           ),
                         ),
-
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 10.0),
                           child: Text(
@@ -237,34 +318,52 @@ class _AgentState extends State<Agent> {
                         ),
                       ],
                     ),
-
-                    // for (int i = 1; i <= 4; i++)
-                    _AgentRow(
-                      code: "1",
-                      name: "Salim",
-
-                      phone: "9562791690",
-                      Address: "kottakkal",
-                      onEdit: () {},
-                      onDelete: () {},
-                    ),
-                    _AgentRow(
-                      code: "1",
-                      name: "Ashiq",
-
-                      phone: "46465",
-                      Address: "kottakkal",
-                      onEdit: () {},
-                      onDelete: () {},
-                    ),
-                    _AgentRow(
-                      code: "1",
-                      name: "Ali",
-                      phone: "95668690",
-                      Address: "kottakkal",
-                      onEdit: () {},
-                      onDelete: () {},
-                    ),
+                    ...List.generate(Agentlist.length, (index) {
+                      final agent = Agentlist[index];
+                      return _AgentRow(
+                        code: (index + 1).toString(),
+                        name: agent['name'] ?? '',
+                        phone: agent['phone'] ?? '',
+                        Address: agent['address'] ?? '',
+                        onEdit: () {
+                          _namecontroller.text = agent['name'] ?? '';
+                          _phonecontroller.text = agent['phone'] ?? '';
+                          _addresscontroller.text = agent['address'] ?? '';
+                          _AgentopenDialog(
+                            context,
+                            _namecontroller,
+                            _phonecontroller,
+                            _addresscontroller,
+                            () async {
+                              setState(() {
+                                Agentlist[index] = {
+                                  'name': _namecontroller.text.trim(),
+                                  'phone': _phonecontroller.text.trim(),
+                                  'address': _addresscontroller.text.trim(),
+                                };
+                              });
+                              final prefs =
+                                  await SharedPreferences.getInstance();
+                              await prefs.setString(
+                                'agents',
+                                jsonEncode(Agentlist),
+                              );
+                            },
+                            isEdit: true,
+                          );
+                        },
+                        onDelete: () async {
+                          setState(() {
+                            Agentlist.removeAt(index);
+                          });
+                          final prefs = await SharedPreferences.getInstance();
+                          await prefs.setString(
+                            'agents',
+                            jsonEncode(Agentlist),
+                          );
+                        },
+                      );
+                    }),
                   ],
                 ),
               ),
@@ -302,7 +401,6 @@ TableRow _AgentRow({
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Center(child: Text(Address, style: FontStyles.body)),
       ),
-
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
@@ -346,7 +444,14 @@ TableRow _AgentRow({
   );
 }
 
-Future<void> AgentsopenDialog(BuildContext context) async {
+Future<void> _AgentopenDialog(
+  BuildContext context,
+  TextEditingController namecontroller,
+  TextEditingController phonecontroller,
+  TextEditingController addresscontroller,
+  Future<void> Function() setAgentdata, {
+  required bool isEdit,
+}) async {
   return showDialog(
     context: context,
     builder: (context) {
@@ -369,8 +474,10 @@ Future<void> AgentsopenDialog(BuildContext context) async {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(height: 23.h),
-                      Text("Create Agents", style: FontStyles.heading),
+                      Text(
+                        isEdit ? "Edit Agent" : "Create Agents",
+                        style: FontStyles.heading,
+                      ),
                       InkWell(
                         onTap: () => Navigator.pop(context),
                         child: Icon(Icons.close, color: AppColors.kBorderColor),
@@ -378,16 +485,18 @@ Future<void> AgentsopenDialog(BuildContext context) async {
                     ],
                   ),
                   SizedBox(height: 9.h),
-
-                  _fullTextField(title: "Name"),
+                  _fullTextField(title: "Name", controller: namecontroller),
                   SizedBox(height: 10.h),
-
-                  _fullTextField(title: "Phone Number",
-                  keyboardType: TextInputType.phone
+                  _fullTextField(
+                    title: "Phone Number",
+                    keyboardType: TextInputType.phone,
+                    controller: phonecontroller,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(title: "Address"),
-
+                  _fullTextField(
+                    title: "Address",
+                    controller: addresscontroller,
+                  ),
                   SizedBox(height: 21.h),
                   SizedBox(
                     width: double.infinity,
@@ -399,9 +508,12 @@ Future<void> AgentsopenDialog(BuildContext context) async {
                           borderRadius: BorderRadius.circular(6),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        await setAgentdata();
+                        Navigator.pop(context);
+                      },
                       child: Text(
-                        "Create",
+                        isEdit ? "Update" : "Create",
                         style: GoogleFonts.inter(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -424,7 +536,8 @@ Widget _fullTextField({
   IconData? icon,
   bool isPassword = false,
   double? width,
-   TextInputType keyboardType = TextInputType.text,
+  TextInputType keyboardType = TextInputType.text,
+  required TextEditingController controller,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -435,6 +548,7 @@ Widget _fullTextField({
         height: 30.h,
         width: width ?? 324.w,
         child: TextField(
+          controller: controller,
           keyboardType: keyboardType,
           obscureText: isPassword,
           decoration: InputDecoration(

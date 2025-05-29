@@ -1,3 +1,5 @@
+import 'package:audit_info/ui/leadcall.dart';
+import 'package:audit_info/ui/leadhistory.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
@@ -38,6 +40,12 @@ class _StudentManagmentState extends State<StudentManagment> {
   void _filterleads() {
     setState(() {
       showDropdown = !showDropdown;
+    });
+  }
+
+  void _toggleVisibility(int index) {
+    setState(() {
+      _isVisibleList[index] = !_isVisibleList[index];
     });
   }
 
@@ -242,278 +250,236 @@ class _StudentManagmentState extends State<StudentManagment> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 10.h),
-
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.shade400),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade200,
-                              borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(10),
-                              ),
-                            ),
-                            child: Row(
-                              children: const [
-                                Expanded(
-                                  child: Text(
-                                    "Date",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    "Name",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    "school Name",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    "SRC",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    "Phone number",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    "Status",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "21-10-2024",
-                                    style: FontStyles.body,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text("Babu", style: FontStyles.body),
-                                ),
-                                Expanded(
-                                  child: Text("PKM", style: FontStyles.body),
-                                ),
-                                Expanded(
-                                  child: Text("None", style: FontStyles.body),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    "3652154652",
-                                    style: FontStyles.body,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    "Registered",
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.green,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          _buildActions(
-                            isVisible: _isVisibleList[0],
-                            toggleVisibility: () => _toggleVisibility(0),
-                          ),
-                          if (_isVisibleList[0]) downbotton(context),
-
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "21-10-2024",
-                                    style: FontStyles.body,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text("Sreya", style: FontStyles.body),
-                                ),
-                                Expanded(
-                                  child: Text("PKM", style: FontStyles.body),
-                                ),
-                                Expanded(
-                                  child: Text("None", style: FontStyles.body),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    "3652154652",
-                                    style: FontStyles.body,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    "Registered",
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.green,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          _buildActions(
-                            isVisible: _isVisibleList[1],
-                            toggleVisibility: () => _toggleVisibility(1),
-                          ),
-
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "21-10-2024",
-                                    style: FontStyles.body,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text("Salim", style: FontStyles.body),
-                                ),
-                                Expanded(
-                                  child: Text("PKM", style: FontStyles.body),
-                                ),
-                                Expanded(
-                                  child: Text("None", style: FontStyles.body),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    "3652154652",
-                                    style: FontStyles.body,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    "Registered",
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.green,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Actions Row 3
-                          _buildActions(
-                            isVisible: _isVisibleList[2],
-                            toggleVisibility: () => _toggleVisibility(2),
-                          ),
-                          if (_isVisibleList[2]) downbotton(context),
-                          // Lead Data Row 4
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 8,
-                            ),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "21-10-2024",
-                                    style: FontStyles.body,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text("Sreya", style: FontStyles.body),
-                                ),
-                                Expanded(
-                                  child: Text("PKM", style: FontStyles.body),
-                                ),
-                                Expanded(
-                                  child: Text("None", style: FontStyles.body),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    "3652154652",
-                                    style: FontStyles.body,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Text(
-                                    "None",
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.black,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Actions Row 4
-                          _buildActions(
-                            isVisible: _isVisibleList[3],
-                            toggleVisibility: () => _toggleVisibility(3),
-                          ),
-                          if (_isVisibleList[3]) downbotton(context),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
               ],
+              SizedBox(height: 10.h),
+
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade400),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(10),
+                        ),
+                      ),
+                      child: Row(
+                        children: const [
+                          Expanded(
+                            child: Text(
+                              "Date",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              "Name",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              "school Name",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              "SRC",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              "Phone number",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            child: Text(
+                              "Status",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text("21-10-2024", style: FontStyles.body),
+                          ),
+                          Expanded(child: Text("Babu", style: FontStyles.body)),
+                          Expanded(child: Text("PKM", style: FontStyles.body)),
+                          Expanded(child: Text("None", style: FontStyles.body)),
+                          Expanded(
+                            child: Text("3652154652", style: FontStyles.body),
+                          ),
+                          Expanded(
+                            child: Text(
+                              "Registered",
+                              style: GoogleFonts.poppins(
+                                color: Colors.green,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    _buildActions(
+                      isVisible: _isVisibleList[0],
+                      toggleVisibility: () => _toggleVisibility(0),
+                    ),
+                    if (_isVisibleList[0]) downbotton(context),
+
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text("21-10-2024", style: FontStyles.body),
+                          ),
+                          Expanded(
+                            child: Text("Sreya", style: FontStyles.body),
+                          ),
+                          Expanded(child: Text("PKM", style: FontStyles.body)),
+                          Expanded(child: Text("None", style: FontStyles.body)),
+                          Expanded(
+                            child: Text("3652154652", style: FontStyles.body),
+                          ),
+                          Expanded(
+                            child: Text(
+                              "Registered",
+                              style: GoogleFonts.poppins(
+                                color: Colors.green,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    _buildActions(
+                      isVisible: _isVisibleList[1],
+                      toggleVisibility: () => _toggleVisibility(1),
+                    ),
+                    if (_isVisibleList[1]) downbotton(context),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text("21-10-2024", style: FontStyles.body),
+                          ),
+                          Expanded(
+                            child: Text("Salim", style: FontStyles.body),
+                          ),
+                          Expanded(child: Text("PKM", style: FontStyles.body)),
+                          Expanded(child: Text("None", style: FontStyles.body)),
+                          Expanded(
+                            child: Text("3652154652", style: FontStyles.body),
+                          ),
+                          Expanded(
+                            child: Text(
+                              "Registered",
+                              style: GoogleFonts.poppins(
+                                color: Colors.green,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Actions Row 3
+                    _buildActions(
+                      isVisible: _isVisibleList[2],
+                      toggleVisibility: () => _toggleVisibility(2),
+                    ),
+                    if (_isVisibleList[2]) downbotton(context),
+                    // Lead Data Row 4
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text("21-10-2024", style: FontStyles.body),
+                          ),
+                          Expanded(
+                            child: Text("Sreya", style: FontStyles.body),
+                          ),
+                          Expanded(child: Text("PKM", style: FontStyles.body)),
+                          Expanded(child: Text("None", style: FontStyles.body)),
+                          Expanded(
+                            child: Text("3652154652", style: FontStyles.body),
+                          ),
+                          Expanded(
+                            child: Text(
+                              "None",
+                              style: GoogleFonts.poppins(
+                                color: Colors.black,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Actions Row 4
+                    _buildActions(
+                      isVisible: _isVisibleList[3],
+                      toggleVisibility: () => _toggleVisibility(3),
+                    ),
+                    if (_isVisibleList[3]) downbotton(context),
+                  ],
+                ),
+              ),
 
               SizedBox(height: 20.h),
             ],
@@ -734,19 +700,7 @@ Widget downbotton(BuildContext context) {
               borderRadius: BorderRadius.circular(4),
             ),
             alignment: Alignment.center,
-            child: Icon(Icons.delete, color: Colors.white),
-          ),
-        ),
-        GestureDetector(
-          child: Container(
-            height: 25.h,
-            width: 25.w,
-            decoration: BoxDecoration(
-              color: Color(0xFFFB952C),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            alignment: Alignment.center,
-            child: Icon(Icons.description, color: Colors.white),
+            child: Icon(Icons.close, color: Colors.white),
           ),
         ),
 
@@ -759,13 +713,15 @@ Widget downbotton(BuildContext context) {
           },
           child: Container(
             height: 25.h,
-            width: 25.w,
+            width: 90.w,
             decoration: BoxDecoration(
               color: Color(0xFF19A246),
               borderRadius: BorderRadius.circular(4),
             ),
             alignment: Alignment.center,
-            child: Icon(Icons.phone, color: Colors.white),
+            child:Text("Add Amount",
+            style: FontStyles.body.copyWith(color: Colors.white),
+            )
           ),
         ),
       ],

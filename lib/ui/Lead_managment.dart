@@ -676,7 +676,7 @@ class _LeadManagmentState extends State<LeadManagment> {
                           isVisible: _isVisibleList[1],
                           toggleVisibility: () => _toggleVisibility(1),
                         ),
-
+if (_isVisibleList[1])downbotton(context),
                         Container(
                           padding: const EdgeInsets.symmetric(
                             horizontal: 12,
