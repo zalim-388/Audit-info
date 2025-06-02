@@ -27,9 +27,6 @@ class Customdrawer extends StatefulWidget {
 }
 
 class _CustomdrawerState extends State<Customdrawer> {
-  // Track expanded state for each popup menu
-  Map<int, bool> expandedStates = {};
-  
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -225,43 +222,32 @@ class _CustomdrawerState extends State<Customdrawer> {
           ),
           SizedBox(height: 25.h),
 
-          // Enhanced Settings with expandable menu
-          _ExpandableDrawerItem(
+          _Draweritems(
             icon: Icons.settings,
             title: "Settings",
             index: 9,
             selectedIndex: widget.SelectedIndex,
-            isExpanded: expandedStates[9] ?? false,
             onTap: () {
-              setState(() {
-                expandedStates[9] = !(expandedStates[9] ?? false);
-              });
               widget.onitemTapped(9);
             },
-            subItems: [
+            isPopupMenu: true,
+            popupItems: [
               "Branch Management",
               "College Management",
               "School Management",
               "Particular Management",
             ],
-            onSubItemTap: (subItem) {
-              print("Settings sub-item selected: $subItem");
-              // Add navigation logic for settings sub-items
-            },
           ),
           SizedBox(height: 25.h),
 
-          // Enhanced Reports with multi-level expandable menu
-          _ExpandableDrawerItemWithSubMenu(
+          // Reports with multi-level popup
+          _DraweritemsWithMultiLevel(
+            icon: null,
             svgpath: "assets/icon/Reports.png",
             title: "Reports",
             index: 10,
             selectedIndex: widget.SelectedIndex,
-            isExpanded: expandedStates[10] ?? false,
             onTap: () {
-              setState(() {
-                expandedStates[10] = !(expandedStates[10] ?? false);
-              });
               widget.onitemTapped(10);
             },
           ),
@@ -295,7 +281,7 @@ class _CustomdrawerState extends State<Customdrawer> {
 
           _Draweritems(
             icon: null,
-            svgpath: "assets/icon/Request's.png",
+            svgpath: "assets/icon/Request’s.png",
             title: "Request's",
             index: 13,
             selectedIndex: widget.SelectedIndex,
@@ -310,304 +296,153 @@ class _CustomdrawerState extends State<Customdrawer> {
   }
 }
 
-// Enhanced expandable drawer item widget
-class _ExpandableDrawerItem extends StatelessWidget {
-  final IconData? icon;
-  final String? svgpath;
-  final String title;
-  final int index;
-  final int selectedIndex;
-  final bool isExpanded;
-  final VoidCallback onTap;
-  final List<String> subItems;
-  final Function(String) onSubItemTap;
+// New widget for multi-level popup menu
+Widget _DraweritemsWithMultiLevel({
+  required IconData? icon,
+  String? svgpath,
+  required String title,
+  required int index,
+  required Function() onTap,
+  required int selectedIndex,
+}) {
+  final bool isSelected = selectedIndex == index;
 
-  const _ExpandableDrawerItem({
-    this.icon,
-    this.svgpath,
-    required this.title,
-    required this.index,
-    required this.selectedIndex,
-    required this.isExpanded,
-    required this.onTap,
-    required this.subItems,
-    required this.onSubItemTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final bool isSelected = selectedIndex == index;
-    
-    return Column(
-      children: [
-        Container(
-          height: 40.h,
-          width: 320.w,
-          decoration: BoxDecoration(
-            color: isSelected ? AppColors.kPrimaryColor : const Color(0xFF414143),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: ListTile(
-            leading: svgpath != null
-                ? Image.asset(
-                    svgpath!,
-                    height: 14.h,
-                    width: 14.w,
-                    fit: BoxFit.cover,
-                    color: Colors.white,
-                  )
-                : Icon(icon, color: Colors.white),
-            title: Text(
-              title,
-              style: GoogleFonts.poppins(color: Colors.white, fontSize: 12),
-            ),
-            trailing: AnimatedRotation(
-              turns: isExpanded ? 0.5 : 0.0,
-              duration: Duration(milliseconds: 200),
-              child: Icon(
-                isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                color: Colors.white,
+  return Container(
+    height: 40.h,
+    width: 320.w,
+    decoration: BoxDecoration(
+      color: isSelected ? AppColors.kPrimaryColor : const Color(0xFF414143),
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: PopupMenuButton<String>(
+      onSelected: (String value) {
+        // Handle the selection based on the value
+        print("Selected: $value");
+        // Add your navigation logic here based on the selected value
+      },
+      itemBuilder:
+          (BuildContext context) => [
+            PopupMenuItem<String>(
+              value: "Seat Bookings",
+              child: Text(
+                "Seat Bookings",
+                style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
               ),
             ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            onTap: onTap,
-          ),
-        ),
-        AnimatedContainer(
-          duration: Duration(milliseconds: 300),
-          height: isExpanded ? (subItems.length * 50.0) : 0,
-          child: AnimatedOpacity(
-            opacity: isExpanded ? 1.0 : 0.0,
-            duration: Duration(milliseconds: 300),
-            child: Column(
-              children: subItems.map((subItem) => 
-                Container(
-                  margin: EdgeInsets.only(left: 20.w, top: 5.h),
-                  height: 40.h,
-                  width: 300.w,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF525254),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: ListTile(
-                    leading: Icon(Icons.subdirectory_arrow_right, color: Colors.white70, size: 16),
-                    title: Text(
-                      subItem,
-                      style: GoogleFonts.poppins(color: Colors.white70, fontSize: 11),
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    onTap: () => onSubItemTap(subItem),
-                  ),
-                ),
-              ).toList(),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-// Enhanced Reports expandable item with nested sub-menu
-class _ExpandableDrawerItemWithSubMenu extends StatefulWidget {
-  final IconData? icon;
-  final String? svgpath;
-  final String title;
-  final int index;
-  final int selectedIndex;
-  final bool isExpanded;
-  final VoidCallback onTap;
-
-  const _ExpandableDrawerItemWithSubMenu({
-    this.icon,
-    this.svgpath,
-    required this.title,
-    required this.index,
-    required this.selectedIndex,
-    required this.isExpanded,
-    required this.onTap,
-  });
-
-  @override
-  State<_ExpandableDrawerItemWithSubMenu> createState() => _ExpandableDrawerItemWithSubMenuState();
-}
-
-class _ExpandableDrawerItemWithSubMenuState extends State<_ExpandableDrawerItemWithSubMenu> {
-  bool isAccountsExpanded = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final bool isSelected = widget.selectedIndex == widget.index;
-    
-    return Column(
-      children: [
-        Container(
-          height: 40.h,
-          width: 320.w,
-          decoration: BoxDecoration(
-            color: isSelected ? AppColors.kPrimaryColor : const Color(0xFF414143),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: ListTile(
-            leading: widget.svgpath != null
-                ? Image.asset(
-                    widget.svgpath!,
-                    height: 14.h,
-                    width: 14.w,
-                    fit: BoxFit.cover,
-                    color: Colors.white,
-                  )
-                : Icon(widget.icon, color: Colors.white),
-            title: Text(
-              widget.title,
-              style: GoogleFonts.poppins(color: Colors.white, fontSize: 12),
-            ),
-            trailing: AnimatedRotation(
-              turns: widget.isExpanded ? 0.5 : 0.0,
-              duration: Duration(milliseconds: 200),
-              child: Icon(
-                widget.isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                color: Colors.white,
+            PopupMenuItem<String>(
+              value: "Employee Sale",
+              child: Text(
+                "Employee Sale",
+                style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
               ),
             ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20),
+            PopupMenuItem<String>(
+              value: "Agent College",
+              child: Text(
+                "Agent College",
+                style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+              ),
             ),
-            onTap: widget.onTap,
-          ),
-        ),
-        AnimatedContainer(
-          duration: Duration(milliseconds: 300),
-          height: widget.isExpanded ? null : 0,
-          child: AnimatedOpacity(
-            opacity: widget.isExpanded ? 1.0 : 0.0,
-            duration: Duration(milliseconds: 300),
-            child: widget.isExpanded ? Column(
-              children: [
-                // Regular report items
-                _buildSubMenuItem("Seat Bookings"),
-                _buildSubMenuItem("Employee Sale"),
-                _buildSubMenuItem("Agent College"),
-                _buildSubMenuItem("Cancelled Student"),
-                
-                // Accounts expandable sub-menu
-                Container(
-                  margin: EdgeInsets.only(left: 20.w, top: 5.h),
-                  width: 300.w,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF525254),
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 40.h,
-                        child: ListTile(
-                          leading: Icon(Icons.subdirectory_arrow_right, color: Colors.white70, size: 16),
-                          title: Text(
-                            "Accounts",
-                            style: GoogleFonts.poppins(color: Colors.white70, fontSize: 11),
+            PopupMenuItem<String>(
+              value: "Cancelled Student",
+              child: Text(
+                "Cancelled Student",
+                style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+              ),
+            ),
+            // Multi-level Accounts submenu
+            PopupMenuItem<String>(
+              enabled: false, // Disable selection for parent item
+              child: PopupMenuButton<String>(
+                onSelected: (String accountValue) {
+                  print("Account Selected: $accountValue");
+                  // Handle account submenu selection
+                },
+                itemBuilder:
+                    (BuildContext context) => [
+                      PopupMenuItem<String>(
+                        value: "Accounts",
+                        child: Text(
+                          "Accounts",
+                          style: GoogleFonts.poppins(
+                            color: Colors.black,
+                            fontSize: 14,
                           ),
-                          trailing: AnimatedRotation(
-                            turns: isAccountsExpanded ? 0.5 : 0.0,
-                            duration: Duration(milliseconds: 200),
-                            child: Icon(
-                              isAccountsExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                              color: Colors.white70,
-                              size: 16,
-                            ),
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          onTap: () {
-                            setState(() {
-                              isAccountsExpanded = !isAccountsExpanded;
-                            });
-                          },
                         ),
                       ),
-                      AnimatedContainer(
-                        duration: Duration(milliseconds: 300),
-                        height: isAccountsExpanded ? null : 0,
-                        child: AnimatedOpacity(
-                          opacity: isAccountsExpanded ? 1.0 : 0.0,
-                          duration: Duration(milliseconds: 300),
-                          child: isAccountsExpanded ? Column(
-                            children: [
-                              _buildNestedSubMenuItem("Accounts"),
-                              _buildNestedSubMenuItem("College Accounts"),
-                              _buildNestedSubMenuItem("Employee Accounts"),
-                              _buildNestedSubMenuItem("Agent Accounts"),
-                            ],
-                          ) : SizedBox.shrink(),
+                      PopupMenuItem<String>(
+                        value: "College Accounts",
+                        child: Text(
+                          "College Accounts",
+                          style: GoogleFonts.poppins(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      PopupMenuItem<String>(
+                        value: "Employee Accounts",
+                        child: Text(
+                          "Employee Accounts",
+                          style: GoogleFonts.poppins(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                      PopupMenuItem<String>(
+                        value: "Agent Accounts",
+                        child: Text(
+                          "Agent Accounts",
+                          style: GoogleFonts.poppins(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
                     ],
-                  ),
+                offset: Offset(200, 0), // Position submenu to the right
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "Accounts",
+                      style: GoogleFonts.poppins(
+                        color: Colors.black,
+                        fontSize: 14,
+                      ),
+                    ),
+                    Icon(
+                      Icons.keyboard_arrow_down,
+                      color: Colors.black,
+                      size: 16,
+                    ),
+                  ],
                 ),
-              ],
-            ) : SizedBox.shrink(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSubMenuItem(String title) {
-    return Container(
-      margin: EdgeInsets.only(left: 20.w, top: 5.h),
-      height: 40.h,
-      width: 300.w,
-      decoration: BoxDecoration(
-        color: const Color(0xFF525254),
-        borderRadius: BorderRadius.circular(15),
-      ),
+              ),
+            ),
+          ],
+      offset: Offset(40, 30.h),
       child: ListTile(
-        leading: Icon(Icons.subdirectory_arrow_right, color: Colors.white70, size: 16),
+        leading:
+            svgpath != null
+                ? Image.asset(
+                  svgpath,
+                  height: 14.h,
+                  width: 14.w,
+                  fit: BoxFit.cover,
+                  color: Colors.white,
+                )
+                : Icon(icon, color: Colors.white),
         title: Text(
           title,
-          style: GoogleFonts.poppins(color: Colors.white70, fontSize: 11),
+          style: GoogleFonts.poppins(color: Colors.white, fontSize: 12),
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
-        onTap: () {
-          print("Report item selected: $title");
-          // Add navigation logic for report items
-        },
+        trailing: Icon(Icons.keyboard_arrow_down, color: Colors.white),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
-    );
-  }
-
-  Widget _buildNestedSubMenuItem(String title) {
-    return Container(
-      margin: EdgeInsets.only(left: 15.w, top: 2.h),
-      height: 35.h,
-      decoration: BoxDecoration(
-        color: const Color(0xFF636365),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: ListTile(
-        leading: Icon(Icons.circle, color: Colors.white60, size: 8),
-        title: Text(
-          title,
-          style: GoogleFonts.poppins(color: Colors.white60, fontSize: 10),
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        onTap: () {
-          print("Nested account item selected: $title");
-          // Add navigation logic for nested account items
-        },
-      ),
-    );
-  }
+    ),
+  );
 }
 
 Widget _Draweritems({
@@ -629,25 +464,72 @@ Widget _Draweritems({
       color: isSelected ? AppColors.kPrimaryColor : const Color(0xFF414143),
       borderRadius: BorderRadius.circular(20),
     ),
-    child: ListTile(
-      leading: svgpath != null
-          ? Image.asset(
-              svgpath,
-              height: 14.h,
-              width: 14.w,
-              fit: BoxFit.cover,
-              color: Colors.white,
+    child:
+        isPopupMenu
+            ? PopupMenuButton<String>(
+              onSelected: onPopupSelected ?? (String value) {},
+              itemBuilder:
+                  (BuildContext context) =>
+                      popupItems!
+                          .map(
+                            (String item) => PopupMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: GoogleFonts.poppins(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
+              offset: Offset(0, 40.h),
+              child: ListTile(
+                leading:
+                    svgpath != null
+                        ? Image.asset(
+                          svgpath,
+                          height: 14.h,
+                          width: 14.w,
+                          fit: BoxFit.cover,
+                          color: Colors.white,
+                        )
+                        : Icon(icon, color: Colors.white),
+                title: Text(
+                  title,
+                  style: GoogleFonts.poppins(color: Colors.white, fontSize: 12),
+                ),
+                trailing: Icon(Icons.keyboard_arrow_down, color: Colors.white),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
             )
-          : Icon(icon, color: Colors.white),
-      title: Text(
-        title,
-        style: GoogleFonts.poppins(color: Colors.white, fontSize: 12),
-      ),
-      selected: isSelected,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      onTap: onTap,
-    ),
+            : ListTile(
+              leading:
+                  svgpath != null
+                      ? Image.asset(
+                        svgpath,
+                        height: 14.h,
+                        width: 14.w,
+                        fit: BoxFit.cover,
+                        color: Colors.white,
+                      )
+                      : Icon(icon, color: Colors.white),
+              title: Text(
+                title,
+                style: GoogleFonts.poppins(color: Colors.white, fontSize: 12),
+              ),
+              trailing:
+                  (title == "Reports" || title == "Settings")
+                      ? Icon(Icons.keyboard_arrow_down, color: Colors.white)
+                      : null,
+              selected: isSelected,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              onTap: onTap,
+            ),
   );
 }
