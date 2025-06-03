@@ -27,6 +27,9 @@ class Customdrawer extends StatefulWidget {
 }
 
 class _CustomdrawerState extends State<Customdrawer> {
+  // Add state variable to track menu level
+  bool showSubMenu = false;
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -239,18 +242,19 @@ class _CustomdrawerState extends State<Customdrawer> {
             ],
           ),
           SizedBox(height: 25.h),
-
-          // Reports with multi-level popup
-          _DraweritemsWithMultiLevel(
+          DrawerItemWithMultiLevel(
             icon: null,
             svgpath: "assets/icon/Reports.png",
             title: "Reports",
             index: 10,
-            selectedIndex: widget.SelectedIndex,
-            onTap: () {
-              widget.onitemTapped(10);
+            onBaseItemTap: () {
+              setState(() {
+                showSubMenu;
+              });
             },
+            selectedIndex: widget.SelectedIndex,
           ),
+
           SizedBox(height: 25.h),
 
           _Draweritems(
@@ -281,7 +285,7 @@ class _CustomdrawerState extends State<Customdrawer> {
 
           _Draweritems(
             icon: null,
-            svgpath: "assets/icon/Request’s.png",
+            svgpath: "assets/icon/Request's.png",
             title: "Request's",
             index: 13,
             selectedIndex: widget.SelectedIndex,
@@ -296,153 +300,155 @@ class _CustomdrawerState extends State<Customdrawer> {
   }
 }
 
-// New widget for multi-level popup menu
-Widget _DraweritemsWithMultiLevel({
-  required IconData? icon,
-  String? svgpath,
-  required String title,
-  required int index,
-  required Function() onTap,
-  required int selectedIndex,
-}) {
-  final bool isSelected = selectedIndex == index;
+enum ReportsPopupPage { main, accounts }
 
-  return Container(
-    height: 40.h,
-    width: 320.w,
-    decoration: BoxDecoration(
-      color: isSelected ? AppColors.kPrimaryColor : const Color(0xFF414143),
-      borderRadius: BorderRadius.circular(20),
-    ),
-    child: PopupMenuButton<String>(
-      onSelected: (String value) {
-        // Handle the selection based on the value
-        print("Selected: $value");
-        // Add your navigation logic here based on the selected value
-      },
-      itemBuilder:
-          (BuildContext context) => [
-            PopupMenuItem<String>(
-              value: "Seat Bookings",
-              child: Text(
-                "Seat Bookings",
-                style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
-              ),
-            ),
-            PopupMenuItem<String>(
-              value: "Employee Sale",
-              child: Text(
-                "Employee Sale",
-                style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
-              ),
-            ),
-            PopupMenuItem<String>(
-              value: "Agent College",
-              child: Text(
-                "Agent College",
-                style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
-              ),
-            ),
-            PopupMenuItem<String>(
-              value: "Cancelled Student",
-              child: Text(
-                "Cancelled Student",
-                style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
-              ),
-            ),
-            // Multi-level Accounts submenu
-            PopupMenuItem<String>(
-              enabled: false, // Disable selection for parent item
-              child: PopupMenuButton<String>(
-                onSelected: (String accountValue) {
-                  print("Account Selected: $accountValue");
-                  // Handle account submenu selection
-                },
-                itemBuilder:
-                    (BuildContext context) => [
-                      PopupMenuItem<String>(
-                        value: "Accounts",
-                        child: Text(
-                          "Accounts",
-                          style: GoogleFonts.poppins(
-                            color: Colors.black,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      PopupMenuItem<String>(
-                        value: "College Accounts",
-                        child: Text(
-                          "College Accounts",
-                          style: GoogleFonts.poppins(
-                            color: Colors.black,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      PopupMenuItem<String>(
-                        value: "Employee Accounts",
-                        child: Text(
-                          "Employee Accounts",
-                          style: GoogleFonts.poppins(
-                            color: Colors.black,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                      PopupMenuItem<String>(
-                        value: "Agent Accounts",
-                        child: Text(
-                          "Agent Accounts",
-                          style: GoogleFonts.poppins(
-                            color: Colors.black,
-                            fontSize: 14,
-                          ),
-                        ),
-                      ),
-                    ],
-                offset: Offset(200, 0), // Position submenu to the right
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Accounts",
-                      style: GoogleFonts.poppins(
-                        color: Colors.black,
-                        fontSize: 14,
-                      ),
-                    ),
-                    Icon(
-                      Icons.keyboard_arrow_down,
-                      color: Colors.black,
-                      size: 16,
-                    ),
-                  ],
-                ),
-              ),
-            ),
+class DrawerItemWithMultiLevel extends StatefulWidget {
+  final IconData? icon;
+  final String? svgpath;
+  final String title;
+  final int index;
+  final int selectedIndex;
+  final VoidCallback onBaseItemTap;
+
+  const DrawerItemWithMultiLevel({
+    super.key,
+    this.icon,
+    this.svgpath,
+    required this.title,
+    required this.index,
+    required this.selectedIndex,
+    required this.onBaseItemTap,
+  });
+
+  @override
+  State<DrawerItemWithMultiLevel> createState() =>
+      _DrawerItemWithMultiLevelState();
+}
+
+class _DrawerItemWithMultiLevelState extends State<DrawerItemWithMultiLevel> {
+  ReportsPopupPage _currentPage = ReportsPopupPage.main;
+  final _popupMenuKey = GlobalKey<PopupMenuButtonState<String>>();
+
+  // Main Menu Items
+  List<PopupMenuEntry<String>> _buildMainItems() {
+    return [
+      _popupItem('seat_bookings', 'Seat Bookings'),
+      const PopupMenuDivider(),
+      _popupItem('employee_sale', 'Employee Sale'),
+      const PopupMenuDivider(),
+      _popupItem('agent_college', 'Agent College'),
+      const PopupMenuDivider(),
+      _popupItem('cancelled_student', 'Cancelled Student'),
+      const PopupMenuDivider(),
+      PopupMenuItem<String>(
+        value: 'show_accounts_submenu',
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: const [
+            Text('Accounts'),
+            Icon(Icons.keyboard_arrow_down, color: Colors.black54),
           ],
-      offset: Offset(40, 30.h),
-      child: ListTile(
-        leading:
-            svgpath != null
-                ? Image.asset(
-                  svgpath,
-                  height: 14.h,
-                  width: 14.w,
-                  fit: BoxFit.cover,
-                  color: Colors.white,
-                )
-                : Icon(icon, color: Colors.white),
-        title: Text(
-          title,
-          style: GoogleFonts.poppins(color: Colors.white, fontSize: 12),
         ),
-        trailing: Icon(Icons.keyboard_arrow_down, color: Colors.white),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       ),
-    ),
-  );
+    ];
+  }
+
+  // Sub Menu Items (Accounts)
+  List<PopupMenuEntry<String>> _buildAccountItems() {
+    return [
+      PopupMenuItem<String>(
+        value: 'back_to_reports_main',
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: const [
+            Text('Accounts'),
+            Icon(Icons.keyboard_arrow_up, color: Colors.black54),
+          ],
+        ),
+      ),
+      const PopupMenuDivider(),
+      _popupItem('accounts_detail_main', 'Accounts Detail'),
+      const PopupMenuDivider(),
+      _popupItem('college_accounts_report', 'College Accounts'),
+      const PopupMenuDivider(),
+      _popupItem('employee_accounts_report', 'Employee Accounts'),
+      const PopupMenuDivider(),
+      _popupItem('agent_accounts_report', 'Agent Accounts'),
+    ];
+  }
+
+  // Reusable Popup Item
+  PopupMenuItem<String> _popupItem(String value, String label) {
+    return PopupMenuItem<String>(value: value, child: Text(label));
+  }
+
+  // Selection Logic
+  void _handleSelection(String value) {
+    if (value == 'show_accounts_submenu') {
+      setState(() => _currentPage = ReportsPopupPage.accounts);
+      _reopenMenu();
+    } else if (value == 'back_to_reports_main') {
+      setState(() => _currentPage = ReportsPopupPage.main);
+      _reopenMenu();
+    } else {
+      // handle your item taps here
+    }
+  }
+
+  void _reopenMenu() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _popupMenuKey.currentState?.showButtonMenu();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isSelected = widget.selectedIndex == widget.index;
+
+    return Container(
+      height: 40.h,
+      decoration: BoxDecoration(
+        color: isSelected ? AppColors.kPrimaryColor : const Color(0xFF414143),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: PopupMenuButton<String>(
+        key: _popupMenuKey,
+        tooltip: "Show Reports Options",
+        offset: Offset(40, 30.h),
+        onSelected: _handleSelection,
+        onCanceled: () => setState(() => _currentPage = ReportsPopupPage.main),
+        itemBuilder:
+            (_) =>
+                _currentPage == ReportsPopupPage.accounts
+                    ? _buildAccountItems()
+                    : _buildMainItems(),
+        child: ListTile(
+          leading:
+              widget.svgpath != null
+                  ? Image.asset(
+                    widget.svgpath!,
+                    height: 18.h,
+                    width: 18.w,
+                    color: Colors.white,
+                  )
+                  : Icon(widget.icon, color: Colors.white, size: 18.h),
+          title: Text(
+            widget.title,
+            style: GoogleFonts.poppins(color: Colors.white, fontSize: 12.sp),
+          ),
+          trailing: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          selected: isSelected,
+          onTap: () {
+            widget.onBaseItemTap();
+            _popupMenuKey.currentState?.showButtonMenu();
+          },
+        ),
+      ),
+    );
+  }
 }
 
 Widget _Draweritems({
@@ -467,7 +473,11 @@ Widget _Draweritems({
     child:
         isPopupMenu
             ? PopupMenuButton<String>(
-              onSelected: onPopupSelected ?? (String value) {},
+              onSelected:
+                  onPopupSelected ??
+                  (String value) {
+                    print("Selected: $value");
+                  },
               itemBuilder:
                   (BuildContext context) =>
                       popupItems!
@@ -533,3 +543,141 @@ Widget _Draweritems({
             ),
   );
 }
+
+// enum ReportPopupPage{ main, accounts }
+// Widget _DraweritemsWithMultiLevell({
+//   required IconData? icon,
+//   String? svgpath,
+//   required String title,
+//   required int index,
+//   required Function() onTap,
+//   required int selectedIndex,
+//   required bool showSubMenu,
+//   required Function(bool) onSubMenuToggle,
+// }) {
+//   final bool isSelected = selectedIndex == index;
+//  ReportPopupPage _currentPage = ReportPopupPage.main;
+
+
+//   return Container(
+//     height: 40.h,
+//     width: 320.w,
+//     decoration: BoxDecoration(
+//       color: isSelected ? AppColors.kPrimaryColor : const Color(0xFF414143),
+//       borderRadius: BorderRadius.circular(20),
+//     ),
+//     child: PopupMenuButton<String>(
+//       onSelected: (String value) {
+//         print("Selected: $value");
+
+//         if (value == "Accounts") {
+//           onSubMenuToggle(!showSubMenu);
+//         } else if (value == "Back") {
+//           onSubMenuToggle(false);
+//         } else {
+//           onSubMenuToggle(false);
+//           // Add your navigation logic here based on the selected value
+//           print("Navigating to: $value");
+//         }
+//       },
+//       itemBuilder: (BuildContext context) => showSubMenu ? [
+//         // Submenu items for Accounts
+//         PopupMenuItem<String>(
+//           value: "College Accounts",
+//           child: Text(
+//             "College Accounts",
+//             style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+//           ),
+//         ),
+//         PopupMenuItem<String>(
+//           value: "Employee Accounts",
+//           child: Text(
+//             "Employee Accounts",
+//             style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+//           ),
+//         ),
+//         PopupMenuItem<String>(
+//           value: "Agent Accounts",
+//           child: Text(
+//             "Agent Accounts",
+//             style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+//           ),
+//         ),
+//         PopupMenuItem<String>(
+//           value: "Back",
+//           child: Row(
+//             children: [
+//               Icon(Icons.arrow_back, color: Colors.black, size: 16),
+//               SizedBox(width: 8),
+//               Text(
+//                 "Back",
+//                 style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ] : [
+//         // Main menu items
+//         PopupMenuItem<String>(
+//           value: "Seat Bookings",
+//           child: Text(
+//             "Seat Bookings",
+//             style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+//           ),
+//         ),
+//         PopupMenuItem<String>(
+//           value: "Employee Sale",
+//           child: Text(
+//             "Employee Sale",
+//             style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+//           ),
+//         ),
+//         PopupMenuItem<String>(
+//           value: "Agent College",
+//           child: Text(
+//             "Agent College",
+//             style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+//           ),
+//         ),
+//         PopupMenuItem<String>(
+//           value: "Cancelled Student",
+//           child: Text(
+//             "Cancelled Student",
+//             style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+//           ),
+//         ),
+//         PopupMenuItem<String>(
+//           value: "Accounts",
+//           child: Row(
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: [
+//               Text(
+//                 "Accounts",
+//                 style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+//               ),
+//               Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 16),
+//             ],
+//           ),
+//         ),
+//       ],
+//       offset: Offset(40, 30.h),
+//       child: ListTile(
+//         leading: svgpath != null
+//             ? Image.asset(
+//                 svgpath,
+//                 height: 14.h,
+//                 width: 14.w,
+//                 fit: BoxFit.cover,
+//                 color: Colors.white,
+//               )
+//             : Icon(icon, color: Colors.white),
+//         title: Text(
+//           title,
+//           style: GoogleFonts.poppins(color: Colors.white, fontSize: 12),
+//         ),
+//         trailing: Icon(Icons.keyboard_arrow_down, color: Colors.white),
+//         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+//       ),
+//     ),
+//   );
+// }

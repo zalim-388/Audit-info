@@ -4,8 +4,6 @@ import 'dart:developer';
 import 'package:audit_info/Repositry/Api/Api_Exception.dart';
 import 'package:http/http.dart';
 
-import 'api_exception.dart';
-
 class ApiClient {
   Future<Response> invokeAPI(String path, String method, Object? body) async {
     Response response;
@@ -47,11 +45,11 @@ class ApiClient {
         response = await get(
           Uri.parse(url),
           headers: {
-            'X-RapidAPI-Key':
-                'ca62211e4cmshcd22b3f6295b989p18b2ccjsn35cbabc6e276',
-            'X-RapidAPI-Host': 'instagram230.p.rapidapi.com',
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
+            // 'X-RapidAPI-Key':
+            //     'ca62211e4cmshcd22b3f6295b989p18b2ccjsn35cbabc6e276',
+            // 'X-RapidAPI-Host': 'instagram230.p.rapidapi.com',
+            // 'Accept': 'application/json',
+            // 'Content-Type': 'application/json',
           },
         );
 
@@ -63,9 +61,7 @@ class ApiClient {
           body: body,
         );
         break;
-      case "PATCH1":
-        response = await patch(Uri.parse(url), headers: {}, body: body);
-        break;
+
       default:
         response = await get(
           Uri.parse(url),
