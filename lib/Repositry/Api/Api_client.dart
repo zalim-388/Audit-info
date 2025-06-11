@@ -2,13 +2,15 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:audit_info/Repositry/Api/Api_Exception.dart';
+import 'package:audit_info/main.dart';
 import 'package:http/http.dart';
 
 class ApiClient {
   Future<Response> invokeAPI(String path, String method, Object? body) async {
     Response response;
 
-    String url = path;
+
+    String url = baseUrl+ path;
     print(url);
 
     print(body);

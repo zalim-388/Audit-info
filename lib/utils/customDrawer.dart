@@ -27,7 +27,6 @@ class Customdrawer extends StatefulWidget {
 }
 
 class _CustomdrawerState extends State<Customdrawer> {
-  // Add state variable to track menu level
   bool showSubMenu = false;
 
   @override
@@ -120,6 +119,7 @@ class _CustomdrawerState extends State<Customdrawer> {
             selectedIndex: widget.SelectedIndex,
             onTap: () {
               widget.onitemTapped(2);
+              Navigator.pop(context);
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => Accountant()),
@@ -136,6 +136,7 @@ class _CustomdrawerState extends State<Customdrawer> {
             selectedIndex: widget.SelectedIndex,
             onTap: () {
               widget.onitemTapped(3);
+              Navigator.pop(context);
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => Src()),
@@ -152,6 +153,7 @@ class _CustomdrawerState extends State<Customdrawer> {
             selectedIndex: widget.SelectedIndex,
             onTap: () {
               widget.onitemTapped(4);
+              Navigator.pop(context);
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => Sro()),
@@ -168,6 +170,7 @@ class _CustomdrawerState extends State<Customdrawer> {
             selectedIndex: widget.SelectedIndex,
             onTap: () {
               widget.onitemTapped(5);
+              Navigator.pop(context);
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => Officeadministration()),
@@ -185,6 +188,7 @@ class _CustomdrawerState extends State<Customdrawer> {
             selectedIndex: widget.SelectedIndex,
             onTap: () {
               widget.onitemTapped(6);
+              Navigator.pop(context);
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => Agent()),
@@ -201,6 +205,7 @@ class _CustomdrawerState extends State<Customdrawer> {
             selectedIndex: widget.SelectedIndex,
             onTap: () {
               widget.onitemTapped(7);
+              Navigator.pop(context);
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => LeadManagment()),
@@ -217,6 +222,7 @@ class _CustomdrawerState extends State<Customdrawer> {
             selectedIndex: widget.SelectedIndex,
             onTap: () {
               widget.onitemTapped(8);
+              Navigator.pop(context);
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => StudentManagment()),
@@ -232,6 +238,7 @@ class _CustomdrawerState extends State<Customdrawer> {
             selectedIndex: widget.SelectedIndex,
             onTap: () {
               widget.onitemTapped(9);
+              Navigator.pop(context);
             },
             isPopupMenu: true,
             popupItems: [
@@ -285,7 +292,7 @@ class _CustomdrawerState extends State<Customdrawer> {
 
           _Draweritems(
             icon: null,
-            svgpath: "assets/icon/Request's.png",
+            svgpath: "assets/icon/Request’s.png",
             title: "Request's",
             index: 13,
             selectedIndex: widget.SelectedIndex,
@@ -294,6 +301,7 @@ class _CustomdrawerState extends State<Customdrawer> {
               Navigator.pop(context);
             },
           ),
+          SizedBox(height: 25.h),
         ],
       ),
     );
@@ -321,15 +329,13 @@ class DrawerItemWithMultiLevel extends StatefulWidget {
   });
 
   @override
-  State<DrawerItemWithMultiLevel> createState() =>
-      _DrawerItemWithMultiLevelState();
+  State<DrawerItemWithMultiLevel> createState() => _DrawerItemWithMultiLevelState();
 }
 
 class _DrawerItemWithMultiLevelState extends State<DrawerItemWithMultiLevel> {
   ReportsPopupPage _currentPage = ReportsPopupPage.main;
   final _popupMenuKey = GlobalKey<PopupMenuButtonState<String>>();
 
-  // Main Menu Items
   List<PopupMenuEntry<String>> _buildMainItems() {
     return [
       _popupItem('seat_bookings', 'Seat Bookings'),
@@ -353,7 +359,6 @@ class _DrawerItemWithMultiLevelState extends State<DrawerItemWithMultiLevel> {
     ];
   }
 
-  // Sub Menu Items (Accounts)
   List<PopupMenuEntry<String>> _buildAccountItems() {
     return [
       PopupMenuItem<String>(
@@ -377,12 +382,17 @@ class _DrawerItemWithMultiLevelState extends State<DrawerItemWithMultiLevel> {
     ];
   }
 
-  // Reusable Popup Item
   PopupMenuItem<String> _popupItem(String value, String label) {
-    return PopupMenuItem<String>(value: value, child: Text(label));
+    return PopupMenuItem<String>(
+      value: value,
+      child: SizedBox(
+      height: 160.h,
+        width: 162.w, 
+        child: Text(label),
+      ),
+    );
   }
 
-  // Selection Logic
   void _handleSelection(String value) {
     if (value == 'show_accounts_submenu') {
       setState(() => _currentPage = ReportsPopupPage.accounts);
@@ -391,7 +401,7 @@ class _DrawerItemWithMultiLevelState extends State<DrawerItemWithMultiLevel> {
       setState(() => _currentPage = ReportsPopupPage.main);
       _reopenMenu();
     } else {
-      // handle your item taps here
+     
     }
   }
 
@@ -411,40 +421,48 @@ class _DrawerItemWithMultiLevelState extends State<DrawerItemWithMultiLevel> {
         color: isSelected ? AppColors.kPrimaryColor : const Color(0xFF414143),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: PopupMenuButton<String>(
-        key: _popupMenuKey,
-        tooltip: "Show Reports Options",
-        offset: Offset(40, 30.h),
-        onSelected: _handleSelection,
-        onCanceled: () => setState(() => _currentPage = ReportsPopupPage.main),
-        itemBuilder:
-            (_) =>
-                _currentPage == ReportsPopupPage.accounts
-                    ? _buildAccountItems()
-                    : _buildMainItems(),
-        child: ListTile(
-          leading:
-              widget.svgpath != null
-                  ? Image.asset(
+      child: Theme(
+        data: Theme.of(context).copyWith(
+          cardColor: Colors.white,
+          popupMenuTheme: PopupMenuThemeData(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+        child: PopupMenuButton<String>(
+          key: _popupMenuKey,
+          tooltip: "Show Reports Options",
+          offset: Offset(0, 40.h), // Corrected alignment
+          onSelected: _handleSelection,
+          onCanceled: () => setState(() => _currentPage = ReportsPopupPage.main),
+          itemBuilder: (_) =>
+              _currentPage == ReportsPopupPage.accounts
+                  ? _buildAccountItems()
+                  : _buildMainItems(),
+          child: ListTile(
+            leading: widget.svgpath != null
+                ? Image.asset(
                     widget.svgpath!,
                     height: 18.h,
                     width: 18.w,
                     color: Colors.white,
                   )
-                  : Icon(widget.icon, color: Colors.white, size: 18.h),
-          title: Text(
-            widget.title,
-            style: GoogleFonts.poppins(color: Colors.white, fontSize: 12.sp),
+                : Icon(widget.icon, color: Colors.white, size: 18.h),
+            title: Text(
+              widget.title,
+              style: GoogleFonts.poppins(color: Colors.white, fontSize: 12.sp),
+            ),
+            trailing: Icon(Icons.keyboard_arrow_down, color: Colors.white),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            selected: isSelected,
+            onTap: () {
+              widget.onBaseItemTap();
+              _popupMenuKey.currentState?.showButtonMenu();
+            },
           ),
-          trailing: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          selected: isSelected,
-          onTap: () {
-            widget.onBaseItemTap();
-            _popupMenuKey.currentState?.showButtonMenu();
-          },
         ),
       ),
     );
@@ -463,6 +481,38 @@ Widget _Draweritems({
   Function(String)? onPopupSelected,
 }) {
   final bool isSelected = selectedIndex == index;
+
+  final listTile = Row(crossAxisAlignment: CrossAxisAlignment.center,
+    children: [
+      ListTile(
+        leading: svgpath != null
+            ? Image.asset(
+                svgpath,
+                height: 14.h,
+                width: 14.w,
+                fit: BoxFit.cover,
+                color: Colors.white,
+              )
+            : Icon(icon, color: Colors.white),
+        title: Text(
+          title,
+          style: GoogleFonts.poppins(
+            color: Colors.white,
+            fontSize: 12,
+          ),
+        ),
+        trailing: (isPopupMenu || title == "Reports" || title == "Settings")
+            ? Icon(Icons.keyboard_arrow_down, color: Colors.white)
+            : null,
+        selected: isSelected,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        onTap: isPopupMenu ? null : onTap,
+      ),
+    ],
+  );
+
   return Container(
     height: 40.h,
     width: 320.w,
@@ -470,214 +520,21 @@ Widget _Draweritems({
       color: isSelected ? AppColors.kPrimaryColor : const Color(0xFF414143),
       borderRadius: BorderRadius.circular(20),
     ),
-    child:
-        isPopupMenu
-            ? PopupMenuButton<String>(
-              onSelected:
-                  onPopupSelected ??
-                  (String value) {
-                    print("Selected: $value");
-                  },
-              itemBuilder:
-                  (BuildContext context) =>
-                      popupItems!
-                          .map(
-                            (String item) => PopupMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: GoogleFonts.poppins(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                          )
-                          .toList(),
-              offset: Offset(0, 40.h),
-              child: ListTile(
-                leading:
-                    svgpath != null
-                        ? Image.asset(
-                          svgpath,
-                          height: 14.h,
-                          width: 14.w,
-                          fit: BoxFit.cover,
-                          color: Colors.white,
-                        )
-                        : Icon(icon, color: Colors.white),
-                title: Text(
-                  title,
-                  style: GoogleFonts.poppins(color: Colors.white, fontSize: 12),
-                ),
-                trailing: Icon(Icons.keyboard_arrow_down, color: Colors.white),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-            )
-            : ListTile(
-              leading:
-                  svgpath != null
-                      ? Image.asset(
-                        svgpath,
-                        height: 14.h,
-                        width: 14.w,
-                        fit: BoxFit.cover,
-                        color: Colors.white,
-                      )
-                      : Icon(icon, color: Colors.white),
-              title: Text(
-                title,
-                style: GoogleFonts.poppins(color: Colors.white, fontSize: 12),
-              ),
-              trailing:
-                  (title == "Reports" || title == "Settings")
-                      ? Icon(Icons.keyboard_arrow_down, color: Colors.white)
-                      : null,
-              selected: isSelected,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              onTap: onTap,
-            ),
+    child: isPopupMenu
+        ? PopupMenuButton<String>(
+            onSelected: onPopupSelected ?? (String value) => print("Selected: $value"),
+            itemBuilder: (context) => popupItems!
+                .map((item) => PopupMenuItem<String>(
+                      value: item,
+                      child: Text(
+                        "",
+                        style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+                      ),
+                    ))
+                .toList(),
+            offset: Offset(0, 40.h),
+            child: listTile,
+          )
+        : listTile,
   );
 }
-
-// enum ReportPopupPage{ main, accounts }
-// Widget _DraweritemsWithMultiLevell({
-//   required IconData? icon,
-//   String? svgpath,
-//   required String title,
-//   required int index,
-//   required Function() onTap,
-//   required int selectedIndex,
-//   required bool showSubMenu,
-//   required Function(bool) onSubMenuToggle,
-// }) {
-//   final bool isSelected = selectedIndex == index;
-//  ReportPopupPage _currentPage = ReportPopupPage.main;
-
-
-//   return Container(
-//     height: 40.h,
-//     width: 320.w,
-//     decoration: BoxDecoration(
-//       color: isSelected ? AppColors.kPrimaryColor : const Color(0xFF414143),
-//       borderRadius: BorderRadius.circular(20),
-//     ),
-//     child: PopupMenuButton<String>(
-//       onSelected: (String value) {
-//         print("Selected: $value");
-
-//         if (value == "Accounts") {
-//           onSubMenuToggle(!showSubMenu);
-//         } else if (value == "Back") {
-//           onSubMenuToggle(false);
-//         } else {
-//           onSubMenuToggle(false);
-//           // Add your navigation logic here based on the selected value
-//           print("Navigating to: $value");
-//         }
-//       },
-//       itemBuilder: (BuildContext context) => showSubMenu ? [
-//         // Submenu items for Accounts
-//         PopupMenuItem<String>(
-//           value: "College Accounts",
-//           child: Text(
-//             "College Accounts",
-//             style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
-//           ),
-//         ),
-//         PopupMenuItem<String>(
-//           value: "Employee Accounts",
-//           child: Text(
-//             "Employee Accounts",
-//             style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
-//           ),
-//         ),
-//         PopupMenuItem<String>(
-//           value: "Agent Accounts",
-//           child: Text(
-//             "Agent Accounts",
-//             style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
-//           ),
-//         ),
-//         PopupMenuItem<String>(
-//           value: "Back",
-//           child: Row(
-//             children: [
-//               Icon(Icons.arrow_back, color: Colors.black, size: 16),
-//               SizedBox(width: 8),
-//               Text(
-//                 "Back",
-//                 style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
-//               ),
-//             ],
-//           ),
-//         ),
-//       ] : [
-//         // Main menu items
-//         PopupMenuItem<String>(
-//           value: "Seat Bookings",
-//           child: Text(
-//             "Seat Bookings",
-//             style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
-//           ),
-//         ),
-//         PopupMenuItem<String>(
-//           value: "Employee Sale",
-//           child: Text(
-//             "Employee Sale",
-//             style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
-//           ),
-//         ),
-//         PopupMenuItem<String>(
-//           value: "Agent College",
-//           child: Text(
-//             "Agent College",
-//             style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
-//           ),
-//         ),
-//         PopupMenuItem<String>(
-//           value: "Cancelled Student",
-//           child: Text(
-//             "Cancelled Student",
-//             style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
-//           ),
-//         ),
-//         PopupMenuItem<String>(
-//           value: "Accounts",
-//           child: Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               Text(
-//                 "Accounts",
-//                 style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
-//               ),
-//               Icon(Icons.keyboard_arrow_right, color: Colors.black, size: 16),
-//             ],
-//           ),
-//         ),
-//       ],
-//       offset: Offset(40, 30.h),
-//       child: ListTile(
-//         leading: svgpath != null
-//             ? Image.asset(
-//                 svgpath,
-//                 height: 14.h,
-//                 width: 14.w,
-//                 fit: BoxFit.cover,
-//                 color: Colors.white,
-//               )
-//             : Icon(icon, color: Colors.white),
-//         title: Text(
-//           title,
-//           style: GoogleFonts.poppins(color: Colors.white, fontSize: 12),
-//         ),
-//         trailing: Icon(Icons.keyboard_arrow_down, color: Colors.white),
-//         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-//       ),
-//     ),
-//   );
-// }

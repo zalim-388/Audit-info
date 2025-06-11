@@ -1,9 +1,11 @@
+import 'package:audit_info/bloc/branch_manager_bloc.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -23,6 +25,11 @@ class _BranchMangerState extends State<BranchManager> {
   }
 
   String? selectedBranch = 'Branch 1';
+
+  void initState() {
+    super.initState();
+    BlocProvider.of<BranchManagerBloc>(context).add(fechbranch());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +93,7 @@ class _BranchMangerState extends State<BranchManager> {
           child: Column(
             children: [
               SizedBox(height: 13.h),
+
               Row(
                 children: [
                   Expanded(

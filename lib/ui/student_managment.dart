@@ -17,7 +17,7 @@ class StudentManagment extends StatefulWidget {
 }
 
 class _StudentManagmentState extends State<StudentManagment> {
-  int _selectedIndex = 9;
+  int _selectedIndex = 8;
   bool showDropdown = false;
 
   List<bool> _isVisibleList = List.generate(4, (_) => false);

@@ -1,10 +1,10 @@
-import 'package:audit_info/ui/Agent.dart';
-import 'package:audit_info/ui/Lead_managment.dart';
+import 'package:audit_info/bloc/branch_manager_bloc.dart';
 import 'package:audit_info/ui/loginpage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+String baseUrl = "http://192.168.1.83:3000/api";
 
 void main() {
   runApp(const MyApp());
@@ -15,26 +15,31 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: Size(402, 874),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (context, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
+    return BlocProvider(
+      create: (context) => BranchManagerBloc(),
+      child: ScreenUtilInit(
+        designSize: Size(402, 874),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
 
-          // home: Loginpage(),
-          // home: StudentHistory(),
-          home: Agent(),
-        );
-      },
+            home: Loginpage(),
+            // home: StudentHistory(),
+            // home: BranchManager(),
+          );
+        },
+      ),
     );
   }
 }
 
 
 
-
+//  MultiBlocProvider(
+//       providers: [],
+//       child:
 
 
 

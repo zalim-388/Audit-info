@@ -18,7 +18,7 @@ class LeadManagment extends StatefulWidget {
 }
 
 class _LeadManagmentState extends State<LeadManagment> {
-  int _selectedIndex = 8;
+  int _selectedIndex = 7;
   bool showDropdown = false;
   // bool _isVisible = false;
   List<bool> _isVisibleList = List.generate(4, (_) => false);

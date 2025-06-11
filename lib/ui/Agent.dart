@@ -19,9 +19,12 @@ class Agent extends StatefulWidget {
 
 class _AgentState extends State<Agent> {
   List<Map<String, dynamic>> Agentlist = [];
+  List<Map<String, dynamic>> filterAgent = [];
+
   TextEditingController _namecontroller = TextEditingController();
   TextEditingController _phonecontroller = TextEditingController();
   TextEditingController _addresscontroller = TextEditingController();
+  TextEditingController searchcontroller = TextEditingController();
 
   void initState() {
     super.initState();
@@ -40,22 +43,17 @@ class _AgentState extends State<Agent> {
     final prerf = await SharedPreferences.getInstance();
     final String? data = prerf.getString("agents");
     if (data != null) {
+      List<Map<String, dynamic>> allAgents = List<Map<String, dynamic>>.from(
+        jsonDecode(data),
+      );
       setState(() {
-        Agentlist = List<Map<String, dynamic>>.from(jsonDecode(data));
+        Agentlist = allAgents;
+        filterAgent = allAgents;
       });
     }
   }
 
   Future<void> setAgentdata() async {
-    // if (_namecontroller.text.isEmpty ||
-    //     _phonecontroller.text.isEmpty ||
-    //     _addresscontroller.text.isEmpty) {
-    //   ScaffoldMessenger.of(
-    //     context,
-    //   ).showSnackBar(const SnackBar(content: Text("Please fill all fields")));
-    //   return;
-    // }
-
     final prefs = await SharedPreferences.getInstance();
     final agent = {
       'name': _namecontroller.text.trim(),
@@ -64,6 +62,7 @@ class _AgentState extends State<Agent> {
     };
     setState(() {
       Agentlist.add(agent);
+      filterAgent = Agentlist;
     });
 
     await prefs.setString('agents', jsonEncode(Agentlist));
@@ -73,10 +72,24 @@ class _AgentState extends State<Agent> {
     _addresscontroller.clear();
   }
 
-  int _selectedIndex = 7;
+  int _selectedIndex = 6;
   void _onitemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+    });
+  }
+
+  void _filtersearch(String query) {
+    setState(() {
+      filterAgent =
+          Agentlist.where((agent) {
+            final name = agent['name']?.toLowerCase() ?? '';
+            final phone = agent['phone']?.toLowerCase() ?? '';
+            final address = agent['Address']?.toLowerCase() ?? '';
+            return name.contains(query.toLowerCase()) ||
+                phone.contains(query.toLowerCase()) ||
+                address.contains(query.toLowerCase());
+          }).toList();
     });
   }
 
@@ -146,6 +159,8 @@ class _AgentState extends State<Agent> {
                       width: 322.w,
                       height: 30.h,
                       child: TextField(
+                        controller: searchcontroller,
+                        onChanged: _filtersearch,
                         decoration: InputDecoration(
                           prefixIcon: Icon(
                             Icons.search,
