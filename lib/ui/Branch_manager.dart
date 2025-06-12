@@ -1,4 +1,5 @@
-import 'package:audit_info/bloc/branch_manager_bloc.dart';
+import 'package:audit_info/bloc/branch/branch_manager_bloc.dart';
+import 'package:audit_info/bloc/manger/manager_bloc.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
@@ -28,8 +29,20 @@ class _BranchMangerState extends State<BranchManager> {
 
   void initState() {
     super.initState();
-    BlocProvider.of<BranchManagerBloc>(context).add(fechbranch());
+    BlocProvider.of<BranchManagerBloc>(context).add(fetchbranch());
+    BlocProvider.of<ManagerBloc>(context).add(fetchmanager());
   }
+
+  TextEditingController employecodeController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController phonenumber = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmController = TextEditingController();
+  TextEditingController pointamountController = TextEditingController();
+  TextEditingController salaryController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -130,11 +143,25 @@ class _BranchMangerState extends State<BranchManager> {
                   SizedBox(width: 7.w),
                   GestureDetector(
                     onTap: () {
-                      BranchManageropenDialog(context, selectedBranch, (value) {
-                        setState(() {
-                          selectedBranch = value;
-                        });
-                      });
+                      _BranchManageropenDialog(
+                        context,
+                        selectedBranch,
+                        (value) {
+                          setState(() {
+                            selectedBranch = value;
+                          });
+                        },
+                        employecodeController,
+                        dateController,
+                        nameController,
+                        emailController,
+                        addressController,
+                        phonenumber,
+                        confirmController,
+                        pointamountController,
+                        salaryController,
+                        passwordController,
+                      );
                     },
                     child: Container(
                       height: 28.h,
@@ -152,85 +179,139 @@ class _BranchMangerState extends State<BranchManager> {
               ),
 
               SizedBox(height: 13.h),
-
-              Container(
-                width: 354.w,
-                height: 35.h,
-                decoration: BoxDecoration(
-                  color: AppColors.kContainerColor,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(9),
-                    topRight: Radius.circular(9),
-                  ),
-                  border: Border(
-                    top: BorderSide(color: Colors.black),
-                    left: BorderSide(color: Colors.black),
-                    right: BorderSide(color: Colors.black),
-                  ),
-                ),
-                alignment: Alignment.centerLeft,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 8.w),
-                  child: Text('Branch Manager', style: FontStyles.body),
-                ),
-              ),
-              SizedBox(
-                width: 354.w,
-
-                child: Table(
-                  border: TableBorder(
-                    horizontalInside: BorderSide(color: AppColors.kBorderColor),
-                    verticalInside: BorderSide(color: AppColors.kBorderColor),
-                    bottom: BorderSide(color: Colors.black),
-                    left: BorderSide(color: Colors.black),
-                    right: BorderSide(color: Colors.black),
-                  ),
-
-                  columnWidths: {
-                    0: FixedColumnWidth(160), // Id
-                    1: FixedColumnWidth(60), // Status
-                    2: FixedColumnWidth(100), // Actions
-                  },
-                  children: [
-                    TableRow(
-                      decoration: BoxDecoration(color: Colors.grey[300]),
+              BlocBuilder<BranchManagerBloc, BranchManagerState>(
+                builder: (context, state) {
+                  print("loading");
+                  if (state is BranchManagerBlocloading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is BranchManagerBlocError) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
+                        Image.asset('assets/icon/Group 99.png', height: 40.h),
+                        SizedBox(height: 4.h),
                         Text(
-                          'Id',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            fontSize: 10.sp,
-                            color: AppColors.kTextColor,
-                            fontWeight: FontWeight.bold,
+                          "No data available",
+                          style: TextStyle(color: Colors.grey, fontSize: 12),
+                        ),
+                      ],
+                    );
+                  } else if (state is BranchManagerBlocloaded) {
+                    var data = state.branches;
+
+                    return Column(
+                      children: [
+                        Container(
+                          width: 354.w,
+                          height: 35.h,
+                          decoration: BoxDecoration(
+                            color: AppColors.kContainerColor,
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(9),
+                              topRight: Radius.circular(9),
+                            ),
+                            border: Border(
+                              top: BorderSide(color: Colors.black),
+                              left: BorderSide(color: Colors.black),
+                              right: BorderSide(color: Colors.black),
+                            ),
+                          ),
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 8.w),
+                            child: Text(
+                              'Branch Manager',
+                              style: FontStyles.body,
+                            ),
                           ),
                         ),
-                        Text(
-                          'Status',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            fontSize: 10.sp,
-                            color: AppColors.kTextColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          'Actions',
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            fontSize: 10.sp,
-                            color: AppColors.kTextColor,
-                            fontWeight: FontWeight.bold,
+                        SizedBox(
+                          width: 354.w,
+                          child: Table(
+                            border: TableBorder(
+                              horizontalInside: BorderSide(
+                                color: AppColors.kBorderColor,
+                              ),
+                              verticalInside: BorderSide(
+                                color: AppColors.kBorderColor,
+                              ),
+                              bottom: BorderSide(color: Colors.black),
+                              left: BorderSide(color: Colors.black),
+                              right: BorderSide(color: Colors.black),
+                            ),
+                            columnWidths: {
+                              0: FixedColumnWidth(160),
+                              1: FixedColumnWidth(60),
+                              2: FixedColumnWidth(100),
+                            },
+                            children: [
+                              TableRow(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[300],
+                                ),
+                                children: [
+                                  Text(
+                                    'Id',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 10.sp,
+                                      color: AppColors.kTextColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Status',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 10.sp,
+                                      color: AppColors.kTextColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Actions',
+                                    textAlign: TextAlign.center,
+                                    style: GoogleFonts.poppins(
+                                      fontSize: 10.sp,
+                                      color: AppColors.kTextColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              _TableRow(
+                                Id: data.id,
+                                onTapEdit: () {
+                                  _BranchManageropenDialog(
+                                    context,
+                                    selectedBranch,
+                                    (value) {
+                                      setState(() {
+                                        selectedBranch = value;
+                                      });
+                                    },
+                                    employecodeController,
+                                    dateController,
+                                    nameController,
+                                    emailController,
+                                    addressController,
+                                    phonenumber,
+                                    confirmController,
+                                    pointamountController,
+                                    salaryController,
+                                    passwordController,
+                                  );
+                                },
+                                onTapDelete: () {},
+                              ),
+                            ],
                           ),
                         ),
                       ],
-                    ),
-
-                    _TableRow(" 2342424"),
-                    _TableRow(" 4534634"),
-
-                    _TableRow(" 34252526"),
-                  ],
-                ),
+                    );
+                  }
+                  return SizedBox();
+                },
               ),
             ],
           ),
@@ -240,7 +321,11 @@ class _BranchMangerState extends State<BranchManager> {
   }
 }
 
-TableRow _TableRow(String Id) {
+TableRow _TableRow({
+  required String Id,
+  required VoidCallback onTapEdit,
+  required VoidCallback onTapDelete,
+}) {
   return TableRow(
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
     children: [
@@ -264,9 +349,8 @@ TableRow _TableRow(String Id) {
               ),
               alignment: Alignment.center,
               child: GestureDetector(
-                onTap: () {
-                  // Handle edit
-                },
+                onTap: onTapEdit,
+
                 child: Icon(Icons.edit, color: Colors.white, size: 16.sp),
               ),
             ),
@@ -280,9 +364,7 @@ TableRow _TableRow(String Id) {
               ),
               alignment: Alignment.center,
               child: GestureDetector(
-                onTap: () {
-                  // Handle delete
-                },
+                onTap: onTapDelete,
                 child: Icon(
                   Icons.delete_outline,
                   color: Colors.white,
@@ -297,10 +379,20 @@ TableRow _TableRow(String Id) {
   );
 }
 
-Future<void> BranchManageropenDialog(
+Future<void> _BranchManageropenDialog(
   BuildContext context,
   String? selectedBranch,
   Function(String) onBranchSelected,
+  employecodeController,
+  dateController,
+  nameController,
+  emailController,
+  addressController,
+  phonenumber,
+  confirmController,
+  pointamountController,
+  salaryController,
+  passwordController,
 ) async {
   return showDialog(
     context: context,
@@ -336,27 +428,43 @@ Future<void> BranchManageropenDialog(
                   ),
                   SizedBox(height: 23.h),
 
-                  _fullTextField(title: "Employee Code"),
+                  _fullTextField(
+                    title: "Employee Code",
+                    controller: employecodeController,
+                  ),
                   SizedBox(height: 10.h),
                   _fullTextField(
                     title: "Date of Joining",
+                    controller: dateController,
 
                     icon: Icons.calendar_today,
                   ),
-                  _fullTextField(title: "Name"),
+                  _fullTextField(title: "Name", controller: nameController),
                   SizedBox(height: 10.h),
-                  _fullTextField(title: "Email"),
+                  _fullTextField(title: "Email", controller: emailController),
                   SizedBox(height: 10.h),
-                  _fullTextField(title: "Address"),
+                  _fullTextField(
+                    title: "Address ",
+                    controller: addressController,
+                  ),
                   SizedBox(height: 10.h),
                   _fullTextField(
                     title: "Phone Number",
                     keyboardType: TextInputType.phone,
+                    controller: phonenumber,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(title: "Password", isPassword: true),
+                  _fullTextField(
+                    title: "Password",
+                    isPassword: true,
+                    controller: passwordController,
+                  ),
                   SizedBox(height: 10.h),
-                  _fullTextField(title: "Confirm Password", isPassword: true),
+                  _fullTextField(
+                    title: "Confirm Password",
+                    isPassword: true,
+                    controller: confirmController,
+                  ),
                   SizedBox(height: 10.h),
                   customDropdown(
                     context: context,
@@ -377,6 +485,7 @@ Future<void> BranchManageropenDialog(
                           title: "Point Amount",
                           width: double.infinity,
                           keyboardType: TextInputType.number,
+                          controller: pointamountController,
                         ),
                       ),
                       SizedBox(width: 13.w),
@@ -385,6 +494,7 @@ Future<void> BranchManageropenDialog(
                           title: "Salary",
                           width: double.infinity,
                           keyboardType: TextInputType.number,
+                          controller: salaryController,
                         ),
                       ),
                     ],
@@ -401,7 +511,27 @@ Future<void> BranchManageropenDialog(
                           borderRadius: BorderRadius.circular(6),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        if (passwordController.text != confirmController.text) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Passwords do not match")),
+                          );
+                          return;
+                        }
+                        final branchmanagerdata = {
+                          'id': employecodeController.text,
+                          'employeeCode': dateController.text,
+                          'dateOfJoining': dateController.text,
+                          'name': nameController.text,
+                          'email': emailController.text,
+                          'address': addressController.text,
+                          'phoneNumber': phonenumber.text,
+                          'password': passwordController.text,
+                          'branch': selectedBranch,
+                          'pointAmount': phonenumber.text,
+                          'salary': salaryController.text,
+                        };
+                      },
                       child: Text(
                         "Create",
                         style: GoogleFonts.inter(
@@ -427,36 +557,55 @@ Widget _fullTextField({
   bool isPassword = false,
   double? width,
   TextInputType keyboardType = TextInputType.text,
+  TextEditingController? controller,
 }) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(title, style: FontStyles.body),
-      SizedBox(height: 4.h),
-      SizedBox(
-        height: 30.h,
-        width: width ?? 324.w,
-        child: TextField(
-          keyboardType: keyboardType,
-          obscureText: isPassword,
-          decoration: InputDecoration(
-            hintStyle: GoogleFonts.poppins(fontSize: 12),
-            suffixIcon: icon != null ? Icon(icon, size: 18) : null,
-            contentPadding: EdgeInsets.symmetric(horizontal: 12),
-            filled: true,
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-              borderSide: BorderSide(color: AppColors.kBorderColor),
+  return BlocBuilder<ManagerBloc, ManagerState>(
+    builder: (context, state) {
+      print("loading");
+      if (state is ManagerBlocloading) {
+        return const Center(child: CircularProgressIndicator());
+      } else if (state is ManagerBlocError) {
+        return Text(
+          "No data available",
+          style: TextStyle(color: Colors.grey, fontSize: 12),
+        );
+      } else if (state is ManagerBlocloaded) {
+        var data = state.manager;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: FontStyles.body),
+            SizedBox(height: 4.h),
+            SizedBox(
+              height: 30.h,
+              width: width ?? 324.w,
+              child: TextField(
+                controller: controller,
+                keyboardType: keyboardType,
+                obscureText: isPassword,
+                decoration: InputDecoration(
+                  hintStyle: GoogleFonts.poppins(fontSize: 12),
+                  suffixIcon: icon != null ? Icon(icon, size: 18) : null,
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                  filled: true,
+                  fillColor: Colors.white,
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6),
+                    borderSide: BorderSide(color: AppColors.kBorderColor),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(6),
+                    borderSide: BorderSide(color: AppColors.kBorderColor),
+                  ),
+                ),
+              ),
             ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-              borderSide: BorderSide(color: AppColors.kBorderColor),
-            ),
-          ),
-        ),
-      ),
-    ],
+          ],
+        );
+      }
+      return Container();
+    },
   );
 }
 

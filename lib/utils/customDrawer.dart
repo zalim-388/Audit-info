@@ -329,7 +329,8 @@ class DrawerItemWithMultiLevel extends StatefulWidget {
   });
 
   @override
-  State<DrawerItemWithMultiLevel> createState() => _DrawerItemWithMultiLevelState();
+  State<DrawerItemWithMultiLevel> createState() =>
+      _DrawerItemWithMultiLevelState();
 }
 
 class _DrawerItemWithMultiLevelState extends State<DrawerItemWithMultiLevel> {
@@ -385,11 +386,7 @@ class _DrawerItemWithMultiLevelState extends State<DrawerItemWithMultiLevel> {
   PopupMenuItem<String> _popupItem(String value, String label) {
     return PopupMenuItem<String>(
       value: value,
-      child: SizedBox(
-      height: 160.h,
-        width: 162.w, 
-        child: Text(label),
-      ),
+      child: SizedBox(height: 33.h, width: 139.w, child: Text(label)),
     );
   }
 
@@ -400,9 +397,7 @@ class _DrawerItemWithMultiLevelState extends State<DrawerItemWithMultiLevel> {
     } else if (value == 'back_to_reports_main') {
       setState(() => _currentPage = ReportsPopupPage.main);
       _reopenMenu();
-    } else {
-     
-    }
+    } else {}
   }
 
   void _reopenMenu() {
@@ -435,20 +430,23 @@ class _DrawerItemWithMultiLevelState extends State<DrawerItemWithMultiLevel> {
           tooltip: "Show Reports Options",
           offset: Offset(0, 40.h), // Corrected alignment
           onSelected: _handleSelection,
-          onCanceled: () => setState(() => _currentPage = ReportsPopupPage.main),
-          itemBuilder: (_) =>
-              _currentPage == ReportsPopupPage.accounts
-                  ? _buildAccountItems()
-                  : _buildMainItems(),
+          onCanceled:
+              () => setState(() => _currentPage = ReportsPopupPage.main),
+          itemBuilder:
+              (_) =>
+                  _currentPage == ReportsPopupPage.accounts
+                      ? _buildAccountItems()
+                      : _buildMainItems(),
           child: ListTile(
-            leading: widget.svgpath != null
-                ? Image.asset(
-                    widget.svgpath!,
-                    height: 18.h,
-                    width: 18.w,
-                    color: Colors.white,
-                  )
-                : Icon(widget.icon, color: Colors.white, size: 18.h),
+            leading:
+                widget.svgpath != null
+                    ? Image.asset(
+                      widget.svgpath!,
+                      height: 18.h,
+                      width: 18.w,
+                      color: Colors.white,
+                    )
+                    : Icon(widget.icon, color: Colors.white, size: 18.h),
             title: Text(
               widget.title,
               style: GoogleFonts.poppins(color: Colors.white, fontSize: 12.sp),
@@ -482,35 +480,28 @@ Widget _Draweritems({
 }) {
   final bool isSelected = selectedIndex == index;
 
-  final listTile = Row(crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      ListTile(
-        leading: svgpath != null
+  final listTile = ListTile(
+    leading:
+        svgpath != null
             ? Image.asset(
-                svgpath,
-                height: 14.h,
-                width: 14.w,
-                fit: BoxFit.cover,
-                color: Colors.white,
-              )
+              svgpath,
+              height: 14.h,
+              width: 14.w,
+              fit: BoxFit.cover,
+              color: Colors.white,
+            )
             : Icon(icon, color: Colors.white),
-        title: Text(
-          title,
-          style: GoogleFonts.poppins(
-            color: Colors.white,
-            fontSize: 12,
-          ),
-        ),
-        trailing: (isPopupMenu || title == "Reports" || title == "Settings")
+    title: Text(
+      title,
+      style: GoogleFonts.poppins(color: Colors.white, fontSize: 12),
+    ),
+    trailing:
+        (isPopupMenu || title == "Reports" || title == "Settings")
             ? Icon(Icons.keyboard_arrow_down, color: Colors.white)
             : null,
-        selected: isSelected,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        onTap: isPopupMenu ? null : onTap,
-      ),
-    ],
+    selected: isSelected,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+    onTap: isPopupMenu ? null : onTap,
   );
 
   return Container(
@@ -520,21 +511,31 @@ Widget _Draweritems({
       color: isSelected ? AppColors.kPrimaryColor : const Color(0xFF414143),
       borderRadius: BorderRadius.circular(20),
     ),
-    child: isPopupMenu
-        ? PopupMenuButton<String>(
-            onSelected: onPopupSelected ?? (String value) => print("Selected: $value"),
-            itemBuilder: (context) => popupItems!
-                .map((item) => PopupMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        "",
-                        style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
-                      ),
-                    ))
-                .toList(),
-            offset: Offset(0, 40.h),
-            child: listTile,
-          )
-        : listTile,
+    child:
+        isPopupMenu
+            ? PopupMenuButton<String>(
+              onSelected:
+                  onPopupSelected ??
+                  (String value) => print("Selected: $value"),
+              itemBuilder:
+                  (context) =>
+                      popupItems!
+                          .map(
+                            (item) => PopupMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: GoogleFonts.poppins(
+                                  color: Colors.black,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
+              offset: Offset(0, 40.h),
+              child: listTile,
+            )
+            : listTile,
   );
 }
