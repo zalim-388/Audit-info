@@ -29,7 +29,7 @@ class _BranchMangerState extends State<BranchManager> {
 
   void initState() {
     super.initState();
-    BlocProvider.of<BranchManagerBloc>(context).add(fetchbranch());
+    // BlocProvider.of<BranchManagerBloc>(context).add(fetchbranch());
     BlocProvider.of<ManagerBloc>(context).add(fetchmanager());
   }
 
@@ -179,12 +179,12 @@ class _BranchMangerState extends State<BranchManager> {
               ),
 
               SizedBox(height: 13.h),
-              BlocBuilder<BranchManagerBloc, BranchManagerState>(
+              BlocBuilder<ManagerBloc, ManagerState>(
                 builder: (context, state) {
                   print("loading");
-                  if (state is BranchManagerBlocloading) {
+                  if (state is ManagerBlocloading) {
                     return const Center(child: CircularProgressIndicator());
-                  } else if (state is BranchManagerBlocError) {
+                  } else if (state is ManagerBlocError) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -196,8 +196,8 @@ class _BranchMangerState extends State<BranchManager> {
                         ),
                       ],
                     );
-                  } else if (state is BranchManagerBlocloaded) {
-                    var data = state.branches;
+                  } else if (state is ManagerBlocloaded) {
+                    var managers = state.manager;
 
                     return Column(
                       children: [
@@ -279,30 +279,44 @@ class _BranchMangerState extends State<BranchManager> {
                                   ),
                                 ],
                               ),
-                              _TableRow(
-                                Id: data.id,
-                                onTapEdit: () {
-                                  _BranchManageropenDialog(
-                                    context,
-                                    selectedBranch,
-                                    (value) {
-                                      setState(() {
-                                        selectedBranch = value;
-                                      });
-                                    },
-                                    employecodeController,
-                                    dateController,
-                                    nameController,
-                                    emailController,
-                                    addressController,
-                                    phonenumber,
-                                    confirmController,
-                                    pointamountController,
-                                    salaryController,
-                                    passwordController,
-                                  );
-                                },
-                                onTapDelete: () {},
+
+                              ...managers.map(
+                                (manager) => _TableRow(
+                                  Id: manager.id,
+                                  onTapEdit: () {
+                                    _BranchManageropenDialog(
+                                      context,
+                                      selectedBranch,
+                                      (value) {
+                                        setState(() {
+                                          selectedBranch = value;
+                                        });
+                                      },
+                                      employecodeController.text =
+                                          manager.employeeCode,
+                                      dateController.text =
+                                          manager.dateOfJoining.toString(),
+                                      nameController.text = manager.name,
+                                      emailController.text = manager.email,
+
+                                      addressController.text = manager.address,
+                                      phonenumber.text =
+                                          manager.phoneNumber.toString(),
+                                      confirmController.text = manager.password,
+                                      pointamountController.text =
+                                          manager.pointAmount.toString(),
+                                      salaryController.text =
+                                          manager.salary.toString(),
+                                      passwordController.text =
+                                          manager.password,
+                                    );
+                                  },
+                                  onTapDelete: () {
+                                    BlocProvider.of<ManagerBloc>(
+                                      context,
+                                    ).add(DeleteManager(id: manager.id));
+                                  },
+                                ),
                               ),
                             ],
                           ),
@@ -518,7 +532,7 @@ Future<void> _BranchManageropenDialog(
                           );
                           return;
                         }
-                        final branchmanagerdata = {
+                        final managerdata = {
                           'id': employecodeController.text,
                           'employeeCode': dateController.text,
                           'dateOfJoining': dateController.text,
@@ -531,6 +545,10 @@ Future<void> _BranchManageropenDialog(
                           'pointAmount': phonenumber.text,
                           'salary': salaryController.text,
                         };
+                        BlocProvider.of<ManagerBloc>(
+                          context,
+                        ).add(Addmanager(managerdata: managerdata));
+                        Navigator.pop(context);
                       },
                       child: Text(
                         "Create",

@@ -6,7 +6,7 @@ sealed class BranchManagerEvent {}
 class fetchbranch extends BranchManagerEvent {}
 
 class Addbranchmanager extends BranchManagerEvent {
-  final List<ManagerBloc> branchmanagerdata;
+  final List<BranchManagerBloc> branchmanagerdata;
 
   Addbranchmanager({required this.branchmanagerdata});
 }
