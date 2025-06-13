@@ -1,4 +1,3 @@
-import 'package:audit_info/bloc/branch/branch_manager_bloc.dart';
 import 'package:audit_info/bloc/manger/manager_bloc.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
@@ -18,6 +17,7 @@ class BranchManager extends StatefulWidget {
 }
 
 class _BranchMangerState extends State<BranchManager> {
+  bool toggle = false;
   int _selectedIndex = 1;
   void _onitemTapped(int index) {
     setState(() {
@@ -27,9 +27,9 @@ class _BranchMangerState extends State<BranchManager> {
 
   String? selectedBranch = 'Branch 1';
 
+  @override
   void initState() {
     super.initState();
-    // BlocProvider.of<BranchManagerBloc>(context).add(fetchbranch());
     BlocProvider.of<ManagerBloc>(context).add(fetchmanager());
   }
 
@@ -65,7 +65,7 @@ class _BranchMangerState extends State<BranchManager> {
                 },
               ),
         ),
-        title: Text(" Branch Manager", style: FontStyles.heading),
+        title: Text("Branch Manager", style: FontStyles.heading),
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
@@ -98,7 +98,6 @@ class _BranchMangerState extends State<BranchManager> {
           ),
         ],
       ),
-
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 23),
@@ -106,14 +105,12 @@ class _BranchMangerState extends State<BranchManager> {
           child: Column(
             children: [
               SizedBox(height: 13.h),
-
               Row(
                 children: [
                   Expanded(
                     child: SizedBox(
                       width: 322.w,
                       height: 30.h,
-
                       child: TextField(
                         decoration: InputDecoration(
                           prefixIcon: Icon(
@@ -177,7 +174,6 @@ class _BranchMangerState extends State<BranchManager> {
                   ),
                 ],
               ),
-
               SizedBox(height: 13.h),
               BlocBuilder<ManagerBloc, ManagerState>(
                 builder: (context, state) {
@@ -190,45 +186,18 @@ class _BranchMangerState extends State<BranchManager> {
                       children: [
                         Image.asset('assets/icon/Group 99.png', height: 40.h),
                         SizedBox(height: 4.h),
-                        Text(
-                          "No data available",
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        ),
                       ],
                     );
                   } else if (state is ManagerBlocloaded) {
                     var managers = state.manager;
-
                     return Column(
                       children: [
-                        Container(
-                          width: 354.w,
-                          height: 35.h,
-                          decoration: BoxDecoration(
-                            color: AppColors.kContainerColor,
-                            borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(9),
-                              topRight: Radius.circular(9),
-                            ),
-                            border: Border(
-                              top: BorderSide(color: Colors.black),
-                              left: BorderSide(color: Colors.black),
-                              right: BorderSide(color: Colors.black),
-                            ),
-                          ),
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 8.w),
-                            child: Text(
-                              'Branch Manager',
-                              style: FontStyles.body,
-                            ),
-                          ),
-                        ),
                         SizedBox(
+                          height: 20.h,
                           width: 354.w,
                           child: Table(
                             border: TableBorder(
+                              borderRadius: BorderRadius.circular(9),
                               horizontalInside: BorderSide(
                                 color: AppColors.kBorderColor,
                               ),
@@ -238,11 +207,12 @@ class _BranchMangerState extends State<BranchManager> {
                               bottom: BorderSide(color: Colors.black),
                               left: BorderSide(color: Colors.black),
                               right: BorderSide(color: Colors.black),
+                              top: BorderSide(color: Colors.black),
                             ),
                             columnWidths: {
                               0: FixedColumnWidth(160),
-                              1: FixedColumnWidth(60),
-                              2: FixedColumnWidth(100),
+                              1: FixedColumnWidth(0),
+                              2: FixedColumnWidth(40),
                             },
                             children: [
                               TableRow(
@@ -279,10 +249,21 @@ class _BranchMangerState extends State<BranchManager> {
                                   ),
                                 ],
                               ),
-
-                              ...managers.map(
-                                (manager) => _TableRow(
+                              ...List.generate(managers.length, (index) {
+                                final manager = managers[index];
+                                return _TableRow(
                                   Id: manager.id,
+                                  icon:
+                                      toggle
+                                          ? Icons.toggle_off
+                                          : Icons.toggle_on,
+
+                                  onTap: () {
+                                    setState(() {
+                                      toggle != toggle;
+                                    });
+                                  },
+
                                   onTapEdit: () {
                                     _BranchManageropenDialog(
                                       context,
@@ -292,23 +273,24 @@ class _BranchMangerState extends State<BranchManager> {
                                           selectedBranch = value;
                                         });
                                       },
-                                      employecodeController.text =
-                                          manager.employeeCode,
-                                      dateController.text =
-                                          manager.dateOfJoining.toString(),
-                                      nameController.text = manager.name,
-                                      emailController.text = manager.email,
-
-                                      addressController.text = manager.address,
-                                      phonenumber.text =
-                                          manager.phoneNumber.toString(),
-                                      confirmController.text = manager.password,
-                                      pointamountController.text =
-                                          manager.pointAmount.toString(),
-                                      salaryController.text =
-                                          manager.salary.toString(),
-                                      passwordController.text =
-                                          manager.password,
+                                      employecodeController
+                                        ..text = manager.employeeCode,
+                                      dateController
+                                        ..text =
+                                            manager.dateOfJoining.toString(),
+                                      nameController..text = manager.name,
+                                      emailController..text = manager.email,
+                                      addressController..text = manager.address,
+                                      phonenumber
+                                        ..text = manager.phoneNumber.toString(),
+                                      confirmController
+                                        ..text = manager.password,
+                                      pointamountController
+                                        ..text = manager.pointAmount.toString(),
+                                      salaryController
+                                        ..text = manager.salary.toString(),
+                                      passwordController
+                                        ..text = manager.password,
                                     );
                                   },
                                   onTapDelete: () {
@@ -316,15 +298,15 @@ class _BranchMangerState extends State<BranchManager> {
                                       context,
                                     ).add(DeleteManager(id: manager.id));
                                   },
-                                ),
-                              ),
+                                );
+                              }),
                             ],
                           ),
                         ),
                       ],
                     );
                   }
-                  return SizedBox();
+                  return const SizedBox();
                 },
               ),
             ],
@@ -337,17 +319,21 @@ class _BranchMangerState extends State<BranchManager> {
 
 TableRow _TableRow({
   required String Id,
+  IconData? icon,
   required VoidCallback onTapEdit,
   required VoidCallback onTapDelete,
+  VoidCallback? onTap,
 }) {
   return TableRow(
     decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
     children: [
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Text(Id, style: FontStyles.body),
+        child: Center(child: Text(Id, style: FontStyles.body)),
       ),
-      Icon(Icons.toggle_on, color: Colors.green, size: 31),
+      icon != null
+          ? IconButton(onPressed: onTap, icon: Icon(icon, size: 40))
+          : SizedBox.shrink(),
 
       Padding(
         padding: const EdgeInsets.all(8.0),
@@ -364,7 +350,6 @@ TableRow _TableRow({
               alignment: Alignment.center,
               child: GestureDetector(
                 onTap: onTapEdit,
-
                 child: Icon(Icons.edit, color: Colors.white, size: 16.sp),
               ),
             ),
@@ -397,16 +382,16 @@ Future<void> _BranchManageropenDialog(
   BuildContext context,
   String? selectedBranch,
   Function(String) onBranchSelected,
-  employecodeController,
-  dateController,
-  nameController,
-  emailController,
-  addressController,
-  phonenumber,
-  confirmController,
-  pointamountController,
-  salaryController,
-  passwordController,
+  TextEditingController employecodeController,
+  TextEditingController dateController,
+  TextEditingController nameController,
+  TextEditingController emailController,
+  TextEditingController addressController,
+  TextEditingController phonenumber,
+  TextEditingController confirmController,
+  TextEditingController pointamountController,
+  TextEditingController salaryController,
+  TextEditingController passwordController,
 ) async {
   return showDialog(
     context: context,
@@ -441,7 +426,6 @@ Future<void> _BranchManageropenDialog(
                     ],
                   ),
                   SizedBox(height: 23.h),
-
                   _fullTextField(
                     title: "Employee Code",
                     controller: employecodeController,
@@ -450,7 +434,6 @@ Future<void> _BranchManageropenDialog(
                   _fullTextField(
                     title: "Date of Joining",
                     controller: dateController,
-
                     icon: Icons.calendar_today,
                   ),
                   _fullTextField(title: "Name", controller: nameController),
@@ -458,7 +441,7 @@ Future<void> _BranchManageropenDialog(
                   _fullTextField(title: "Email", controller: emailController),
                   SizedBox(height: 10.h),
                   _fullTextField(
-                    title: "Address ",
+                    title: "Address",
                     controller: addressController,
                   ),
                   SizedBox(height: 10.h),
@@ -489,9 +472,7 @@ Future<void> _BranchManageropenDialog(
                       onBranchSelected(value);
                     },
                   ),
-
                   SizedBox(height: 10.h),
-
                   Row(
                     children: [
                       Expanded(
@@ -513,7 +494,6 @@ Future<void> _BranchManageropenDialog(
                       ),
                     ],
                   ),
-
                   SizedBox(height: 21.h),
                   SizedBox(
                     width: double.infinity,
@@ -533,21 +513,32 @@ Future<void> _BranchManageropenDialog(
                           return;
                         }
                         final managerdata = {
-                          'id': employecodeController.text,
-                          'employeeCode': dateController.text,
+                          'id': employecodeController.text.isEmpty,
+
+                          'employeeCode': employecodeController.text,
                           'dateOfJoining': dateController.text,
                           'name': nameController.text,
                           'email': emailController.text,
                           'address': addressController.text,
                           'phoneNumber': phonenumber.text,
                           'password': passwordController.text,
-                          'branch': selectedBranch,
-                          'pointAmount': phonenumber.text,
+                          'branch': selectedBranch ?? 'Branch 1',
+                          'pointAmount': pointamountController.text,
                           'salary': salaryController.text,
                         };
                         BlocProvider.of<ManagerBloc>(
                           context,
                         ).add(Addmanager(managerdata: managerdata));
+                        // employecodeController.clear();
+                        // dateController.clear();
+                        // nameController.clear();
+                        // emailController.clear();
+                        // addressController.clear();
+                        // phonenumber.clear();
+                        // passwordController.clear();
+                        // confirmController.clear();
+                        // pointamountController.clear();
+                        // salaryController.clear();
                         Navigator.pop(context);
                       },
                       child: Text(
@@ -577,53 +568,36 @@ Widget _fullTextField({
   TextInputType keyboardType = TextInputType.text,
   TextEditingController? controller,
 }) {
-  return BlocBuilder<ManagerBloc, ManagerState>(
-    builder: (context, state) {
-      print("loading");
-      if (state is ManagerBlocloading) {
-        return const Center(child: CircularProgressIndicator());
-      } else if (state is ManagerBlocError) {
-        return Text(
-          "No data available",
-          style: TextStyle(color: Colors.grey, fontSize: 12),
-        );
-      } else if (state is ManagerBlocloaded) {
-        var data = state.manager;
-
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: FontStyles.body),
-            SizedBox(height: 4.h),
-            SizedBox(
-              height: 30.h,
-              width: width ?? 324.w,
-              child: TextField(
-                controller: controller,
-                keyboardType: keyboardType,
-                obscureText: isPassword,
-                decoration: InputDecoration(
-                  hintStyle: GoogleFonts.poppins(fontSize: 12),
-                  suffixIcon: icon != null ? Icon(icon, size: 18) : null,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12),
-                  filled: true,
-                  fillColor: Colors.white,
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: BorderSide(color: AppColors.kBorderColor),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(6),
-                    borderSide: BorderSide(color: AppColors.kBorderColor),
-                  ),
-                ),
-              ),
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(title, style: FontStyles.body),
+      SizedBox(height: 4.h),
+      SizedBox(
+        height: 30.h,
+        width: width ?? 324.w,
+        child: TextField(
+          controller: controller,
+          keyboardType: keyboardType,
+          obscureText: isPassword,
+          decoration: InputDecoration(
+            hintStyle: GoogleFonts.poppins(fontSize: 12),
+            suffixIcon: icon != null ? Icon(icon, size: 18) : null,
+            contentPadding: EdgeInsets.symmetric(horizontal: 12),
+            filled: true,
+            fillColor: Colors.white,
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: BorderSide(color: AppColors.kBorderColor),
             ),
-          ],
-        );
-      }
-      return Container();
-    },
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: BorderSide(color: AppColors.kBorderColor),
+            ),
+          ),
+        ),
+      ),
+    ],
   );
 }
 

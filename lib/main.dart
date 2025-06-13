@@ -1,4 +1,5 @@
 import 'package:audit_info/bloc/branch/branch_manager_bloc.dart';
+import 'package:audit_info/bloc/manger/manager_bloc.dart';
 import 'package:audit_info/ui/Branch_manager.dart';
 import 'package:audit_info/ui/loginpage.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => BranchManagerBloc(),
+      create: (context) => ManagerBloc(),
       child: ScreenUtilInit(
         designSize: Size(402, 874),
         minTextAdapt: true,
