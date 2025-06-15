@@ -21,7 +21,7 @@ class ManagerApi {
 
   Future<void> addManager(Map<String, dynamic> managerdata) async {
     String trendingpath = "manager/create";
-    // var body = "";
+    var body = "";
     try {
       final String body = jsonEncode(managerdata);
       await api.invokeAPI(trendingpath, "POST", body);

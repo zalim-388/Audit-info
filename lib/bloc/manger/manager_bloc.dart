@@ -9,6 +9,7 @@ part 'manager_event.dart';
 part 'manager_state.dart';
 
 class ManagerBloc extends Bloc<ManagerEvent, ManagerState> {
+  
   List<Managermodel> manager = [];
   static const String _managersKey = 'managers';
 
@@ -64,7 +65,7 @@ class ManagerBloc extends Bloc<ManagerEvent, ManagerState> {
                   : 0,
           position: event.managerdata['position']?.toString() ?? '',
           refresh:
-              event.managerdata['refresh']
+              event.managerdata['refresh'] is bool
                   ? event.managerdata['refresh']
                   : (event.managerdata['refresh']?.toString().toLowerCase() ==
                       'true'),

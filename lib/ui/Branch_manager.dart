@@ -17,7 +17,7 @@ class BranchManager extends StatefulWidget {
 }
 
 class _BranchMangerState extends State<BranchManager> {
-  bool toggle = false;
+  bool toggle = true;
   int _selectedIndex = 1;
   void _onitemTapped(int index) {
     setState(() {
@@ -192,12 +192,18 @@ class _BranchMangerState extends State<BranchManager> {
                     var managers = state.manager;
                     return Column(
                       children: [
-                        SizedBox(
+                        Container(
                           height: 20.h,
                           width: 354.w,
+                          decoration: BoxDecoration(
+                            color: AppColors.kContainerColor,
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(9),
+                              topRight: Radius.circular(9),
+                            ),
+                          ),
                           child: Table(
                             border: TableBorder(
-                              borderRadius: BorderRadius.circular(9),
                               horizontalInside: BorderSide(
                                 color: AppColors.kBorderColor,
                               ),
@@ -210,9 +216,9 @@ class _BranchMangerState extends State<BranchManager> {
                               top: BorderSide(color: Colors.black),
                             ),
                             columnWidths: {
-                              0: FixedColumnWidth(160),
-                              1: FixedColumnWidth(0),
-                              2: FixedColumnWidth(40),
+                              0: FixedColumnWidth(180),
+                              1: FixedColumnWidth(10),
+                              2: FixedColumnWidth(60),
                             },
                             children: [
                               TableRow(
@@ -249,18 +255,15 @@ class _BranchMangerState extends State<BranchManager> {
                                   ),
                                 ],
                               ),
+
                               ...List.generate(managers.length, (index) {
                                 final manager = managers[index];
                                 return _TableRow(
                                   Id: manager.id,
-                                  icon:
-                                      toggle
-                                          ? Icons.toggle_off
-                                          : Icons.toggle_on,
-
-                                  onTap: () {
+                                  status: manager.refresh,
+                                  onToggle: (bool value) {
                                     setState(() {
-                                      toggle != toggle;
+                                      toggle = value;
                                     });
                                   },
 
@@ -306,7 +309,7 @@ class _BranchMangerState extends State<BranchManager> {
                       ],
                     );
                   }
-                  return const SizedBox();
+                  return SizedBox();
                 },
               ),
             ],
@@ -319,55 +322,63 @@ class _BranchMangerState extends State<BranchManager> {
 
 TableRow _TableRow({
   required String Id,
-  IconData? icon,
   required VoidCallback onTapEdit,
   required VoidCallback onTapDelete,
-  VoidCallback? onTap,
+  required ValueChanged<bool> onToggle,
+  required bool status,
 }) {
   return TableRow(
-    decoration: BoxDecoration(borderRadius: BorderRadius.circular(4)),
     children: [
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Center(child: Text(Id, style: FontStyles.body)),
       ),
-      icon != null
-          ? IconButton(onPressed: onTap, icon: Icon(icon, size: 40))
-          : SizedBox.shrink(),
+      Padding(
+        padding: EdgeInsets.symmetric(vertical: 6.h),
+        child: Center(
+          child: Switch(
+            value: status,
+            onChanged: onToggle,
+            activeColor: Colors.green,
+            inactiveTrackColor: Colors.grey,
+          ),
+        ),
+      ),
 
       Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.symmetric(horizontal: 5),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              width: 25.w,
-              height: 25.h,
-              decoration: BoxDecoration(
-                color: Color(0xFF4A60E4),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              alignment: Alignment.center,
-              child: GestureDetector(
+            Material(
+              color: Color(0xFF4A60E4),
+              borderRadius: BorderRadius.circular(4),
+              child: InkWell(
                 onTap: onTapEdit,
-                child: Icon(Icons.edit, color: Colors.white, size: 16.sp),
+                borderRadius: BorderRadius.circular(4),
+                child: SizedBox(
+                  width: 25.w,
+                  height: 25.h,
+                  child: Icon(Icons.edit, color: Colors.white, size: 16.sp),
+                ),
               ),
             ),
             SizedBox(width: 18.w),
-            Container(
-              width: 25.w,
-              height: 25.h,
-              decoration: BoxDecoration(
-                color: Color(0xFFFF4C4C),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              alignment: Alignment.center,
-              child: GestureDetector(
+
+        
+            Material(
+              color: Color(0xFFFF4C4C),
+              borderRadius: BorderRadius.circular(4),
+              child: InkWell(
                 onTap: onTapDelete,
-                child: Icon(
-                  Icons.delete_outline,
-                  color: Colors.white,
-                  size: 16.sp,
+                borderRadius: BorderRadius.circular(4),
+                child: SizedBox(
+                  width: 25.w,
+                  height: 25.h,
+                  child: Icon(
+                    Icons.delete_outline,
+                    color: Colors.white,
+                    size: 16.sp,
+                  ),
                 ),
               ),
             ),
@@ -514,7 +525,6 @@ Future<void> _BranchManageropenDialog(
                         }
                         final managerdata = {
                           'id': employecodeController.text.isEmpty,
-
                           'employeeCode': employecodeController.text,
                           'dateOfJoining': dateController.text,
                           'name': nameController.text,

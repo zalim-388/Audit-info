@@ -1,12 +1,15 @@
+import 'package:audit_info/bloc/accountant/accountant_bloc.dart';
 import 'package:audit_info/bloc/branch/branch_manager_bloc.dart';
 import 'package:audit_info/bloc/manger/manager_bloc.dart';
+import 'package:audit_info/ui/Accountant.dart';
 import 'package:audit_info/ui/Branch_manager.dart';
 import 'package:audit_info/ui/loginpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-String baseUrl = "http://192.168.1.83:3000/api";
+// String baseUrl = "http://192.168.1.83:3000/api";
+final String baseurl = "https://audit-info-backend.onrender.com/api/";
 
 void main() {
   runApp(const MyApp());
@@ -17,8 +20,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ManagerBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<ManagerBloc>(
+          create: (BuildContext context) => ManagerBloc(),
+        ),
+        BlocProvider<AccountantBloc>(
+          create: (BuildContext ontext) => AccountantBloc(),
+        ),
+      ],
       child: ScreenUtilInit(
         designSize: Size(402, 874),
         minTextAdapt: true,
@@ -29,7 +39,7 @@ class MyApp extends StatelessWidget {
 
             // home: Loginpage(),
             // home: StudentHistory(),
-             home: BranchManager(),
+            home: Accountant(),
           );
         },
       ),

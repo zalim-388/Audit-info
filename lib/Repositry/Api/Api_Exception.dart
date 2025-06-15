@@ -4,8 +4,5 @@ class ApiException {
 
   ApiException(this.message, this.statusCode);
 
-  @override
-  String toString() {
-    return message;
-  }
+
 }

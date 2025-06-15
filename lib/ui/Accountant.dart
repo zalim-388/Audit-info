@@ -1,11 +1,15 @@
+import 'package:audit_info/Repositry/model/accountant_modal.dart';
+import 'package:audit_info/bloc/accountant/accountant_bloc.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class Accountant extends StatefulWidget {
   const Accountant({super.key});
@@ -16,13 +20,70 @@ class Accountant extends StatefulWidget {
 
 class _AccountantState extends State<Accountant> {
   int _selectedIndex = 2;
+  bool toggle = false;
   void _onitemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
+  TextEditingController searchController = TextEditingController();
+  List<AccountantModel> filteredAccounts = [];
+  List<AccountantModel> AllAccounts = [];
+
+  String? selectedBranch = 'Branch 1';
+
+  void inistate() {
+    super.initState();
+    BlocProvider.of<AccountantBloc>(context).add(fetchAccountant());
+  }
+
+  void filterAccountsList() async {
+    final query = searchController.text.toLowerCase();
+    setState(() {
+      if (query.isEmpty) {
+        filteredAccounts = AllAccounts;
+      } else {
+        filteredAccounts =
+            AllAccounts.where((account) {
+              return account.name.toLowerCase().contains(query) ||
+                  account.email.toLowerCase().contains(query) ||
+                  account.employeeCode.toLowerCase().contains(query) ||
+                  account.phoneNumber.toLowerCase().contains(query);
+            }).toList();
+      }
+    });
+  }
+
+  TextEditingController employeeCodeController = TextEditingController();
+  TextEditingController dateOfJoiningController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmpasswordcontroller = TextEditingController();
+  TextEditingController salaryController = TextEditingController();
   @override
+  // void dispose() {
+  //   searchController.dispose();
+  //   super.dispose();
+  // }
+  void dispose() {
+    searchController.removeListener(filterAccountsList);
+    searchController.dispose();
+    employeeCodeController.dispose();
+    dateOfJoiningController.dispose();
+    nameController.dispose();
+    emailController.dispose();
+    addressController.dispose();
+    phoneController.dispose();
+    passwordController.dispose();
+    confirmpasswordcontroller.dispose();
+    salaryController.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Customdrawer(
@@ -91,6 +152,7 @@ class _AccountantState extends State<Accountant> {
                       height: 30.h,
 
                       child: TextField(
+                        controller: searchController,
                         decoration: InputDecoration(
                           prefixIcon: Icon(
                             Icons.search,
@@ -119,7 +181,24 @@ class _AccountantState extends State<Accountant> {
                   SizedBox(width: 7.w),
                   GestureDetector(
                     onTap: () {
-                      AccountantopenDialog(context);
+                      AccountantopenDialog(
+                        context,
+                        selectedBranch,
+                        (value) {
+                          setState(() {
+                            selectedBranch = value;
+                          });
+                        },
+                        employeeCodeController,
+                        dateOfJoiningController,
+                        nameController,
+                        emailController,
+                        addressController,
+                        phoneController,
+                        confirmpasswordcontroller,
+                        passwordController,
+                        salaryController,
+                      );
                     },
                     child: Container(
                       height: 28.h,
@@ -137,145 +216,211 @@ class _AccountantState extends State<Accountant> {
               ),
               SizedBox(height: 13.h),
 
-              Container(
-                width: 358.w,
+              BlocBuilder<AccountantBloc, AccountantState>(
+                builder: (context, state) {
+                  if (state is Accountantblocloading) {
+                    print("loading");
 
-                decoration: BoxDecoration(
-                  color: AppColors.kContainerColor,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(4),
-                    topRight: Radius.circular(4),
-                  ),
-                  border: Border(
-                    top: BorderSide(color: Colors.black),
-                    left: BorderSide(color: Colors.black),
-                    right: BorderSide(color: Colors.black),
-                  ),
-                ),
-                child: Table(
-                  border: TableBorder(
-                    borderRadius: BorderRadius.circular(4),
-                    horizontalInside: BorderSide(color: AppColors.kBorderColor),
-                    verticalInside: BorderSide(color: AppColors.kBorderColor),
-                    bottom: BorderSide(color: Colors.black),
-                  ),
-                  columnWidths: const <int, TableColumnWidth>{
-                    0: FixedColumnWidth(50), // E.Code
-                    1: FixedColumnWidth(60), // Name
-                    2: FixedColumnWidth(70), // Email
-                    3: FixedColumnWidth(74), // Phone
-                    4: FixedColumnWidth(40), // Status
-                    5: FixedColumnWidth(60), // Actions
-                  },
+                    return Center(child: CircularProgressIndicator());
+                  } else if (state is Accountantblocloaded) {
+                    var allAccounts = state.Account;
+                    if (filteredAccounts.isEmpty &&
+                        searchController.text.isEmpty) {
+                      filteredAccounts = allAccounts;
+                    }
+                    return Container(
+                      width: 358.w,
 
-                  children: [
-                    TableRow(
-                      decoration: BoxDecoration(color: Colors.grey[300]),
+                      decoration: BoxDecoration(
+                        color: AppColors.kContainerColor,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(4),
+                          topRight: Radius.circular(4),
+                        ),
+                        border: Border(
+                          top: BorderSide(color: Colors.black),
+                          left: BorderSide(color: Colors.black),
+                          right: BorderSide(color: Colors.black),
+                        ),
+                      ),
+                      child: Table(
+                        border: TableBorder(
+                          borderRadius: BorderRadius.circular(4),
+                          horizontalInside: BorderSide(
+                            color: AppColors.kBorderColor,
+                          ),
+                          verticalInside: BorderSide(
+                            color: AppColors.kBorderColor,
+                          ),
+                          bottom: BorderSide(color: Colors.black),
+                        ),
+                        columnWidths: const <int, TableColumnWidth>{
+                          0: FixedColumnWidth(50), // E.Code
+                          1: FixedColumnWidth(60), // Name
+                          2: FixedColumnWidth(70), // Email
+                          3: FixedColumnWidth(74), // Phone
+                          4: FixedColumnWidth(40), // Status
+                          5: FixedColumnWidth(60), // Actions
+                        },
+
+                        children: [
+                          TableRow(
+                            decoration: BoxDecoration(color: Colors.grey[300]),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                ),
+                                child: Text(
+                                  'E.Code',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10.sp,
+                                    color: AppColors.kTextColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                ),
+                                child: Text(
+                                  'Name',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10.sp,
+                                    color: AppColors.kTextColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                ),
+                                child: Text(
+                                  'Email',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10.sp,
+                                    color: AppColors.kTextColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                ),
+                                child: Text(
+                                  'phone number',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10.sp,
+                                    color: AppColors.kTextColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                ),
+                                child: Text(
+                                  'Status',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10.sp,
+                                    color: AppColors.kTextColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                ),
+                                child: Text(
+                                  'Actions',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10.sp,
+                                    color: AppColors.kTextColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          ...List.generate(filteredAccounts.length, (index) {
+                            final account = filteredAccounts[index];
+                            return _accountantRow(
+                              code: account.employeeCode.toString(),
+                              name: account.name.toString(),
+                              email: account.email.toString(),
+                              phone: account.phoneNumber.toString(),
+                              status: account.status,
+                              onToggle: (bool value) {
+                                setState(() {
+                                  BlocProvider.of<AccountantBloc>(context).add(
+                                    UpdateAccountStatus(
+                                      id: account.id,
+                                      status: value,
+                                    ),
+                                  );
+                                });
+                              },
+
+                              onEdit: () {
+                                AccountantopenDialog(
+                                  context,
+                                  selectedBranch,
+                                  (value) {
+                                    setState(() {
+                                      selectedBranch = value;
+                                    });
+                                  },
+                                  employeeCodeController
+                                    ..text = account.employeeCode.toString(),
+                                  dateOfJoiningController
+                                    ..text = DateFormat(
+                                      'yyyy-MM-dd',
+                                    ).format(account.dateOfJoining),
+                                  nameController..text = account.name,
+                                  emailController..text = account.email,
+                                  addressController..text = account.address,
+                                  phoneController..text = account.phoneNumber,
+                                  confirmpasswordcontroller
+                                    ..text = account.password,
+                                  passwordController..text = account.password,
+                                  salaryController..text = '',
+                                );
+                              },
+                              onDelete: () {
+                                BlocProvider.of<AccountantBloc>(
+                                  context,
+                                ).add(deleteaccount(id: account.id));
+                              },
+                            );
+                          }),
+                        ],
+                      ),
+                    );
+                  } else if (state is AccountantblocError) {
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'E.Code',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Name',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Email',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'phone number',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Status',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Actions',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                        Image.asset('assets/icon/Group 99.png', height: 40.h),
+                        SizedBox(height: 4.h),
                       ],
-                    ),
-
-                    // for (int i = 1; i <= 4; i++)
-                    _accountantRow(
-                      code: "1",
-                      name: "Salim",
-                      email: "salim77634@gamil.com",
-                      phone: "9562791690",
-                      onEdit: () {},
-                      onDelete: () {},
-                    ),
-                    _accountantRow(
-                      code: "1",
-                      name: "Ashiq",
-                      email: "@gamil.com",
-                      phone: "46465",
-                      onEdit: () {},
-                      onDelete: () {},
-                    ),
-                    _accountantRow(
-                      code: "1",
-                      name: "Ali",
-                      email: "Ali774@gmail.com",
-                      phone: "95668690",
-                      onEdit: () {},
-                      onDelete: () {},
-                    ),
-                  ],
-                ),
+                    );
+                  }
+                  return Container();
+                },
               ),
             ],
           ),
@@ -292,6 +437,8 @@ TableRow _accountantRow({
   required String phone,
   required VoidCallback onEdit,
   required VoidCallback onDelete,
+  required bool status,
+  required ValueChanged<bool> onToggle,
 }) {
   return TableRow(
     children: [
@@ -311,16 +458,17 @@ TableRow _accountantRow({
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Center(child: Text(phone, style: FontStyles.body)),
       ),
-      // Padding(
-      //   padding: EdgeInsets.symmetric(vertical: 6.h),
-      //   child: Center(
-      //     child: Switch(
-      //       value: true,
-      //       onChanged: (val) {},
-      //       activeColor: Colors.green,
-      //     ),
-      //   ),
-      // ),
+      Padding(
+        padding: EdgeInsets.symmetric(vertical: 6.h),
+        child: Center(
+          child: Switch(
+            value: status,
+            onChanged: onToggle,
+            activeColor: Colors.green,
+            inactiveTrackColor: Colors.grey,
+          ),
+        ),
+      ),
       Icon(Icons.toggle_on, color: Colors.green, size: 31),
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -365,7 +513,20 @@ TableRow _accountantRow({
   );
 }
 
-Future<void> AccountantopenDialog(BuildContext context) async {
+Future<void> AccountantopenDialog(
+  BuildContext context,
+  String? selectedBranch,
+  Function(String) onBranchSelected,
+  TextEditingController employecodeController,
+  TextEditingController dateOfJoiningController,
+  TextEditingController nameController,
+  TextEditingController emailController,
+  TextEditingController addressController,
+  TextEditingController phoneController,
+  TextEditingController confirmpasswordcontroller,
+  TextEditingController passwordController,
+  TextEditingController salaryController,
+) async {
   return showDialog(
     context: context,
     builder: (context) {
@@ -397,36 +558,72 @@ Future<void> AccountantopenDialog(BuildContext context) async {
                   ),
                   SizedBox(height: 20.h),
 
-                  _fullTextField(title: "Employee Code"),
+                  _fullTextField(
+                    title: "Employee Code",
+                    keyboardType: TextInputType.name,
+                    controller: employecodeController,
+                  ),
                   _fullTextField(
                     title: "Date of Joining",
 
                     icon: Icons.calendar_today,
+                    controller: dateOfJoiningController,
+                    // onTap: () async {
+                    //   // Show date picker
+                    //   DateTime? pickedDate = await showDatePicker(
+                    //     context: context,
+                    //     initialDate: DateTime.now(),
+                    //     firstDate: DateTime(2000),
+                    //     lastDate: DateTime(2100),
+                    //   );
+                    //   if (pickedDate != null) {
+                    //     // Format date as YYYY-MM-DD
+                    //     dateOfJoiningController.text =
+                    //         "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
+                    //   }
+                    // },
                   ),
-                  _fullTextField(title: "Name"),
+                  _fullTextField(title: "Name", controller: nameController),
                   SizedBox(height: 10.h),
-                  _fullTextField(title: "Email"),
+                  _fullTextField(title: "Email", controller: emailController),
                   SizedBox(height: 10.h),
-                  _fullTextField(title: "Address"),
+                  _fullTextField(
+                    title: "Address",
+                    controller: addressController,
+                  ),
                   SizedBox(height: 10.h),
                   _fullTextField(
                     title: "Phone Number",
+                    controller: phoneController,
                     keyboardType: TextInputType.phone,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(title: "Password", isPassword: true),
-                  SizedBox(height: 10.h),
-                  _fullTextField(title: "Confirm Password", isPassword: true),
-
-                  SizedBox(height: 10.h),
                   _fullTextField(
-                    title: "Select branch",
+                    title: "Password",
+                    isPassword: true,
+                    controller: passwordController,
+                  ),
+                  SizedBox(height: 10.h),
 
-                    icon: Icons.keyboard_arrow_down,
+                  _fullTextField(
+                    title: "Confirm Password",
+                    isPassword: true,
+                    controller: confirmpasswordcontroller,
+                  ),
+                  SizedBox(height: 10.h),
+                  customDropdown(
+                    context: context,
+                    title: "Select Branch",
+                    selectedValue: selectedBranch,
+                    items: ['Branch 1', 'Branch 2', 'Branch 3'],
+                    onSelected: (value) {
+                      onBranchSelected(value);
+                    },
                   ),
                   _fullTextField(
                     title: "Salary",
                     keyboardType: TextInputType.number,
+                    controller: salaryController,
                   ),
 
                   SizedBox(height: 21.h),
@@ -440,7 +637,36 @@ Future<void> AccountantopenDialog(BuildContext context) async {
                           borderRadius: BorderRadius.circular(6),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        if (passwordController.text !=
+                            confirmpasswordcontroller.text) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Passwords do not match"),
+                            ),
+                          );
+                          return;
+                        }
+
+                        final Accountdata = {
+                         'id': employecodeController.text,
+                          'employeeCode': employecodeController.text,
+                          'dateOfJoining': dateOfJoiningController.text,
+                          'name': nameController.text,
+                          'email': emailController.text,
+                          'phonenumber': phoneController.text,
+                          'address': addressController.text,
+                          'password': passwordController.text,
+                          'position': 'Accountant',
+                          'branch': selectedBranch ?? 'Branch 1',
+                          'salary': salaryController.text,
+                          'state': true,
+                        };
+                        BlocProvider.of<AccountantBloc>(
+                          context,
+                        ).add(AddAccount(Accountdata: Accountdata));
+                        Navigator.pop(context);
+                      },
                       child: Text(
                         "Create",
                         style: GoogleFonts.inter(
@@ -466,6 +692,8 @@ Widget _fullTextField({
   bool isPassword = false,
   double? width,
   TextInputType keyboardType = TextInputType.text,
+  TextEditingController? controller,
+  VoidCallback? onTap,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -476,6 +704,7 @@ Widget _fullTextField({
         height: 30.h,
         width: width ?? 324.w,
         child: TextField(
+          controller: controller,
           keyboardType: keyboardType,
           obscureText: isPassword,
           decoration: InputDecoration(
@@ -492,6 +721,65 @@ Widget _fullTextField({
               borderRadius: BorderRadius.circular(6),
               borderSide: BorderSide(color: AppColors.kBorderColor),
             ),
+          ),
+        ),
+      ),
+    ],
+  );
+}
+
+Widget customDropdown({
+  required BuildContext context,
+  required String title,
+  required String? selectedValue,
+  required void Function(String value) onSelected,
+  required List<String> items,
+  double? width,
+}) {
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(title, style: FontStyles.body),
+      SizedBox(height: 4.h),
+      Container(
+        height: 27.h,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 6),
+        child: GestureDetector(
+          onTapDown: (details) async {
+            final selected = await showMenu<String>(
+              context: context,
+              position: RelativeRect.fromLTRB(
+                details.globalPosition.dx,
+                details.globalPosition.dy,
+                details.globalPosition.dx,
+                details.globalPosition.dy,
+              ),
+              items:
+                  items.map((item) {
+                    return PopupMenuItem<String>(
+                      value: item,
+                      child: Text(item),
+                    );
+                  }).toList(),
+            );
+            if (selected != null) {
+              onSelected(selected);
+            }
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                selectedValue ?? title,
+                style: GoogleFonts.inter(fontSize: 10, color: Colors.grey),
+              ),
+              const Icon(Icons.keyboard_arrow_down, size: 16),
+            ],
           ),
         ),
       ),

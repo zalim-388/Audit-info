@@ -3,60 +3,55 @@ import 'dart:developer';
 
 import 'package:audit_info/Repositry/Api/Api_Exception.dart';
 import 'package:audit_info/main.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 
 class ApiClient {
-  Future<http.Response> invokeAPI(
-    String path,
-    String method,
-    Object? body,
-  ) async {
-    http.Response response;
+  Future<Response> invokeAPI(String path, String method, Object? body) async {
+    Response response;
 
-    String url = baseUrl + path;
+    String url = baseurl + path;
+
     print(url);
     print(body);
 
     switch (method) {
       case "POST":
-        response = await http.post(
+        response = await post(
           Uri.parse(url),
           headers: {'Content-Type': 'application/x-www-form-urlencoded'},
           body: body,
         );
         break;
       case "PUT":
-        response = await http.put(
+        response = await put(
           Uri.parse(url),
           headers: {'Content-Type': 'application/json'},
           body: body,
         );
         break;
       case "DELETE":
-        response = await http.delete(Uri.parse(url), headers: {}, body: body);
+        response = await delete(Uri.parse(url), headers: {}, body: body);
         break;
       case "POST_":
-        response = await http.post(
+        response = await post(
           Uri.parse(url),
           headers: {'Content-Type': 'application/json'},
           body: body,
         );
         break;
       case "GET_":
-        response = await http.post(Uri.parse(url), headers: {}, body: body);
+        response = await post(Uri.parse(url), headers: {}, body: body);
         break;
-      case "GET":
-        response = await http.get(Uri.parse(url), headers: {});
-        break;
+
       case "PATCH":
-        response = await http.patch(
+        response = await patch(
           Uri.parse(url),
           headers: {'Content-Type': 'application/json'},
           body: body,
         );
         break;
       default:
-        response = await http.get(
+        response = await get(
           Uri.parse(url),
           headers: {
             'Accept': 'application/json',
@@ -74,7 +69,7 @@ class ApiClient {
     return response;
   }
 
-  String _decodeBodyBytes(http.Response response) {
+  String _decodeBodyBytes(Response response) {
     var contentType = response.headers['content-type'];
     if (contentType != null && contentType.contains("application/json")) {
       return jsonDecode(response.body)['message'] ?? response.body;
