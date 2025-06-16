@@ -1,9 +1,12 @@
+import 'package:audit_info/Repositry/model/SRCmodel.dart';
+import 'package:audit_info/bloc/SRC/src_bloc_bloc.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,10 +18,45 @@ class Src extends StatefulWidget {
 }
 
 class _SrcState extends State<Src> {
+  List<SrcModel> filteredsrc = [];
+  List<SrcModel> allsrc = [];
+
   int _selectedIndex = 3;
   void _onitemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+    });
+  }
+
+  void initState() {
+    super.initState();
+    BlocProvider.of<SrcBlocBloc>(context).add(fetchsrc());
+    searchController.addListener(filtersrcList);
+  }
+
+  TextEditingController searchController = TextEditingController();
+  TextEditingController employecodeController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController phonenumber = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmController = TextEditingController();
+  TextEditingController pointamountController = TextEditingController();
+  TextEditingController salaryController = TextEditingController();
+
+  void filtersrcList() async {
+    final qeury = searchController.text.toLowerCase();
+    setState(() {
+      filteredsrc =
+          allsrc.where((Src) {
+            return Src.employeeCode.toLowerCase().contains(qeury) ||
+                Src.name.toLowerCase().contains(qeury) ||
+                Src.email.toLowerCase().contains(qeury) ||
+                Src.phoneNumber.toLowerCase().contains(qeury) ||
+                Src.branchId.toString().toLowerCase().contains(qeury);
+          }).toList();
     });
   }
 
@@ -119,7 +157,19 @@ class _SrcState extends State<Src> {
                   SizedBox(width: 7.w),
                   GestureDetector(
                     onTap: () {
-                      SRCopenDialog(context);
+                      SRCopenDialog(
+                        context,
+                        employecodeController,
+                        dateController,
+                        nameController,
+                        emailController,
+                        addressController,
+                        phonenumber,
+                        confirmController,
+                        pointamountController,
+                        salaryController,
+                        passwordController,
+                      );
                     },
                     child: Container(
                       height: 28.h,
@@ -138,162 +188,204 @@ class _SrcState extends State<Src> {
 
               SizedBox(height: 13.h),
 
-              Container(
-                width: 358.w,
-
-                decoration: BoxDecoration(
-                  color: AppColors.kContainerColor,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(4),
-                    topRight: Radius.circular(4),
-                  ),
-                  border: Border(
-                    top: BorderSide(color: Colors.black),
-                    left: BorderSide(color: Colors.black),
-                    right: BorderSide(color: Colors.black),
-                  ),
-                ),
-                child: Table(
-                  border: TableBorder(
-                    borderRadius: BorderRadius.circular(4),
-                    horizontalInside: BorderSide(color: AppColors.kBorderColor),
-                    verticalInside: BorderSide(color: AppColors.kBorderColor),
-                    bottom: BorderSide(color: Colors.black),
-                  ),
-                  columnWidths: const <int, TableColumnWidth>{
-                    0: FixedColumnWidth(50), // E.CODE
-                    1: FixedColumnWidth(50), // Name
-                    2: FixedColumnWidth(40), // Branch Name
-                    3: FixedColumnWidth(70), // Phone Number
-                    4: FixedColumnWidth(40), // Point Amount
-                    5: FixedColumnWidth(40), // Status (toggle)
-                    6: FixedColumnWidth(80), // Actions (icons)
-                  },
-
-                  children: [
-                    TableRow(
-                      decoration: BoxDecoration(color: Colors.grey[300]),
+              BlocBuilder<SrcBlocBloc, SrcBlocState>(
+                builder: (context, state) {
+                  if (state is SrcBlocloading) {
+                    print("loading");
+                    Center(child: CircularProgressIndicator());
+                  } else if (state is srcblocError) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'E.Code',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Name',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Branch name',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'phone number',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Point Amount',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Status',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Actions',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                        Image.asset('assets/icon/Group 99.png', height: 40.h),
+                        SizedBox(height: 4.h),
                       ],
-                    ),
+                    );
+                  } else if (state is srcBlocloaded) {
+                    var allsrc = state.SRC;
+                    if (searchController.text.isEmpty) {
+                      filteredsrc = allsrc;
+                    }
 
-                    // for (int i = 1; i <= 4; i++)
-                    _SrcRow(
-                      code: "1",
-                      name: "Salim",
-                      Branchname: "",
-                      phone: "9562791690",
-                      onEdit: () {},
-                      PointAmount: "",
-                      onDelete: () {},
-                    ),
-                    _SrcRow(
-                      code: "2",
-                      name: "Ashiq",
-                      Branchname: "",
+                    return Container(
+                      width: 358.w,
 
-                      phone: "46465",
-                      PointAmount: "",
-                      onEdit: () {},
-                      onDelete: () {},
-                    ),
-                    _SrcRow(
-                      code: "3",
-                      name: "Ali",
-                      Branchname: "",
-                      phone: "95668690",
-                      PointAmount: "",
-                      onEdit: () {},
-                      onDelete: () {},
-                    ),
-                  ],
-                ),
+                      decoration: BoxDecoration(
+                        color: AppColors.kContainerColor,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(4),
+                          topRight: Radius.circular(4),
+                        ),
+                        border: Border(
+                          top: BorderSide(color: Colors.black),
+                          left: BorderSide(color: Colors.black),
+                          right: BorderSide(color: Colors.black),
+                        ),
+                      ),
+                      child: Table(
+                        border: TableBorder(
+                          borderRadius: BorderRadius.circular(4),
+                          horizontalInside: BorderSide(
+                            color: AppColors.kBorderColor,
+                          ),
+                          verticalInside: BorderSide(
+                            color: AppColors.kBorderColor,
+                          ),
+                          bottom: BorderSide(color: Colors.black),
+                        ),
+                        columnWidths: const <int, TableColumnWidth>{
+                          0: FixedColumnWidth(50), // E.CODE
+                          1: FixedColumnWidth(50), // Name
+                          2: FixedColumnWidth(40), // Branch Name
+                          3: FixedColumnWidth(70), // Phone Number
+                          4: FixedColumnWidth(40), // Point Amount
+                          5: FixedColumnWidth(40), // Status (toggle)
+                          6: FixedColumnWidth(80), // Actions (icons)
+                        },
+
+                        children: [
+                          TableRow(
+                            decoration: BoxDecoration(color: Colors.grey[300]),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                ),
+                                child: Text(
+                                  'E.Code',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10.sp,
+                                    color: AppColors.kTextColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                ),
+                                child: Text(
+                                  'Name',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10.sp,
+                                    color: AppColors.kTextColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                ),
+                                child: Text(
+                                  'Branch name',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10.sp,
+                                    color: AppColors.kTextColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                ),
+                                child: Text(
+                                  'phone number',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10.sp,
+                                    color: AppColors.kTextColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                ),
+                                child: Text(
+                                  'Point Amount',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10.sp,
+                                    color: AppColors.kTextColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                ),
+                                child: Text(
+                                  'Status',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10.sp,
+                                    color: AppColors.kTextColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 10.0,
+                                ),
+                                child: Text(
+                                  'Actions',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                    fontSize: 10.sp,
+                                    color: AppColors.kTextColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          ...List.generate(filteredsrc.length, (index) {
+                            final SRC = filteredsrc[index];
+
+                            return _SrcRow(
+                              code: SRC.employeeCode,
+                              name: SRC.name,
+                              Branchname: SRC.branchId.toString(),
+                              phone: SRC.phoneNumber,
+                              PointAmount: SRC.pointAmount.toString(),
+                              onEdit: () {
+                                SRCopenDialog(
+                                  context,
+                                  employecodeController,
+                                  dateController,
+                                  nameController,
+                                  emailController,
+                                  addressController,
+                                  phonenumber,
+                                  confirmController,
+                                  pointamountController,
+                                  salaryController,
+                                  passwordController,
+                                );
+                              },
+                              onDelete: () {
+                                BlocProvider.of<SrcBlocBloc>(
+                                  context,
+                                ).add(deletesrc(id: SRC.id));
+                              },
+                            );
+                          }),
+                        ],
+                      ),
+                    );
+                  }
+                  return Container();
+                },
               ),
             ],
           ),
@@ -388,7 +480,19 @@ TableRow _SrcRow({
   );
 }
 
-Future<void> SRCopenDialog(BuildContext context) async {
+Future<void> SRCopenDialog(
+  BuildContext context,
+  TextEditingController employecodeController,
+  TextEditingController dateController,
+  TextEditingController nameController,
+  TextEditingController emailController,
+  TextEditingController addressController,
+  TextEditingController phonenumber,
+  TextEditingController confirmController,
+  TextEditingController pointamountController,
+  TextEditingController salaryController,
+  TextEditingController passwordController,
+) async {
   return showDialog(
     context: context,
     builder: (context) {
@@ -421,13 +525,13 @@ Future<void> SRCopenDialog(BuildContext context) async {
                   SizedBox(height: 23.h),
 
                   _fullTextField(title: "Employee Code"),
-                    SizedBox(height: 10.h),
+                  SizedBox(height: 10.h),
                   _fullTextField(
                     title: "Date of Joining",
 
                     icon: Icons.calendar_today,
                   ),
-                    SizedBox(height: 10.h),
+                  SizedBox(height: 10.h),
                   _fullTextField(title: "Name"),
                   SizedBox(height: 10.h),
                   _fullTextField(title: "Email"),
@@ -446,14 +550,14 @@ Future<void> SRCopenDialog(BuildContext context) async {
 
                     icon: Icons.keyboard_arrow_down,
                   ),
-                    SizedBox(height: 10.h),
+                  SizedBox(height: 10.h),
                   Row(
                     children: [
                       Expanded(
                         child: _fullTextField(
                           title: "Salary",
                           width: double.infinity,
-                          keyboardType: TextInputType.number
+                          keyboardType: TextInputType.number,
                         ),
                       ),
                       SizedBox(width: 13.w),
@@ -461,7 +565,7 @@ Future<void> SRCopenDialog(BuildContext context) async {
                         child: _fullTextField(
                           title: "point Amount",
                           width: double.infinity,
-                          keyboardType: TextInputType.number
+                          keyboardType: TextInputType.number,
                         ),
                       ),
                     ],
@@ -478,10 +582,43 @@ Future<void> SRCopenDialog(BuildContext context) async {
                           borderRadius: BorderRadius.circular(6),
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        if (passwordController.text != confirmController.text) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Passwords do not match")),
+                          );
+                          return;
+                        }
+                        final srcdata = {
+                          'employeeCode': employecodeController.text,
+                          'dateOfJoining': dateController.text,
+                          'name': nameController.text,
+                          'email': emailController.text,
+                          'address': addressController.text,
+                          'phoneNumber': phonenumber.text,
+                          'password': passwordController.text,
+                          // 'branch': selectedBranch ?? 'Branch 1',
+                          'pointAmount': pointamountController.text,
+                          'salary': salaryController.text,
+                        };
+                        BlocProvider.of<SrcBlocBloc>(
+                          context,
+                        ).add(AddSrc(srcdata: srcdata));
+                        employecodeController.clear();
+                        dateController.clear();
+                        nameController.clear();
+                        emailController.clear();
+                        addressController.clear();
+                        phonenumber.clear();
+                        passwordController.clear();
+                        confirmController.clear();
+                        pointamountController.clear();
+                        salaryController.clear();
+                        Navigator.pop(context);
+                      },
                       child: Text(
                         "Create",
-                        style: GoogleFonts.inter(
+                        style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
                         ),

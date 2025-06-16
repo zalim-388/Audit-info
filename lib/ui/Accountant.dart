@@ -222,10 +222,17 @@ class _AccountantState extends State<Accountant> {
                     print("loading");
 
                     return Center(child: CircularProgressIndicator());
+                  } else if (state is AccountantblocError) {
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset('assets/icon/Group 99.png', height: 40.h),
+                        SizedBox(height: 4.h),
+                      ],
+                    );
                   } else if (state is Accountantblocloaded) {
                     var allAccounts = state.Account;
-                    if (filteredAccounts.isEmpty &&
-                        searchController.text.isEmpty) {
+                    if (searchController.text.isEmpty) {
                       filteredAccounts = allAccounts;
                     }
                     return Container(
@@ -366,12 +373,12 @@ class _AccountantState extends State<Accountant> {
                               status: account.status,
                               onToggle: (bool value) {
                                 setState(() {
-                                  BlocProvider.of<AccountantBloc>(context).add(
-                                    UpdateAccountStatus(
-                                      id: account.id,
-                                      status: value,
-                                    ),
-                                  );
+                                  // BlocProvider.of<AccountantBloc>(context).add(
+                                  //   // UpdateAccountStatus(
+                                  //   //   id: account.id,
+                                  //   //   status: value,
+                                  //   // ),
+                                  // );
                                 });
                               },
 
@@ -409,14 +416,6 @@ class _AccountantState extends State<Accountant> {
                           }),
                         ],
                       ),
-                    );
-                  } else if (state is AccountantblocError) {
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset('assets/icon/Group 99.png', height: 40.h),
-                        SizedBox(height: 4.h),
-                      ],
                     );
                   }
                   return Container();
@@ -568,20 +567,6 @@ Future<void> AccountantopenDialog(
 
                     icon: Icons.calendar_today,
                     controller: dateOfJoiningController,
-                    // onTap: () async {
-                    //   // Show date picker
-                    //   DateTime? pickedDate = await showDatePicker(
-                    //     context: context,
-                    //     initialDate: DateTime.now(),
-                    //     firstDate: DateTime(2000),
-                    //     lastDate: DateTime(2100),
-                    //   );
-                    //   if (pickedDate != null) {
-                    //     // Format date as YYYY-MM-DD
-                    //     dateOfJoiningController.text =
-                    //         "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
-                    //   }
-                    // },
                   ),
                   _fullTextField(title: "Name", controller: nameController),
                   SizedBox(height: 10.h),
@@ -648,18 +633,32 @@ Future<void> AccountantopenDialog(
                           return;
                         }
 
+                        String formattedDate = '';
+                        try {
+                          if (dateOfJoiningController.text.isNotEmpty) {
+                            DateTime parsedDate = DateFormat(
+                              'yyyy-MM-dd',
+                            ).parse(dateOfJoiningController.text);
+                            formattedDate = DateFormat(
+                              'yyyy-MM-dd',
+                            ).format(parsedDate);
+                          }
+                        } catch (e) {
+                          formattedDate = dateOfJoiningController.text;
+                        }
+
                         final Accountdata = {
-                         'id': employecodeController.text,
+                          'id': employecodeController.text,
                           'employeeCode': employecodeController.text,
-                          'dateOfJoining': dateOfJoiningController.text,
+                          'dateOfJoining': formattedDate,
                           'name': nameController.text,
-                          'email': emailController.text,
+                          'email': 'someone@example.com',
                           'phonenumber': phoneController.text,
                           'address': addressController.text,
                           'password': passwordController.text,
                           'position': 'Accountant',
                           'branch': selectedBranch ?? 'Branch 1',
-                          'salary': salaryController.text,
+                          'salary': int.tryParse(salaryController.text) ?? 0,
                           'state': true,
                         };
                         BlocProvider.of<AccountantBloc>(
@@ -693,7 +692,7 @@ Widget _fullTextField({
   double? width,
   TextInputType keyboardType = TextInputType.text,
   TextEditingController? controller,
-  VoidCallback? onTap,
+  // VoidCallback? onTap,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,

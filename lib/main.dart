@@ -1,8 +1,7 @@
+import 'package:audit_info/bloc/SRC/src_bloc_bloc.dart';
 import 'package:audit_info/bloc/accountant/accountant_bloc.dart';
-import 'package:audit_info/bloc/branch/branch_manager_bloc.dart';
 import 'package:audit_info/bloc/manger/manager_bloc.dart';
 import 'package:audit_info/ui/Accountant.dart';
-import 'package:audit_info/ui/Branch_manager.dart';
 import 'package:audit_info/ui/loginpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,6 +27,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<AccountantBloc>(
           create: (BuildContext ontext) => AccountantBloc(),
         ),
+        BlocProvider<SrcBlocBloc>(create: (context) => SrcBlocBloc()),
       ],
       child: ScreenUtilInit(
         designSize: Size(402, 874),

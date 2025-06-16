@@ -1,3 +1,4 @@
+import 'package:audit_info/Repositry/model/manager_model.dart';
 import 'package:audit_info/bloc/manger/manager_bloc.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
@@ -17,6 +18,9 @@ class BranchManager extends StatefulWidget {
 }
 
 class _BranchMangerState extends State<BranchManager> {
+  List<Managermodel> filteredmanger = [];
+  List<Managermodel> allManagers = [];
+
   bool toggle = true;
   int _selectedIndex = 1;
   void _onitemTapped(int index) {
@@ -31,8 +35,20 @@ class _BranchMangerState extends State<BranchManager> {
   void initState() {
     super.initState();
     BlocProvider.of<ManagerBloc>(context).add(fetchmanager());
+    searchController.addListener(filteredmangerlist);
   }
 
+  void filteredmangerlist() async {
+    final query = searchController.text.toLowerCase();
+    setState(() {
+      filteredmanger =
+          allManagers.where((manger) {
+            return manger.id.toLowerCase().contains(query);
+          }).toList();
+    });
+  }
+
+  TextEditingController searchController = TextEditingController();
   TextEditingController employecodeController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -112,6 +128,7 @@ class _BranchMangerState extends State<BranchManager> {
                       width: 322.w,
                       height: 30.h,
                       child: TextField(
+                        controller: searchController,
                         decoration: InputDecoration(
                           prefixIcon: Icon(
                             Icons.search,
@@ -189,7 +206,10 @@ class _BranchMangerState extends State<BranchManager> {
                       ],
                     );
                   } else if (state is ManagerBlocloaded) {
-                    var managers = state.manager;
+                    var allManagers = state.manager;
+                    if (searchController.text.isEmpty) {
+                      filteredmanger = allManagers;
+                    }
                     return Column(
                       children: [
                         Container(
@@ -216,8 +236,8 @@ class _BranchMangerState extends State<BranchManager> {
                               top: BorderSide(color: Colors.black),
                             ),
                             columnWidths: {
-                              0: FixedColumnWidth(180),
-                              1: FixedColumnWidth(10),
+                              0: FixedColumnWidth(160),
+                              1: FixedColumnWidth(30),
                               2: FixedColumnWidth(60),
                             },
                             children: [
@@ -256,14 +276,14 @@ class _BranchMangerState extends State<BranchManager> {
                                 ],
                               ),
 
-                              ...List.generate(managers.length, (index) {
-                                final manager = managers[index];
+                              ...List.generate(filteredmanger.length, (index) {
+                                final manager = filteredmanger[index];
                                 return _TableRow(
-                                  Id: manager.id,
+                                  Id: manager.employeeCode,
                                   status: manager.refresh,
                                   onToggle: (bool value) {
                                     setState(() {
-                                      toggle = value;
+                                      filteredmanger[index].refresh = value;
                                     });
                                   },
 
@@ -333,9 +353,9 @@ TableRow _TableRow({
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Center(child: Text(Id, style: FontStyles.body)),
       ),
-      Padding(
-        padding: EdgeInsets.symmetric(vertical: 6.h),
-        child: Center(
+      Center(
+        child: Padding(
+          padding: const EdgeInsets.all(3),
           child: Switch(
             value: status,
             onChanged: onToggle,
@@ -346,8 +366,9 @@ TableRow _TableRow({
       ),
 
       Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 5),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Material(
               color: Color(0xFF4A60E4),
@@ -364,7 +385,6 @@ TableRow _TableRow({
             ),
             SizedBox(width: 18.w),
 
-        
             Material(
               color: Color(0xFFFF4C4C),
               borderRadius: BorderRadius.circular(4),
@@ -524,7 +544,6 @@ Future<void> _BranchManageropenDialog(
                           return;
                         }
                         final managerdata = {
-                          'id': employecodeController.text.isEmpty,
                           'employeeCode': employecodeController.text,
                           'dateOfJoining': dateController.text,
                           'name': nameController.text,
@@ -539,16 +558,16 @@ Future<void> _BranchManageropenDialog(
                         BlocProvider.of<ManagerBloc>(
                           context,
                         ).add(Addmanager(managerdata: managerdata));
-                        // employecodeController.clear();
-                        // dateController.clear();
-                        // nameController.clear();
-                        // emailController.clear();
-                        // addressController.clear();
-                        // phonenumber.clear();
-                        // passwordController.clear();
-                        // confirmController.clear();
-                        // pointamountController.clear();
-                        // salaryController.clear();
+                        employecodeController.clear();
+                        dateController.clear();
+                        nameController.clear();
+                        emailController.clear();
+                        addressController.clear();
+                        phonenumber.clear();
+                        passwordController.clear();
+                        confirmController.clear();
+                        pointamountController.clear();
+                        salaryController.clear();
                         Navigator.pop(context);
                       },
                       child: Text(

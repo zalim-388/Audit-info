@@ -14,6 +14,6 @@ final class Accountantblocloaded extends AccountantState {
 }
 
 final class AccountantblocError extends AccountantState {
-  final String? error; 
-  AccountantblocError({this.error});
+  
+  
 }

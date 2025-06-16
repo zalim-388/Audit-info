@@ -17,8 +17,10 @@ class deleteaccount extends AccountantEvent {
 
 
   deleteaccount({required this.id});
-}class UpdateAccountStatus extends AccountantEvent {
-  final String id;
-  final bool status;
-  UpdateAccountStatus({required this.id, required this.status});
 }
+
+// class UpdateAccountStatus extends AccountantEvent {
+//   final String id;
+//   final bool status;
+//   UpdateAccountStatus({required this.id, required this.status});
+// }
