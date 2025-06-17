@@ -1,14 +1,17 @@
 import 'package:audit_info/Repositry/model/manager_model.dart';
 import 'package:audit_info/bloc/manger/manager_bloc.dart';
+import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
+import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class BranchManager extends StatefulWidget {
   const BranchManager({super.key});
@@ -109,7 +112,12 @@ class _BranchMangerState extends State<BranchManager> {
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Loginpage()),
+              );
+            },
             icon: const Icon(Icons.logout_rounded, color: Color(0xFF414143)),
           ),
         ],
@@ -461,6 +469,19 @@ Future<void> _BranchManageropenDialog(
                     title: "Date of Joining",
                     controller: dateController,
                     icon: Icons.calendar_today,
+                    onTap: () async {
+                      final dateRange = await showRangePickerDialog(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        minDate: DateTime(2021, 1, 1),
+                        maxDate: DateTime(2025, 12, 31),
+                      );
+                      if (dateRange != null) {
+                        dateController.text = DateFormat(
+                          'yyyy-MM-dd',
+                        ).format(dateRange.start);
+                      }
+                    },
                   ),
                   _fullTextField(title: "Name", controller: nameController),
                   SizedBox(height: 10.h),
@@ -538,6 +559,21 @@ Future<void> _BranchManageropenDialog(
                           );
                           return;
                         }
+
+                        String formattedDate = '';
+                        try {
+                          if (dateController.text.isNotEmpty) {
+                            DateTime parsedDate = DateFormat(
+                              'yyyy-MM-dd',
+                            ).parse(dateController.text);
+                            formattedDate = DateFormat(
+                              'yyyy-MM-dd',
+                            ).format(parsedDate);
+                          }
+                        } catch (e) {
+                          formattedDate = dateController.text;
+                        }
+
                         final managerdata = {
                           'employeeCode': employecodeController.text,
                           'dateOfJoining': dateController.text,
@@ -591,6 +627,7 @@ Widget _fullTextField({
   double? width,
   TextInputType keyboardType = TextInputType.text,
   TextEditingController? controller,
+  VoidCallback? onTap,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -606,7 +643,10 @@ Widget _fullTextField({
           obscureText: isPassword,
           decoration: InputDecoration(
             hintStyle: GoogleFonts.poppins(fontSize: 12),
-            suffixIcon: icon != null ? Icon(icon, size: 18) : null,
+            suffixIcon: IconButton(
+              onPressed: onTap,
+              icon: Icon(icon, size: 18),
+            ),
             contentPadding: EdgeInsets.symmetric(horizontal: 12),
             filled: true,
             fillColor: Colors.white,

@@ -1,3 +1,4 @@
+import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class Sro extends StatefulWidget {
   const Sro({super.key});
@@ -71,7 +73,15 @@ class _SroState extends State<Sro> {
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                DialogRoute(
+                  context: context,
+                  builder: (context) => Loginpage(),
+                ),
+              );
+            },
             icon: const Icon(Icons.logout_rounded, color: Color(0xFF414143)),
           ),
         ],
@@ -275,7 +285,7 @@ class _SroState extends State<Sro> {
                       ],
                     ),
 
-                    // for (int i = 1; i <= 4; i++)
+
                     _SroRow(
                       code: "1",
                       name: "Salim",

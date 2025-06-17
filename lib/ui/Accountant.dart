@@ -67,10 +67,6 @@ class _AccountantState extends State<Accountant> {
   TextEditingController confirmpasswordcontroller = TextEditingController();
   TextEditingController salaryController = TextEditingController();
   @override
-  // void dispose() {
-  //   searchController.dispose();
-  //   super.dispose();
-  // }
   void dispose() {
     searchController.removeListener(filterAccountsList);
     searchController.dispose();
