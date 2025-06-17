@@ -1,9 +1,11 @@
 import 'package:audit_info/Repositry/model/accountant_modal.dart';
 import 'package:audit_info/bloc/accountant/accountant_bloc.dart';
+import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
+import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -132,7 +134,12 @@ class _AccountantState extends State<Accountant> {
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Loginpage()),
+              );
+            },
             icon: const Icon(Icons.logout_rounded, color: Color(0xFF414143)),
           ),
         ],
@@ -263,11 +270,12 @@ class _AccountantState extends State<Accountant> {
                         ),
                         columnWidths: const <int, TableColumnWidth>{
                           0: FixedColumnWidth(50), // E.Code
-                          1: FixedColumnWidth(60), // Name
+                          1: FixedColumnWidth(50), // Name
                           2: FixedColumnWidth(70), // Email
                           3: FixedColumnWidth(74), // Phone
-                          4: FixedColumnWidth(40), // Status
-                          5: FixedColumnWidth(60), // Actions
+                          4: FixedColumnWidth(60), // Status
+                          5: FixedColumnWidth(60),
+                          6: FlexColumnWidth(60), // Actions
                         },
 
                         children: [
@@ -373,12 +381,7 @@ class _AccountantState extends State<Accountant> {
                               status: account.status,
                               onToggle: (bool value) {
                                 setState(() {
-                                  // BlocProvider.of<AccountantBloc>(context).add(
-                                  //   // UpdateAccountStatus(
-                                  //   //   id: account.id,
-                                  //   //   status: value,
-                                  //   // ),
-                                  // );
+                                  filteredAccounts[index].status = value;
                                 });
                               },
 
@@ -405,6 +408,8 @@ class _AccountantState extends State<Accountant> {
                                     ..text = account.password,
                                   passwordController..text = account.password,
                                   salaryController..text = '',
+                                  isupdate: true,
+                                  accountId: account.id,
                                 );
                               },
                               onDelete: () {
@@ -436,8 +441,9 @@ TableRow _accountantRow({
   required String phone,
   required VoidCallback onEdit,
   required VoidCallback onDelete,
-  required bool status,
+
   required ValueChanged<bool> onToggle,
+  required bool status,
 }) {
   return TableRow(
     children: [
@@ -468,7 +474,7 @@ TableRow _accountantRow({
           ),
         ),
       ),
-      Icon(Icons.toggle_on, color: Colors.green, size: 31),
+
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
@@ -524,8 +530,10 @@ Future<void> AccountantopenDialog(
   TextEditingController phoneController,
   TextEditingController confirmpasswordcontroller,
   TextEditingController passwordController,
-  TextEditingController salaryController,
-) async {
+  TextEditingController salaryController, {
+  bool isupdate = false,
+  String? accountId,
+}) async {
   return showDialog(
     context: context,
     builder: (context) {
@@ -548,7 +556,12 @@ Future<void> AccountantopenDialog(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text("Create New Accountant ", style: FontStyles.heading),
+                      Text(
+                        isupdate
+                            ? "Update Accountant"
+                            : "Create New Accountant ",
+                        style: FontStyles.heading,
+                      ),
                       InkWell(
                         onTap: () => Navigator.pop(context),
                         child: Icon(Icons.close, color: AppColors.kBorderColor),
@@ -564,13 +577,30 @@ Future<void> AccountantopenDialog(
                   ),
                   _fullTextField(
                     title: "Date of Joining",
-
-                    icon: Icons.calendar_today,
                     controller: dateOfJoiningController,
+                    icon: Icons.calendar_today,
+                    onTap: () async {
+                      final dateRange = await showRangePickerDialog(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        minDate: DateTime(2021, 1, 1),
+                        maxDate: DateTime(2025, 12, 31),
+                      );
+
+                      if (dateRange != null) {
+                        dateOfJoiningController.text = DateFormat(
+                          'yyyy-MM-dd',
+                        ).format(dateRange.start);
+                      }
+                    },
                   ),
                   _fullTextField(title: "Name", controller: nameController),
                   SizedBox(height: 10.h),
-                  _fullTextField(title: "Email", controller: emailController),
+                  _fullTextField(
+                    title: "Email",
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
                   SizedBox(height: 10.h),
                   _fullTextField(
                     title: "Address",
@@ -648,26 +678,41 @@ Future<void> AccountantopenDialog(
                         }
 
                         final Accountdata = {
-                          'id': employecodeController.text,
-                          'employeeCode': employecodeController.text,
-                          'dateOfJoining': formattedDate,
+                          'employee_code': employecodeController.text,
+                          'date_of_joining': formattedDate,
                           'name': nameController.text,
-                          'email': 'someone@example.com',
-                          'phonenumber': phoneController.text,
+                          'email': emailController.text,
+                          'phone_number': phoneController.text,
                           'address': addressController.text,
                           'password': passwordController.text,
-                          'position': 'Accountant',
-                          'branch': selectedBranch ?? 'Branch 1',
-                          'salary': int.tryParse(salaryController.text) ?? 0,
                           'state': true,
                         };
-                        BlocProvider.of<AccountantBloc>(
-                          context,
-                        ).add(AddAccount(Accountdata: Accountdata));
+                        if (isupdate && accountId != null) {
+                          BlocProvider.of<AccountantBloc>(context).add(
+                            UpdateAccount(
+                              updatedData: Accountdata,
+                              id: accountId,
+                            ),
+                          );
+                        } else {
+                          BlocProvider.of<AccountantBloc>(
+                            context,
+                          ).add(AddAccount(Accountdata: Accountdata));
+                        }
+
+                        employecodeController.clear();
+                        dateOfJoiningController.clear();
+                        nameController.clear();
+                        emailController.clear();
+                        phoneController.clear();
+                        addressController.clear();
+                        passwordController.clear();
+                        confirmpasswordcontroller.clear();
+                        salaryController.clear();
                         Navigator.pop(context);
                       },
                       child: Text(
-                        "Create",
+                        isupdate ? "Update" : "Create",
                         style: GoogleFonts.inter(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -692,7 +737,8 @@ Widget _fullTextField({
   double? width,
   TextInputType keyboardType = TextInputType.text,
   TextEditingController? controller,
-  // VoidCallback? onTap,
+
+  VoidCallback? onTap,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -708,7 +754,11 @@ Widget _fullTextField({
           obscureText: isPassword,
           decoration: InputDecoration(
             hintStyle: GoogleFonts.poppins(fontSize: 12),
-            suffixIcon: icon != null ? Icon(icon, size: 18) : null,
+            suffixIcon: IconButton(
+              onPressed: onTap,
+              icon: Icon(icon, size: 18),
+            ),
+
             contentPadding: EdgeInsets.symmetric(horizontal: 12),
             filled: true,
             fillColor: Colors.white,

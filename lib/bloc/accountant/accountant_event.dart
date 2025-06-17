@@ -14,13 +14,12 @@ class AddAccount extends AccountantEvent {
 class deleteaccount extends AccountantEvent {
   final String id;
 
-
-
   deleteaccount({required this.id});
 }
 
-// class UpdateAccountStatus extends AccountantEvent {
-//   final String id;
-//   final bool status;
-//   UpdateAccountStatus({required this.id, required this.status});
-// }
+class UpdateAccount extends AccountantEvent {
+  final Map<String, dynamic> updatedData;
+  final String id;
+
+  UpdateAccount({required this.updatedData, required this.id});
+}

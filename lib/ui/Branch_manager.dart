@@ -354,51 +354,46 @@ TableRow _TableRow({
         child: Center(child: Text(Id, style: FontStyles.body)),
       ),
       Center(
-        child: Padding(
-          padding: const EdgeInsets.all(3),
-          child: Switch(
-            value: status,
-            onChanged: onToggle,
-            activeColor: Colors.green,
-            inactiveTrackColor: Colors.grey,
-          ),
+        child: Switch(
+          value: status,
+          onChanged: onToggle,
+          activeColor: Colors.green,
+          inactiveTrackColor: Colors.grey,
         ),
       ),
-
       Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Material(
-              color: Color(0xFF4A60E4),
-              borderRadius: BorderRadius.circular(4),
-              child: InkWell(
-                onTap: onTapEdit,
+            Container(
+              width: 25.w,
+              height: 25.h,
+              decoration: BoxDecoration(
+                color: const Color(0xFF4A60E4),
                 borderRadius: BorderRadius.circular(4),
-                child: SizedBox(
-                  width: 25.w,
-                  height: 25.h,
-                  child: Icon(Icons.edit, color: Colors.white, size: 16.sp),
-                ),
+              ),
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: onTapEdit,
+                child: Icon(Icons.edit, color: Colors.white, size: 16.sp),
               ),
             ),
-            SizedBox(width: 18.w),
-
-            Material(
-              color: Color(0xFFFF4C4C),
-              borderRadius: BorderRadius.circular(4),
-              child: InkWell(
-                onTap: onTapDelete,
+            SizedBox(width: 6.w),
+            Container(
+              width: 25.w,
+              height: 25.h,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFF4C4C),
                 borderRadius: BorderRadius.circular(4),
-                child: SizedBox(
-                  width: 25.w,
-                  height: 25.h,
-                  child: Icon(
-                    Icons.delete_outline,
-                    color: Colors.white,
-                    size: 16.sp,
-                  ),
+              ),
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: onTapDelete,
+                child: Icon(
+                  Icons.delete_outline,
+                  color: Colors.white,
+                  size: 16.sp,
                 ),
               ),
             ),

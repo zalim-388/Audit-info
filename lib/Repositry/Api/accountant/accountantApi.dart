@@ -7,11 +7,12 @@ import 'package:http/http.dart';
 class Accountantapi {
   ApiClient api = ApiClient();
 
-  Future<AccountantModel> getAccountant() async {
+  Future<List<AccountantModel>> getAccountant() async {
     String trendingpath = "accountant/get/";
     try {
       Response response = await api.invokeAPI(trendingpath, "GET", "");
-      return AccountantModel.fromJson(jsonDecode(response.body));
+      List<dynamic> data = jsonDecode(response.body);
+      return data.map((item) => AccountantModel.fromJson(item)).toList();
     } catch (e) {
       throw Exception('Failed to load accountant: $e');
     }
@@ -21,6 +22,7 @@ class Accountantapi {
     String trendingpath = "accountant/create";
     try {
       final String body = jsonEncode(Accountdata);
+      print("Addddd  $body");
       await api.invokeAPI(trendingpath, "POST", body);
     } catch (e) {
       throw Exception('Failed to post: $e');
@@ -35,6 +37,18 @@ class Accountantapi {
       throw Exception('Failed to delete: $e');
     }
   }
-}
 
-Future<void> updateAccount() async {}
+  Future<void> updateAccount(
+    Map<String, dynamic> updatedData,
+    String id,
+  ) async {
+    String trendingpath = "accountant/update$id";
+    final String body = jsonEncode(updatedData);
+    print("update$body");
+    try {
+      await api.invokeAPI(trendingpath, "PUT", body);
+    } catch (e) {
+      throw Exception('Failed to update: $e');
+    }
+  }
+}

@@ -18,7 +18,9 @@ class ApiClient {
       case "POST":
         response = await post(
           Uri.parse(url),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          headers: {
+            'Content-Type': 'application/json',
+          }, // Change to application/json
           body: body,
         );
         break;

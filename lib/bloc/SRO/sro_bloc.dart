@@ -1,3 +1,4 @@
+import 'package:audit_info/Repositry/model/SRO_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -6,8 +7,10 @@ part 'sro_state.dart';
 
 class SroBloc extends Bloc<SroEvent, SroState> {
   SroBloc() : super(SroInitial()) {
-    on<SroEvent>((event, emit) {
-      // TODO: implement event handler
+    on<fetchSro>((event, emit) {
+      emit(SroBlocloading());
+
+      
     });
   }
 }

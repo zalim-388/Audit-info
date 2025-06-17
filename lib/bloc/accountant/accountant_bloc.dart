@@ -1,5 +1,3 @@
-
-
 import 'package:audit_info/Repositry/Api/accountant/accountantApi.dart';
 import 'package:audit_info/Repositry/model/accountant_modal.dart';
 import 'package:bloc/bloc.dart';
@@ -12,13 +10,11 @@ class AccountantBloc extends Bloc<AccountantEvent, AccountantState> {
   List<AccountantModel> account = [];
 
   AccountantBloc() : super(AccountantblocInitial()) {
-    
-   
     on<fetchAccountant>((event, emit) async {
       emit(Accountantblocloading());
       try {
         final result = await Accountantapi().getAccountant();
-        account = [result];
+        account = result;
         emit(Accountantblocloaded(Account: account));
       } catch (e) {
         print("API fetch error: $e");
@@ -26,14 +22,13 @@ class AccountantBloc extends Bloc<AccountantEvent, AccountantState> {
       }
     });
 
-    
     on<AddAccount>((event, emit) async {
       emit(Accountantblocloading());
       try {
         await Accountantapi().AddAccount(event.Accountdata);
 
         final result = await Accountantapi().getAccountant();
-        account = [result];
+        account = result;
         emit(Accountantblocloaded(Account: account));
       } catch (e) {
         print("API add error: $e");
@@ -41,7 +36,6 @@ class AccountantBloc extends Bloc<AccountantEvent, AccountantState> {
       }
     });
 
-   
     on<deleteaccount>((event, emit) async {
       emit(Accountantblocloading());
       try {
@@ -54,21 +48,27 @@ class AccountantBloc extends Bloc<AccountantEvent, AccountantState> {
       }
     });
 
-    
-    // on<UpdateAccountStatus>((event, emit) async {
-    //   emit(Accountantblocloading());
-    //   try {
-    //     final updatedAccount = await Accountantapi().updateAccount(event.updatedData);
-    //     final index = account.indexWhere((a) => a.id == updatedAccount['id']);
-    //     if (index != -1) {
-    //       account[index] = AccountantModel.fromJson(updatedAccount);
-    //     }
-    //     emit(Accountantblocloaded(Account: account));
-    //   } catch (e) {
-    //     print("API update error: $e");
-    //     emit(AccountantblocError(error: e.toString()));
-    //   }
-    // });
+    on<UpdateAccount>((event, emit) async {
+      emit(Accountantblocloading());
+      try {
+        final updatedAccountJson = await Accountantapi().updateAccount(
+          event.updatedData,
+          event.id, 
+        );
+        final updatedAccount = AccountantModel.fromJson(
+          updatedAccountJson as Map<String, dynamic>,
+        );
+
+        final index = account.indexWhere((a) => a.id == updatedAccount.id);
+        if (index != -1) {
+          account[index] = updatedAccount;
+        }
+
+        emit(Accountantblocloaded(Account: List.from(account)));
+      } catch (e) {
+        print("API update error: $e");
+        emit(AccountantblocError());
+      }
+    });
   }
 }
-
