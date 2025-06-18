@@ -57,13 +57,28 @@ class _BranchMangerState extends State<BranchManager> {
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController addressController = TextEditingController();
-  TextEditingController phonenumber = TextEditingController();
+  TextEditingController phonenumberController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmController = TextEditingController();
   TextEditingController pointamountController = TextEditingController();
   TextEditingController salaryController = TextEditingController();
 
   @override
+  void dispose() {
+    searchController.removeListener(filteredmangerlist);
+    searchController.dispose();
+    employecodeController.dispose();
+    dateController.dispose();
+    nameController.dispose();
+    emailController.dispose();
+    addressController.dispose();
+    phonenumberController.dispose();
+    passwordController.dispose();
+    confirmController.dispose();
+    salaryController.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Customdrawer(
@@ -134,7 +149,7 @@ class _BranchMangerState extends State<BranchManager> {
                   Expanded(
                     child: SizedBox(
                       width: 322.w,
-                      height: 30.h,
+                      height: 25.12.h,
                       child: TextField(
                         controller: searchController,
                         decoration: InputDecoration(
@@ -178,7 +193,7 @@ class _BranchMangerState extends State<BranchManager> {
                         nameController,
                         emailController,
                         addressController,
-                        phonenumber,
+                        phonenumberController,
                         confirmController,
                         pointamountController,
                         salaryController,
@@ -244,9 +259,9 @@ class _BranchMangerState extends State<BranchManager> {
                               top: BorderSide(color: Colors.black),
                             ),
                             columnWidths: {
-                              0: FixedColumnWidth(160),
-                              1: FixedColumnWidth(30),
-                              2: FixedColumnWidth(60),
+                              0: FixedColumnWidth(150),
+                              1: FixedColumnWidth(40),
+                              2: FixedColumnWidth(70),
                             },
                             children: [
                               TableRow(
@@ -254,36 +269,11 @@ class _BranchMangerState extends State<BranchManager> {
                                   color: Colors.grey[300],
                                 ),
                                 children: [
-                                  Text(
-                                    'Id',
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 10.sp,
-                                      color: AppColors.kTextColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Status',
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 10.sp,
-                                      color: AppColors.kTextColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Actions',
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 10.sp,
-                                      color: AppColors.kTextColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
+                                  _tableheadRow(heading: "Id"),
+                                  _tableheadRow(heading: "Status"),
+                                  _tableheadRow(heading: "Actions"),
                                 ],
                               ),
-
                               ...List.generate(filteredmanger.length, (index) {
                                 final manager = filteredmanger[index];
                                 return _TableRow(
@@ -307,12 +297,14 @@ class _BranchMangerState extends State<BranchManager> {
                                       employecodeController
                                         ..text = manager.employeeCode,
                                       dateController
-                                        ..text =
-                                            manager.dateOfJoining.toString(),
+                                        ..text = DateFormat(
+                                          'yyyy-MM-dd',
+                                        ).format(manager.dateOfJoining),
+
                                       nameController..text = manager.name,
                                       emailController..text = manager.email,
                                       addressController..text = manager.address,
-                                      phonenumber
+                                      phonenumberController
                                         ..text = manager.phoneNumber.toString(),
                                       confirmController
                                         ..text = manager.password,
@@ -322,6 +314,8 @@ class _BranchMangerState extends State<BranchManager> {
                                         ..text = manager.salary.toString(),
                                       passwordController
                                         ..text = manager.password,
+                                      isUpdate: true,
+                                      managerid: manager.id,
                                     );
                                   },
                                   onTapDelete: () {
@@ -346,6 +340,21 @@ class _BranchMangerState extends State<BranchManager> {
       ),
     );
   }
+}
+
+Widget _tableheadRow({required String heading}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 10.0),
+    child: Text(
+      heading,
+      textAlign: TextAlign.center,
+      style: GoogleFonts.poppins(
+        fontSize: 10.sp,
+        color: AppColors.kTextColor,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  );
 }
 
 TableRow _TableRow({
@@ -425,8 +434,10 @@ Future<void> _BranchManageropenDialog(
   TextEditingController confirmController,
   TextEditingController pointamountController,
   TextEditingController salaryController,
-  TextEditingController passwordController,
-) async {
+  TextEditingController passwordController, {
+  bool isUpdate = false,
+  String? managerid,
+}) async {
   return showDialog(
     context: context,
     builder: (context) {
@@ -450,7 +461,9 @@ Future<void> _BranchManageropenDialog(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Create New Branch Manager",
+                        isUpdate
+                            ? "Update Branch Manager"
+                            : "Create New Branch Manager",
                         style: FontStyles.heading,
                       ),
                       InkWell(
@@ -485,7 +498,11 @@ Future<void> _BranchManageropenDialog(
                   ),
                   _fullTextField(title: "Name", controller: nameController),
                   SizedBox(height: 10.h),
-                  _fullTextField(title: "Email", controller: emailController),
+                  _fullTextField(
+                    title: "Email",
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
                   SizedBox(height: 10.h),
                   _fullTextField(
                     title: "Address",
@@ -575,34 +592,51 @@ Future<void> _BranchManageropenDialog(
                         }
 
                         final managerdata = {
-                          'employeeCode': employecodeController.text,
-                          'dateOfJoining': dateController.text,
-                          'name': nameController.text,
-                          'email': emailController.text,
-                          'address': addressController.text,
-                          'phoneNumber': phonenumber.text,
-                          'password': passwordController.text,
-                          'branch': selectedBranch ?? 'Branch 1',
-                          'pointAmount': pointamountController.text,
-                          'salary': salaryController.text,
+                          "name": nameController.text.trim(),
+                          "email": emailController.text.trim(),
+                          "password": passwordController.text.trim(),
+                          "position": "Manager",
+                          "employee_code": employecodeController.text.trim(),
+                          "phone_number":
+                              int.tryParse(phonenumber.text.trim()) ?? 0,
+                          "date_of_joining": formattedDate,
+                          "address": addressController.text.trim(),
+                          "refresh": true,
+                          "point_amount":
+                              int.tryParse(pointamountController.text.trim()) ??
+                              0,
+                          "salary":
+                              int.tryParse(salaryController.text.trim()) ?? 0,
                         };
+                        if (isUpdate && managerid != null) {
+                          BlocProvider.of<ManagerBloc>(context).add(
+                            updatemanger(managerid, updatedata: managerdata),
+                          );
+                        } else {
+                          BlocProvider.of<ManagerBloc>(
+                            context,
+                          ).add(Addmanager(managerdata: managerdata));
+                        }
+
+                        if (!isUpdate) {
+                          employecodeController.clear();
+                          dateController.clear();
+                          nameController.clear();
+                          emailController.clear();
+                          addressController.clear();
+                          phonenumber.clear();
+                          passwordController.clear();
+                          confirmController.clear();
+                          pointamountController.clear();
+                          salaryController.clear();
+                        }
+                        Navigator.pop(context);
                         BlocProvider.of<ManagerBloc>(
                           context,
-                        ).add(Addmanager(managerdata: managerdata));
-                        employecodeController.clear();
-                        dateController.clear();
-                        nameController.clear();
-                        emailController.clear();
-                        addressController.clear();
-                        phonenumber.clear();
-                        passwordController.clear();
-                        confirmController.clear();
-                        pointamountController.clear();
-                        salaryController.clear();
-                        Navigator.pop(context);
+                        ).add(fetchmanager());
                       },
                       child: Text(
-                        "Create",
+                        isUpdate ? "Update" : "Create",
                         style: GoogleFonts.inter(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,

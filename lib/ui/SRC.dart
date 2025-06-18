@@ -263,106 +263,13 @@ class _SrcState extends State<Src> {
                           TableRow(
                             decoration: BoxDecoration(color: Colors.grey[300]),
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                ),
-                                child: Text(
-                                  'E.Code',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                ),
-                                child: Text(
-                                  'Name',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                ),
-                                child: Text(
-                                  'Branch name',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                ),
-                                child: Text(
-                                  'phone number',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                ),
-                                child: Text(
-                                  'Point Amount',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                ),
-                                child: Text(
-                                  'Status',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                ),
-                                child: Text(
-                                  'Actions',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
+                              _tableheadRow(heading: 'E.Code'),
+                              _tableheadRow(heading: 'Name'),
+                              _tableheadRow(heading: 'Branch name'),
+                              _tableheadRow(heading: "phone number"),
+                              _tableheadRow(heading: 'Point Amount'),
+                              _tableheadRow(heading: 'Status'),
+                              _tableheadRow(heading: 'Actions'),
                             ],
                           ),
                           ...List.generate(filteredsrc.length, (index) {
@@ -419,6 +326,21 @@ class _SrcState extends State<Src> {
       ),
     );
   }
+}
+
+Widget _tableheadRow({required String heading}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 10.0),
+    child: Text(
+      heading,
+      textAlign: TextAlign.center,
+      style: GoogleFonts.poppins(
+        fontSize: 10.sp,
+        color: AppColors.kTextColor,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  );
 }
 
 TableRow _SrcRow({
@@ -567,14 +489,13 @@ Future<void> SRCopenDialog(
                         minDate: DateTime(2021, 1, 1),
                         maxDate: DateTime(2025, 12, 31),
                       );
-                      
+
                       if (dateRange != null) {
                         dateController.text = DateFormat(
                           'yyyy-MM-dd',
                         ).format(dateRange.start);
                       }
                     },
-                    
                   ),
                   SizedBox(height: 10.h),
                   _fullTextField(title: "Name"),

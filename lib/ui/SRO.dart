@@ -285,7 +285,6 @@ class _SroState extends State<Sro> {
                       ],
                     ),
 
-
                     _SroRow(
                       code: "1",
                       name: "Salim",
@@ -325,6 +324,26 @@ class _SroState extends State<Sro> {
       ),
     );
   }
+}
+
+TableRow _tableheadRow({required String heading}) {
+  return TableRow(
+    decoration: BoxDecoration(color: Colors.grey[300]),
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10.0),
+        child: Text(
+          heading,
+          textAlign: TextAlign.center,
+          style: GoogleFonts.poppins(
+            fontSize: 10.sp,
+            color: AppColors.kTextColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    ],
+  );
 }
 
 TableRow _SroRow({

@@ -42,9 +42,9 @@ class Accountantapi {
     Map<String, dynamic> updatedData,
     String id,
   ) async {
-    String trendingpath = "accountant/update$id";
+    String trendingpath = "accountant/update/$id";
     final String body = jsonEncode(updatedData);
-    print("update$body");
+    print("update Account$body");
     try {
       await api.invokeAPI(trendingpath, "PUT", body);
     } catch (e) {

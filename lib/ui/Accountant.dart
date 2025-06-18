@@ -35,9 +35,11 @@ class _AccountantState extends State<Accountant> {
 
   String? selectedBranch = 'Branch 1';
 
-  void inistate() {
+  void initState() {
     super.initState();
     BlocProvider.of<AccountantBloc>(context).add(fetchAccountant());
+    // context.read<AccountantBloc>().add(fetchAccountant());
+    searchController.addListener(filterAccountsList);
   }
 
   void filterAccountsList() async {
@@ -226,7 +228,7 @@ class _AccountantState extends State<Accountant> {
 
                     return Center(child: CircularProgressIndicator());
                   } else if (state is AccountantblocError) {
-                    Column(
+                    return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Image.asset('assets/icon/Group 99.png', height: 40.h),
@@ -234,13 +236,14 @@ class _AccountantState extends State<Accountant> {
                       ],
                     );
                   } else if (state is Accountantblocloaded) {
+                    print("loaded..");
                     var allAccounts = state.Account;
                     if (searchController.text.isEmpty) {
                       filteredAccounts = allAccounts;
                     }
                     return Container(
                       width: 358.w,
-
+                      height: 25.12.h,
                       decoration: BoxDecoration(
                         color: AppColors.kContainerColor,
                         borderRadius: const BorderRadius.only(
@@ -278,92 +281,12 @@ class _AccountantState extends State<Accountant> {
                           TableRow(
                             decoration: BoxDecoration(color: Colors.grey[300]),
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                ),
-                                child: Text(
-                                  'E.Code',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                ),
-                                child: Text(
-                                  'Name',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                ),
-                                child: Text(
-                                  'Email',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                ),
-                                child: Text(
-                                  'phone number',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                ),
-                                child: Text(
-                                  'Status',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 10.0,
-                                ),
-                                child: Text(
-                                  'Actions',
-                                  textAlign: TextAlign.center,
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 10.sp,
-                                    color: AppColors.kTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
+                              _tableheadRow(heading: 'E.Code'),
+                              _tableheadRow(heading: 'Name'),
+                              _tableheadRow(heading: 'Email'),
+                              _tableheadRow(heading: "phone number"),
+                              _tableheadRow(heading: 'Status'),
+                              _tableheadRow(heading: 'Actions'),
                             ],
                           ),
 
@@ -403,7 +326,7 @@ class _AccountantState extends State<Accountant> {
                                   confirmpasswordcontroller
                                     ..text = account.password,
                                   passwordController..text = account.password,
-                                  salaryController..text = '',
+                                  salaryController..text = "",
                                   isupdate: true,
                                   accountId: account.id,
                                 );
@@ -428,6 +351,21 @@ class _AccountantState extends State<Accountant> {
       ),
     );
   }
+}
+
+Widget _tableheadRow({required String heading}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 10.0),
+    child: Text(
+      heading,
+      textAlign: TextAlign.center,
+      style: GoogleFonts.poppins(
+        fontSize: 10.sp,
+        color: AppColors.kTextColor,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  );
 }
 
 TableRow _accountantRow({
@@ -695,17 +633,21 @@ Future<void> AccountantopenDialog(
                             context,
                           ).add(AddAccount(Accountdata: Accountdata));
                         }
-
-                        employecodeController.clear();
-                        dateOfJoiningController.clear();
-                        nameController.clear();
-                        emailController.clear();
-                        phoneController.clear();
-                        addressController.clear();
-                        passwordController.clear();
-                        confirmpasswordcontroller.clear();
-                        salaryController.clear();
+                        if (!isupdate) {
+                          employecodeController.clear();
+                          dateOfJoiningController.clear();
+                          nameController.clear();
+                          emailController.clear();
+                          phoneController.clear();
+                          addressController.clear();
+                          passwordController.clear();
+                          confirmpasswordcontroller.clear();
+                          salaryController.clear();
+                        }
                         Navigator.pop(context);
+                        BlocProvider.of<AccountantBloc>(
+                          context,
+                        ).add(fetchAccountant());
                       },
                       child: Text(
                         isupdate ? "Update" : "Create",

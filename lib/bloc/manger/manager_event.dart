@@ -16,3 +16,10 @@ class DeleteManager extends ManagerEvent {
 
   DeleteManager({required this.id});
 }
+
+class updatemanger extends ManagerEvent {
+  final Map<String, dynamic> updatedata;
+  final String id;
+
+  updatemanger(this.id, {required this.updatedata});
+}

@@ -13,11 +13,12 @@ class AccountantBloc extends Bloc<AccountantEvent, AccountantState> {
     on<fetchAccountant>((event, emit) async {
       emit(Accountantblocloading());
       try {
-        final result = await Accountantapi().getAccountant();
-        account = result;
-        emit(Accountantblocloaded(Account: account));
+        final List<AccountantModel> result =
+            await Accountantapi().getAccountant();
+        print("Fetched ${result.length} accountants");
+        emit(Accountantblocloaded(Account: result));
       } catch (e) {
-        print("API fetch error: $e");
+        print("Fetch Accountant error: $e");
         emit(AccountantblocError());
       }
     });
@@ -28,8 +29,8 @@ class AccountantBloc extends Bloc<AccountantEvent, AccountantState> {
         await Accountantapi().AddAccount(event.Accountdata);
 
         final result = await Accountantapi().getAccountant();
-        account = result;
-        emit(Accountantblocloaded(Account: account));
+
+        emit(Accountantblocloaded(Account: result));
       } catch (e) {
         print("API add error: $e");
         emit(AccountantblocError());
@@ -51,20 +52,11 @@ class AccountantBloc extends Bloc<AccountantEvent, AccountantState> {
     on<UpdateAccount>((event, emit) async {
       emit(Accountantblocloading());
       try {
-        final updatedAccountJson = await Accountantapi().updateAccount(
-          event.updatedData,
-          event.id, 
-        );
-        final updatedAccount = AccountantModel.fromJson(
-          updatedAccountJson as Map<String, dynamic>,
-        );
+        await Accountantapi().updateAccount(event.updatedData, event.id);
 
-        final index = account.indexWhere((a) => a.id == updatedAccount.id);
-        if (index != -1) {
-          account[index] = updatedAccount;
-        }
+        final result = await Accountantapi().getAccountant();
 
-        emit(Accountantblocloaded(Account: List.from(account)));
+        emit(Accountantblocloaded(Account: List.from(result)));
       } catch (e) {
         print("API update error: $e");
         emit(AccountantblocError());
