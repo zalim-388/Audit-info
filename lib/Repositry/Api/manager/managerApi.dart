@@ -7,10 +7,10 @@ class ManagerApi {
   ApiClient api = ApiClient();
 
   Future<List<Managermodel>> getManager() async {
-    String trendingpath = "manager/get/";
+    String trendingpath = "manager/get";
     try {
       final response = await api.invokeAPI(trendingpath, "GET", "");
-      final List<dynamic> jsonData = jsonDecode(response.body);
+      final List jsonData = jsonDecode(response.body);
       return jsonData.map((e) => Managermodel.fromJson(e)).toList();
     } catch (e) {
       throw Exception('Failed to fetch manager: $e');
@@ -21,7 +21,7 @@ class ManagerApi {
     String trendingpath = "manager/create";
     try {
       final String body = jsonEncode(managerData);
-      print("add mangaer$body");
+      print("add manager$body");
       await api.invokeAPI(trendingpath, "POST", body);
     } catch (e) {
       throw Exception('Failed to add manager: $e');

@@ -41,8 +41,12 @@ class ApiClient {
           body: body,
         );
         break;
-      case "GET_":
-        response = await post(Uri.parse(url), headers: {}, body: body);
+      case "GET":
+        response = await get(
+          Uri.parse(url),
+          headers: {'Content-Type': 'application/json'},
+          // body: body,
+        );
         break;
 
       case "PATCH":

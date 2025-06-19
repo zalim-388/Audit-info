@@ -16,3 +16,10 @@ class deletesrc extends SrcBlocEvent {
 
   deletesrc({required this.id});
 }
+
+class updatesrc extends SrcBlocEvent {
+  final Map<String, dynamic> updatedData;
+  final String id;
+
+  updatesrc({required this.updatedData, required this.id});
+}

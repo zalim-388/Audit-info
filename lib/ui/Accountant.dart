@@ -33,7 +33,7 @@ class _AccountantState extends State<Accountant> {
   List<AccountantModel> filteredAccounts = [];
   List<AccountantModel> AllAccounts = [];
 
-  String? selectedBranch = 'Branch 1';
+  String? selectedBranch;
 
   void initState() {
     super.initState();
@@ -144,7 +144,7 @@ class _AccountantState extends State<Accountant> {
       ),
       backgroundColor: Colors.white,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 23),
+        padding: const EdgeInsets.symmetric(horizontal: 22),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -250,10 +250,11 @@ class _AccountantState extends State<Accountant> {
                           topLeft: Radius.circular(4),
                           topRight: Radius.circular(4),
                         ),
+
                         border: Border(
-                          top: BorderSide(color: Colors.black),
-                          left: BorderSide(color: Colors.black),
-                          right: BorderSide(color: Colors.black),
+                          bottom: BorderSide(color: AppColors.kBorderColor),
+
+                          top: BorderSide(color: AppColors.kBorderColor),
                         ),
                       ),
                       child: Table(
@@ -265,16 +266,18 @@ class _AccountantState extends State<Accountant> {
                           verticalInside: BorderSide(
                             color: AppColors.kBorderColor,
                           ),
-                          bottom: BorderSide(color: Colors.black),
+
+                          left: BorderSide(color: AppColors.kBorderColor),
+                          right: BorderSide(color: AppColors.kBorderColor),
                         ),
                         columnWidths: const <int, TableColumnWidth>{
-                          0: FixedColumnWidth(50), // E.Code
-                          1: FixedColumnWidth(50), // Name
+                          0: FixedColumnWidth(40), // E.Code
+                          1: FixedColumnWidth(40), // Name
                           2: FixedColumnWidth(70), // Email
-                          3: FixedColumnWidth(74), // Phone
-                          4: FixedColumnWidth(60), // Status
+                          3: FixedColumnWidth(70), // Phone
+                          4: FixedColumnWidth(40), // Status
                           5: FixedColumnWidth(60),
-                          6: FlexColumnWidth(60), // Actions
+                          6: FlexColumnWidth(70), // Actions
                         },
 
                         children: [
@@ -375,7 +378,6 @@ TableRow _accountantRow({
   required String phone,
   required VoidCallback onEdit,
   required VoidCallback onDelete,
-
   required ValueChanged<bool> onToggle,
   required bool status,
 }) {
@@ -397,15 +399,16 @@ TableRow _accountantRow({
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Center(child: Text(phone, style: FontStyles.body)),
       ),
-      Padding(
-        padding: EdgeInsets.symmetric(vertical: 6.h),
-        child: Center(
-          child: Switch(
-            value: status,
-            onChanged: onToggle,
-            activeColor: Colors.green,
-            inactiveTrackColor: Colors.grey,
-          ),
+      Transform.scale(
+        scale: 0.65,
+        child: Switch(
+          value: status,
+          onChanged: onToggle,
+          activeColor: Colors.white,
+          activeTrackColor: Color(0xFF28AC24),
+          inactiveThumbColor: Colors.white,
+          inactiveTrackColor: Colors.grey[400],
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
       ),
 

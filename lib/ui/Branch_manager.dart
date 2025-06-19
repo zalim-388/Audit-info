@@ -1,3 +1,4 @@
+import 'package:audit_info/Repositry/Api/manager/managerApi.dart';
 import 'package:audit_info/Repositry/model/manager_model.dart';
 import 'package:audit_info/bloc/manger/manager_bloc.dart';
 import 'package:audit_info/ui/loginpage.dart';
@@ -23,7 +24,8 @@ class BranchManager extends StatefulWidget {
 class _BranchMangerState extends State<BranchManager> {
   List<Managermodel> filteredmanger = [];
   List<Managermodel> allManagers = [];
-
+  List<Managermodel> branches = [];
+  Managermodel? selectedBranch;
   bool toggle = true;
   int _selectedIndex = 1;
   void _onitemTapped(int index) {
@@ -32,13 +34,26 @@ class _BranchMangerState extends State<BranchManager> {
     });
   }
 
-  String? selectedBranch = 'Branch 1';
-
   @override
   void initState() {
     super.initState();
     BlocProvider.of<ManagerBloc>(context).add(fetchmanager());
     searchController.addListener(filteredmangerlist);
+    fetchbranch();
+  }
+
+  Future<void> fetchbranch() async {
+    try {
+      final fetchbranches = await ManagerApi().getManager();
+      setState(() {
+        branches = fetchbranches;
+        if (branches.isNotEmpty) {
+          selectedBranch = branches[0];
+        }
+      });
+    } catch (e) {
+      throw Exception("fetchbranch Error$e");
+    }
   }
 
   void filteredmangerlist() async {
@@ -198,6 +213,7 @@ class _BranchMangerState extends State<BranchManager> {
                         pointamountController,
                         salaryController,
                         passwordController,
+                        branches,
                       );
                     },
                     child: Container(
@@ -286,8 +302,25 @@ class _BranchMangerState extends State<BranchManager> {
                                   },
 
                                   onTapEdit: () {
+                                    final Managermodel selected = branches
+                                        .firstWhere(
+                                          (b) =>
+                                              b.branchId.id ==
+                                              manager.branchId.name,
+
+                                          orElse:
+                                              () =>
+                                                  branches.isNotEmpty
+                                                      ? branches[0]
+                                                      : manager,
+                                        );
+                                    setState(() {
+                                      selectedBranch = selected;
+                                    });
+
                                     _BranchManageropenDialog(
                                       context,
+
                                       selectedBranch,
                                       (value) {
                                         setState(() {
@@ -314,6 +347,7 @@ class _BranchMangerState extends State<BranchManager> {
                                         ..text = manager.salary.toString(),
                                       passwordController
                                         ..text = manager.password,
+                                      branches,
                                       isUpdate: true,
                                       managerid: manager.id,
                                     );
@@ -342,89 +376,10 @@ class _BranchMangerState extends State<BranchManager> {
   }
 }
 
-Widget _tableheadRow({required String heading}) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 10.0),
-    child: Text(
-      heading,
-      textAlign: TextAlign.center,
-      style: GoogleFonts.poppins(
-        fontSize: 10.sp,
-        color: AppColors.kTextColor,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-  );
-}
-
-TableRow _TableRow({
-  required String Id,
-  required VoidCallback onTapEdit,
-  required VoidCallback onTapDelete,
-  required ValueChanged<bool> onToggle,
-  required bool status,
-}) {
-  return TableRow(
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(Id, style: FontStyles.body)),
-      ),
-      Center(
-        child: Switch(
-          value: status,
-          onChanged: onToggle,
-          activeColor: Colors.green,
-          inactiveTrackColor: Colors.grey,
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 25.w,
-              height: 25.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFF4A60E4),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              alignment: Alignment.center,
-              child: GestureDetector(
-                onTap: onTapEdit,
-                child: Icon(Icons.edit, color: Colors.white, size: 16.sp),
-              ),
-            ),
-            SizedBox(width: 6.w),
-            Container(
-              width: 25.w,
-              height: 25.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFFFF4C4C),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              alignment: Alignment.center,
-              child: GestureDetector(
-                onTap: onTapDelete,
-                child: Icon(
-                  Icons.delete_outline,
-                  color: Colors.white,
-                  size: 16.sp,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
-}
-
 Future<void> _BranchManageropenDialog(
   BuildContext context,
-  String? selectedBranch,
-  Function(String) onBranchSelected,
+  Managermodel? selectedBranch,
+  Function(Managermodel) onBranchSelected,
   TextEditingController employecodeController,
   TextEditingController dateController,
   TextEditingController nameController,
@@ -434,7 +389,8 @@ Future<void> _BranchManageropenDialog(
   TextEditingController confirmController,
   TextEditingController pointamountController,
   TextEditingController salaryController,
-  TextEditingController passwordController, {
+  TextEditingController passwordController,
+  List<Managermodel> branches, {
   bool isUpdate = false,
   String? managerid,
 }) async {
@@ -527,15 +483,22 @@ Future<void> _BranchManageropenDialog(
                     controller: confirmController,
                   ),
                   SizedBox(height: 10.h),
-                  customDropdown(
-                    context: context,
-                    title: "Select Branch",
-                    selectedValue: selectedBranch,
-                    items: ['Branch 1', 'Branch 2', 'Branch 3'],
-                    onSelected: (value) {
-                      onBranchSelected(value);
+                  _buildDropdownField(
+                    "Select Branch",
+                    selectedBranch?.branchId.name,
+                    branches.map((e) => e.branchId.name).toList(),
+                    "Select Branch",
+                    (selected) {
+                      if (selected != null) {
+                        final branch = branches.firstWhere(
+                          (e) => e.branchId.name == selected,
+                        );
+                        onBranchSelected(branch);
+                      }
                     },
+                    context,
                   ),
+
                   SizedBox(height: 10.h),
                   Row(
                     children: [
@@ -601,12 +564,13 @@ Future<void> _BranchManageropenDialog(
                               int.tryParse(phonenumber.text.trim()) ?? 0,
                           "date_of_joining": formattedDate,
                           "address": addressController.text.trim(),
-                          "refresh": true,
+                          "head_administractor": true,
                           "point_amount":
                               int.tryParse(pointamountController.text.trim()) ??
                               0,
                           "salary":
                               int.tryParse(salaryController.text.trim()) ?? 0,
+                          "branchId": selectedBranch?.branchId.id ?? "",
                         };
                         if (isUpdate && managerid != null) {
                           BlocProvider.of<ManagerBloc>(context).add(
@@ -651,6 +615,89 @@ Future<void> _BranchManageropenDialog(
         ),
       );
     },
+  );
+}
+
+Widget _tableheadRow({required String heading}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 10.0),
+    child: Text(
+      heading,
+      textAlign: TextAlign.center,
+      style: GoogleFonts.poppins(
+        fontSize: 10.sp,
+        color: AppColors.kTextColor,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  );
+}
+
+TableRow _TableRow({
+  required String Id,
+  required VoidCallback onTapEdit,
+  required VoidCallback onTapDelete,
+  required ValueChanged<bool> onToggle,
+  required bool status,
+}) {
+  return TableRow(
+    children: [
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Center(child: Text(Id, style: FontStyles.body)),
+      ),
+     Transform.scale(
+        scale: 0.65,
+        child: Switch(
+          value: status,
+          onChanged: onToggle,
+          activeColor: Colors.white,
+          activeTrackColor: Color(0xFF28AC24),
+          inactiveThumbColor: Colors.white,
+          inactiveTrackColor: Colors.grey[400],
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+      ),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 25.w,
+              height: 25.h,
+              decoration: BoxDecoration(
+                color: const Color(0xFF4A60E4),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: onTapEdit,
+                child: Icon(Icons.edit, color: Colors.white, size: 16.sp),
+              ),
+            ),
+            SizedBox(width: 6.w),
+            Container(
+              width: 25.w,
+              height: 25.h,
+              decoration: BoxDecoration(
+                color: const Color(0xFFFF4C4C),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              alignment: Alignment.center,
+              child: GestureDetector(
+                onTap: onTapDelete,
+                child: Icon(
+                  Icons.delete_outline,
+                  color: Colors.white,
+                  size: 16.sp,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    ],
   );
 }
 
@@ -699,57 +746,73 @@ Widget _fullTextField({
   );
 }
 
-Widget customDropdown({
-  required BuildContext context,
-  required String title,
-  required String? selectedValue,
-  required void Function(String value) onSelected,
-  required List<String> items,
-  double? width,
-}) {
+Widget _buildDropdownField(
+  String label,
+  String? selectedValue,
+  List<String> options,
+  String hint,
+  Function(String?) onChanged,
+  BuildContext context,
+) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(title, style: FontStyles.body),
-      SizedBox(height: 4.h),
-      Container(
-        height: 27.h,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(6),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 6),
-        child: GestureDetector(
-          onTapDown: (details) async {
-            final selected = await showMenu<String>(
-              context: context,
-              position: RelativeRect.fromLTRB(
-                details.globalPosition.dx,
-                details.globalPosition.dy,
-                details.globalPosition.dx,
-                details.globalPosition.dy,
-              ),
-              items:
-                  items.map((item) {
-                    return PopupMenuItem<String>(
-                      value: item,
-                      child: Text(item),
-                    );
-                  }).toList(),
-            );
-            if (selected != null) {
-              onSelected(selected);
-            }
-          },
+      Text(label, style: FontStyles.body),
+      SizedBox(height: 8.h),
+      GestureDetector(
+        onTapDown: (TapDownDetails details) async {
+          final selected = await showMenu<String>(
+            context: context,
+            position: RelativeRect.fromLTRB(
+              details.globalPosition.dx,
+              details.globalPosition.dy,
+              MediaQuery.of(context).size.width - details.globalPosition.dx,
+              MediaQuery.of(context).size.height - details.globalPosition.dy,
+            ),
+            items:
+                options.map((option) {
+                  return PopupMenuItem<String>(
+                    value: option,
+                    child: Text(
+                      option,
+                      style: GoogleFonts.poppins(fontSize: 12),
+                    ),
+                  );
+                }).toList(),
+            color: Colors.white,
+          );
+
+          if (selected != null) {
+            onChanged(selected);
+          }
+        },
+        child: Container(
+          height: 30.h,
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(color: AppColors.kBorderColor),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                selectedValue ?? title,
-                style: GoogleFonts.inter(fontSize: 10, color: Colors.grey),
+                selectedValue ?? hint,
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color:
+                      selectedValue == null
+                          ? const Color(0xFF868686)
+                          : Colors.black,
+                ),
               ),
-              const Icon(Icons.keyboard_arrow_down, size: 16),
+              Icon(
+                Icons.keyboard_arrow_down,
+                size: 16,
+                color: AppColors.kTextColor,
+              ),
             ],
           ),
         ),

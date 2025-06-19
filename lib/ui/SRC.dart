@@ -1,3 +1,4 @@
+import 'package:audit_info/Repositry/Api/SRC/SRCapi.dart';
 import 'package:audit_info/Repositry/model/SRCmodel.dart';
 import 'package:audit_info/bloc/SRC/src_bloc_bloc.dart';
 import 'package:audit_info/ui/loginpage.dart';
@@ -23,6 +24,7 @@ class Src extends StatefulWidget {
 class _SrcState extends State<Src> {
   List<SrcModel> filteredsrc = [];
   List<SrcModel> allsrc = [];
+  List<SrcModel> branch = [];
 
   int _selectedIndex = 3;
   void _onitemTapped(int index) {
@@ -31,12 +33,13 @@ class _SrcState extends State<Src> {
     });
   }
 
-  String? selectedBranch = 'Branch 1';
+  SrcModel? selectedBranch;
 
   void initState() {
     super.initState();
     BlocProvider.of<SrcBlocBloc>(context).add(fetchsrc());
     searchController.addListener(filtersrcList);
+    fetchsrcbranch();
   }
 
   TextEditingController searchController = TextEditingController();
@@ -65,7 +68,37 @@ class _SrcState extends State<Src> {
     });
   }
 
+  Future<void> fetchsrcbranch() async {
+    try {
+      final fetchsrcbranches = await Srcapi().getsrc();
+
+      setState(() {
+        branch = fetchsrcbranches;
+        if (branch.isNotEmpty) {
+          selectedBranch = branch[0];
+        }
+      });
+    } catch (e) {
+      throw Exception("fetchsrcbranch Error$e");
+    }
+  }
+
   @override
+  void dispose() {
+    searchController.removeListener(filtersrcList);
+    searchController.dispose();
+    employecodeController.dispose();
+    dateController.dispose();
+    nameController.dispose();
+    emailController.dispose();
+    addressController.dispose();
+    phonenumber.dispose();
+    passwordController.dispose();
+    confirmController.dispose();
+    salaryController.dispose();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Customdrawer(
@@ -185,6 +218,7 @@ class _SrcState extends State<Src> {
                         pointamountController,
                         salaryController,
                         passwordController,
+                        branch,
                       );
                     },
                     child: Container(
@@ -304,6 +338,7 @@ class _SrcState extends State<Src> {
                                   pointamountController,
                                   salaryController,
                                   passwordController,
+                                  branch,
                                 );
                               },
                               onDelete: () {
@@ -376,17 +411,19 @@ TableRow _SrcRow({
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Center(child: Text(PointAmount, style: FontStyles.body)),
       ),
-      Padding(
-        padding: EdgeInsets.symmetric(vertical: 6.h),
-        child: Center(
-          child: Switch(
-            value: status,
-            onChanged: onToggle,
-            activeColor: Colors.green,
-          ),
+      Transform.scale(
+        scale: 0.65,
+        child: Switch(
+          value: status,
+          onChanged: onToggle,
+          activeColor: Colors.white,
+          activeTrackColor: Color(0xFF28AC24),
+          inactiveThumbColor: Colors.white,
+          inactiveTrackColor: Colors.grey[400],
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
       ),
-      Icon(Icons.toggle_on, color: Colors.green, size: 31),
+
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
@@ -432,8 +469,8 @@ TableRow _SrcRow({
 
 Future<void> SRCopenDialog(
   BuildContext context,
-  String? selectedBranch,
-  Function(String) onBranchSelected,
+  SrcModel? selectedBranch,
+  Function(SrcModel) onBranchSelected,
   TextEditingController employecodeController,
   TextEditingController dateController,
   TextEditingController nameController,
@@ -444,7 +481,10 @@ Future<void> SRCopenDialog(
   TextEditingController pointamountController,
   TextEditingController salaryController,
   TextEditingController passwordController,
-) async {
+  List<SrcModel> branch, {
+  bool isUpdate = false,
+  String? srcId,
+}) async {
   return showDialog(
     context: context,
     builder: (context) {
@@ -467,7 +507,9 @@ Future<void> SRCopenDialog(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text("Create New SRC", style: FontStyles.heading),
+                      Text(isUpdate ?
+                        
+                        "Create New SRC", style: FontStyles.heading),
                       InkWell(
                         onTap: () => Navigator.pop(context),
                         child: Icon(Icons.close, color: AppColors.kBorderColor),
@@ -517,14 +559,20 @@ Future<void> SRCopenDialog(
                   _fullTextField(title: "Confirm Password", isPassword: true),
 
                   SizedBox(height: 10.h),
-                  customDropdown(
-                    context: context,
-                    title: "select branch",
-                    selectedValue: selectedBranch,
-                    onSelected: (value) {
-                      onBranchSelected;
+                  _buildDropdownField(
+                    "select branch",
+                    selectedBranch?.branchId.name,
+                    branch.map((s) => s.branchId.name).toList(),
+                    "select branch",
+                    (selected) {
+                      if (selected != null) {
+                        final Branches = branch.firstWhere(
+                          (s) => s.branchId.name == selected,
+                        );
+                        onBranchSelected(Branches);
+                      }
                     },
-                    items: [],
+                    context,
                   ),
                   SizedBox(height: 10.h),
                   Row(
@@ -580,15 +628,15 @@ Future<void> SRCopenDialog(
                           formattedDate = dateController.text;
                         }
                         final srcdata = {
-                          'employeeCode': employecodeController.text,
-                          'dateOfJoining': dateController.text,
+                          'employee_code': employecodeController.text,
+                          'date_of_joining': formattedDate,
                           'name': nameController.text,
                           'email': emailController.text,
                           'address': addressController.text,
-                          'phoneNumber': phonenumber.text,
+                          'phone_number': phonenumber.text,
                           'password': passwordController.text,
-
-                          'pointAmount': pointamountController.text,
+                          "status": true,
+                          'point_amount': pointamountController.text,
                           'salary': salaryController.text,
                         };
                         BlocProvider.of<SrcBlocBloc>(
@@ -669,57 +717,73 @@ Widget _fullTextField({
   );
 }
 
-Widget customDropdown({
-  required BuildContext context,
-  required String title,
-  required String? selectedValue,
-  required void Function(String value) onSelected,
-  required List<String> items,
-  double? width,
-}) {
+Widget _buildDropdownField(
+  String label,
+  String? selectedValue,
+  List<String> options,
+  String hint,
+  Function(String?) onChanged,
+  BuildContext context,
+) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(title, style: FontStyles.body),
-      SizedBox(height: 4.h),
-      Container(
-        height: 27.h,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(6),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 6),
-        child: GestureDetector(
-          onTapDown: (details) async {
-            final selected = await showMenu<String>(
-              context: context,
-              position: RelativeRect.fromLTRB(
-                details.globalPosition.dx,
-                details.globalPosition.dy,
-                details.globalPosition.dx,
-                details.globalPosition.dy,
-              ),
-              items:
-                  items.map((item) {
-                    return PopupMenuItem<String>(
-                      value: item,
-                      child: Text(item),
-                    );
-                  }).toList(),
-            );
-            if (selected != null) {
-              onSelected(selected);
-            }
-          },
+      Text(label, style: FontStyles.body),
+      SizedBox(height: 8.h),
+      GestureDetector(
+        onTapDown: (TapDownDetails details) async {
+          final selected = await showMenu<String>(
+            context: context,
+            position: RelativeRect.fromLTRB(
+              details.globalPosition.dx,
+              details.globalPosition.dy,
+              MediaQuery.of(context).size.width - details.globalPosition.dx,
+              MediaQuery.of(context).size.height - details.globalPosition.dy,
+            ),
+            items:
+                options.map((option) {
+                  return PopupMenuItem<String>(
+                    value: option,
+                    child: Text(
+                      option,
+                      style: GoogleFonts.poppins(fontSize: 12),
+                    ),
+                  );
+                }).toList(),
+            color: Colors.white,
+          );
+
+          if (selected != null) {
+            onChanged(selected);
+          }
+        },
+        child: Container(
+          height: 30.h,
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(color: AppColors.kBorderColor),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                selectedValue ?? title,
-                style: GoogleFonts.inter(fontSize: 10, color: Colors.grey),
+                selectedValue ?? hint,
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color:
+                      selectedValue == null
+                          ? const Color(0xFF868686)
+                          : Colors.black,
+                ),
               ),
-              const Icon(Icons.keyboard_arrow_down, size: 16),
+              Icon(
+                Icons.keyboard_arrow_down,
+                size: 16,
+                color: AppColors.kTextColor,
+              ),
             ],
           ),
         ),

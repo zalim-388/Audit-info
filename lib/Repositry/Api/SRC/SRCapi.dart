@@ -34,4 +34,16 @@ class Srcapi {
       throw Exception("Failed to DELETE");
     }
   }
+
+  Future<void> updatesrc(Map<String, dynamic> updatesrc, String id) async {
+    String trendingpath = "src/update/$id";
+    final String body = jsonEncode(updatesrc);
+    print("update src$body");
+
+    try {
+      await api.invokeAPI(trendingpath, "UPDATE", body);
+    } catch (e) {
+      throw Exception("");
+    }
+  }
 }

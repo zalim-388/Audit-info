@@ -284,37 +284,6 @@ class _SroState extends State<Sro> {
                         ),
                       ],
                     ),
-
-                    _SroRow(
-                      code: "1",
-                      name: "Salim",
-                      Branchname: "",
-                      SRC: "",
-                      phone: "9562791690",
-                      onEdit: () {},
-                      PointAmount: "",
-                      onDelete: () {},
-                    ),
-                    _SroRow(
-                      code: "2",
-                      name: "Ashiq",
-                      Branchname: "",
-                      SRC: "",
-                      phone: "46465",
-                      PointAmount: "",
-                      onEdit: () {},
-                      onDelete: () {},
-                    ),
-                    _SroRow(
-                      code: "3",
-                      name: "Ali",
-                      Branchname: "",
-                      SRC: "",
-                      phone: "95668690",
-                      PointAmount: "",
-                      onEdit: () {},
-                      onDelete: () {},
-                    ),
                   ],
                 ),
               ),
@@ -355,6 +324,8 @@ TableRow _SroRow({
   required String PointAmount,
   required VoidCallback onEdit,
   required VoidCallback onDelete,
+  required bool status,
+  required ValueChanged<bool> onToggle,
 }) {
   return TableRow(
     children: [
@@ -382,17 +353,19 @@ TableRow _SroRow({
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Center(child: Text(PointAmount, style: FontStyles.body)),
       ),
-      // Padding(
-      //   padding: EdgeInsets.symmetric(vertical: 6.h),
-      //   child: Center(
-      //     child: Switch(
-      //       value: true,
-      //       onChanged: (val) {},
-      //       activeColor: Colors.green,
-      //     ),
-      //   ),
-      // ),
-      Icon(Icons.toggle_on, color: Colors.green, size: 31),
+      Transform.scale(
+        scale: 0.65,
+        child: Switch(
+          value: status,
+          onChanged: onToggle,
+          activeColor: Colors.white,
+          activeTrackColor: Color(0xFF28AC24),
+          inactiveThumbColor: Colors.white,
+          inactiveTrackColor: Colors.grey[400],
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+      ),
+
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(

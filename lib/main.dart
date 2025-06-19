@@ -1,7 +1,8 @@
 import 'package:audit_info/bloc/SRC/src_bloc_bloc.dart';
 import 'package:audit_info/bloc/accountant/accountant_bloc.dart';
 import 'package:audit_info/bloc/manger/manager_bloc.dart';
-import 'package:audit_info/ui/Branch_manager.dart';
+import 'package:audit_info/ui/Accountant.dart';
+import 'package:audit_info/ui/SRC.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -38,7 +39,7 @@ class MyApp extends StatelessWidget {
 
             // home: Loginpage(),
             // home: StudentHistory(),
-            home: BranchManager(),
+            home: Src(),
           );
         },
       ),
