@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:audit_info/Repositry/Api/Api_client.dart';
 import 'package:audit_info/Repositry/model/SRCmodel.dart';
+import 'package:audit_info/bloc/SRO/sro_bloc.dart';
 
 class Srcapi {
   ApiClient api = ApiClient();
@@ -9,10 +10,10 @@ class Srcapi {
     String trendingpath = "src/get";
     try {
       final response = await api.invokeAPI(trendingpath, "GET", "");
-      final List jsonData = jsonDecode(response.body);
+      final List<dynamic> jsonData = jsonDecode(response.body);
       return jsonData.map((s) => SrcModel.fromJson(s)).toList();
-    } catch (s) {
-      throw Exception("Failed to fetch src");
+    } catch (e) {
+      throw Exception("Failed to fetch src: $e");
     }
   }
 
@@ -22,7 +23,7 @@ class Srcapi {
       final String body = jsonEncode(srcdata);
       await api.invokeAPI(trendingpath, "POST", body);
     } catch (e) {
-      throw Exception("Failed to Add src");
+      throw Exception("Failed to Add src$e");
     }
   }
 
@@ -31,19 +32,19 @@ class Srcapi {
     try {
       await api.invokeAPI(trendingpath, "DELETE", "");
     } catch (e) {
-      throw Exception("Failed to DELETE");
+      throw Exception("Failed to DELETE:$e");
     }
   }
 
-  Future<void> updatesrc(Map<String, dynamic> updatesrc, String id) async {
+  Future<void> updatesrc(Map<String, dynamic> updatedata, String id) async {
     String trendingpath = "src/update/$id";
-    final String body = jsonEncode(updatesrc);
+    final String body = jsonEncode(updatedata);
     print("update src$body");
 
     try {
-      await api.invokeAPI(trendingpath, "UPDATE", body);
+      await api.invokeAPI(trendingpath, "PUT", body);
     } catch (e) {
-      throw Exception("");
+      throw Exception("API Src update error: $e");
     }
   }
 }

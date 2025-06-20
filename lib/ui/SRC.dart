@@ -267,9 +267,9 @@ class _SrcState extends State<Src> {
                           topRight: Radius.circular(4),
                         ),
                         border: Border(
-                          top: BorderSide(color: Colors.black),
-                          left: BorderSide(color: Colors.black),
-                          right: BorderSide(color: Colors.black),
+                          bottom: BorderSide(color: AppColors.kBorderColor),
+
+                          top: BorderSide(color: AppColors.kBorderColor),
                         ),
                       ),
                       child: Table(
@@ -281,7 +281,9 @@ class _SrcState extends State<Src> {
                           verticalInside: BorderSide(
                             color: AppColors.kBorderColor,
                           ),
-                          bottom: BorderSide(color: Colors.black),
+
+                          left: BorderSide(color: AppColors.kBorderColor),
+                          right: BorderSide(color: AppColors.kBorderColor),
                         ),
                         columnWidths: const <int, TableColumnWidth>{
                           0: FixedColumnWidth(50), // E.CODE
@@ -320,6 +322,15 @@ class _SrcState extends State<Src> {
                                 filteredsrc[index].status = value;
                               },
                               onEdit: () {
+                                final SrcModel selected = branch.firstWhere(
+                                  (e) => e.branchId?.id == SRC.branchId?.name,
+                                  orElse:
+                                      () => branch.isNotEmpty ? branch[0] : SRC,
+                                );
+                                setState(() {
+                                  selectedBranch = selected;
+                                });
+
                                 SRCopenDialog(
                                   context,
                                   selectedBranch,
@@ -328,17 +339,26 @@ class _SrcState extends State<Src> {
                                       selectedBranch = value;
                                     });
                                   },
-                                  employecodeController,
-                                  dateController,
-                                  nameController,
-                                  emailController,
-                                  addressController,
-                                  phonenumber,
-                                  confirmController,
-                                  pointamountController,
+                                  employecodeController
+                                    ..text = SRC.employeeCode,
+                                  dateController
+                                    ..text = DateFormat(
+                                      'yyyy-MM-dd',
+                                    ).format(SRC.dateOfJoining),
+
+                                  nameController..text = SRC.name,
+                                  emailController..text = SRC.email,
+                                  addressController..text = SRC.address,
+                                  phonenumber
+                                    ..text = SRC.phoneNumber.toString(),
+                                  confirmController..text = SRC.password,
+                                  pointamountController
+                                    ..text = SRC.pointAmount.toString(),
                                   salaryController,
-                                  passwordController,
+                                  passwordController..text = SRC.password,
                                   branch,
+                                  isUpdate: true,
+                                  srcId: SRC.id,
                                 );
                               },
                               onDelete: () {
@@ -507,9 +527,10 @@ Future<void> SRCopenDialog(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(isUpdate ?
-                        
-                        "Create New SRC", style: FontStyles.heading),
+                      Text(
+                        isUpdate ? "Update SRC" : "Create New SRC",
+                        style: FontStyles.heading,
+                      ),
                       InkWell(
                         onTap: () => Navigator.pop(context),
                         child: Icon(Icons.close, color: AppColors.kBorderColor),
@@ -518,11 +539,14 @@ Future<void> SRCopenDialog(
                   ),
                   SizedBox(height: 23.h),
 
-                  _fullTextField(title: "Employee Code"),
+                  _fullTextField(
+                    title: "Employee Code",
+                    controller: employecodeController,
+                  ),
                   SizedBox(height: 10.h),
                   _fullTextField(
                     title: "Date of Joining",
-
+                    controller: dateController,
                     icon: Icons.calendar_today,
                     onTap: () async {
                       final dateRange = await showRangePickerDialog(
@@ -540,34 +564,51 @@ Future<void> SRCopenDialog(
                     },
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(title: "Name"),
+                  _fullTextField(title: "Name", controller: nameController),
                   SizedBox(height: 10.h),
                   _fullTextField(
                     title: "Email",
                     keyboardType: TextInputType.emailAddress,
+                    controller: emailController,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(title: "Address"),
+                  _fullTextField(
+                    title: "Address",
+                    controller: addressController,
+                  ),
                   SizedBox(height: 10.h),
                   _fullTextField(
                     title: "Phone Number",
                     keyboardType: TextInputType.number,
+                    controller: phonenumber,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(title: "Password", isPassword: true),
+                  _fullTextField(
+                    title: "Password",
+                    isPassword: true,
+                    controller: passwordController,
+                  ),
                   SizedBox(height: 10.h),
-                  _fullTextField(title: "Confirm Password", isPassword: true),
+                  _fullTextField(
+                    title: "Confirm Password",
+                    isPassword: true,
+
+                    controller: confirmController,
+                  ),
 
                   SizedBox(height: 10.h),
                   _buildDropdownField(
                     "select branch",
-                    selectedBranch?.branchId.name,
-                    branch.map((s) => s.branchId.name).toList(),
+                    selectedBranch?.branchId?.name,
+                    branch
+                        .map((s) => s.branchId?.name)
+                        .whereType<String>()
+                        .toList(),
                     "select branch",
                     (selected) {
                       if (selected != null) {
                         final Branches = branch.firstWhere(
-                          (s) => s.branchId.name == selected,
+                          (s) => s.branchId!.name == selected,
                         );
                         onBranchSelected(Branches);
                       }
@@ -582,11 +623,13 @@ Future<void> SRCopenDialog(
                           title: "Salary",
                           width: double.infinity,
                           keyboardType: TextInputType.number,
+                          controller: salaryController,
                         ),
                       ),
                       SizedBox(width: 13.w),
                       Expanded(
                         child: _fullTextField(
+                          controller: pointamountController,
                           title: "point Amount",
                           width: double.infinity,
                           keyboardType: TextInputType.number,
@@ -638,24 +681,35 @@ Future<void> SRCopenDialog(
                           "status": true,
                           'point_amount': pointamountController.text,
                           'salary': salaryController.text,
+                          "branchId": selectedBranch!.branchId?.id,
                         };
-                        BlocProvider.of<SrcBlocBloc>(
-                          context,
-                        ).add(AddSrc(srcdata: srcdata));
-                        employecodeController.clear();
-                        dateController.clear();
-                        nameController.clear();
-                        emailController.clear();
-                        addressController.clear();
-                        phonenumber.clear();
-                        passwordController.clear();
-                        confirmController.clear();
-                        pointamountController.clear();
-                        salaryController.clear();
+                        if (isUpdate && srcId != null) {
+                          BlocProvider.of<SrcBlocBloc>(
+                            context,
+                          ).add(updatesrc(updatedData: srcdata, id: srcId));
+                        } else {
+                          BlocProvider.of<SrcBlocBloc>(
+                            context,
+                          ).add(AddSrc(srcdata: srcdata));
+                        }
+                        if (!isUpdate) {
+                          employecodeController.clear();
+                          dateController.clear();
+                          nameController.clear();
+                          emailController.clear();
+                          addressController.clear();
+                          phonenumber.clear();
+                          passwordController.clear();
+                          confirmController.clear();
+                          pointamountController.clear();
+                          salaryController.clear();
+                        }
                         Navigator.pop(context);
+                        BlocProvider.of<SrcBlocBloc>(context).add(fetchsrc());
                       },
+
                       child: Text(
-                        "Create",
+                        isUpdate ? "Update" : "Create",
                         style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -680,6 +734,7 @@ Widget _fullTextField({
   double? width,
   TextInputType keyboardType = TextInputType.text,
   VoidCallback? onTap,
+  TextEditingController? controller,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -691,6 +746,7 @@ Widget _fullTextField({
         width: width ?? 324.w,
 
         child: TextField(
+          controller: controller,
           keyboardType: keyboardType,
           obscureText: isPassword,
           decoration: InputDecoration(

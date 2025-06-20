@@ -18,7 +18,10 @@ class SrcBlocBloc extends Bloc<SrcBlocEvent, SrcBlocState> {
         final newsrc = await Srcapi().getsrc();
         print("fetched ${newsrc.length} src");
         emit(srcBlocloaded(SRC: newsrc));
-      } catch (e) {}
+      } catch (e) {
+        print("SRC fetch error: $e");
+        emit(srcblocError());
+      }
       ;
     });
 
@@ -30,15 +33,22 @@ class SrcBlocBloc extends Bloc<SrcBlocEvent, SrcBlocState> {
         final AddSrc = await Srcapi().getsrc();
         SRC = AddSrc;
         emit(srcBlocloaded(SRC: SRC));
-      } catch (e) {}
+      } catch (e) {
+        print("SRC add error: $e");
+        emit(srcblocError());
+      }
     });
     on<deletesrc>((event, emit) async {
       emit(SrcBlocloading());
       try {
         await Srcapi().deletesrc(event.id);
-      } catch (e) {
+
         SRC.removeWhere((s) => s.id == event.id);
+
         emit(srcBlocloaded(SRC: SRC));
+      } catch (e) {
+        print("SRC delete error: $e");
+        emit(srcblocError());
       }
     });
     on<updatesrc>((event, emit) async {
@@ -47,7 +57,10 @@ class SrcBlocBloc extends Bloc<SrcBlocEvent, SrcBlocState> {
         await Srcapi().updatesrc(event.updatedData, event.id);
         final updatedSrc = await Srcapi().getsrc();
         emit(srcBlocloaded(SRC: updatedSrc));
-      } catch (e) {}
+      } catch (e) {
+        print("API update error: $e");
+        emit(srcblocError());
+      }
     });
   }
 }

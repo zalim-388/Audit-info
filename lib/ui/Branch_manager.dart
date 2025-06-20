@@ -269,10 +269,9 @@ class _BranchMangerState extends State<BranchManager> {
                               verticalInside: BorderSide(
                                 color: AppColors.kBorderColor,
                               ),
-                              bottom: BorderSide(color: Colors.black),
-                              left: BorderSide(color: Colors.black),
-                              right: BorderSide(color: Colors.black),
-                              top: BorderSide(color: Colors.black),
+                           
+                          left: BorderSide(color: AppColors.kBorderColor),
+                          right: BorderSide(color: AppColors.kBorderColor),
                             ),
                             columnWidths: {
                               0: FixedColumnWidth(150),
@@ -436,7 +435,7 @@ Future<void> _BranchManageropenDialog(
                   SizedBox(height: 10.h),
                   _fullTextField(
                     title: "Date of Joining",
-                    controller: dateController,
+
                     icon: Icons.calendar_today,
                     onTap: () async {
                       final dateRange = await showRangePickerDialog(
@@ -646,7 +645,7 @@ TableRow _TableRow({
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Center(child: Text(Id, style: FontStyles.body)),
       ),
-     Transform.scale(
+      Transform.scale(
         scale: 0.65,
         child: Switch(
           value: status,

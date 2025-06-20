@@ -1,3 +1,5 @@
+import 'package:audit_info/Repositry/model/SRO_model.dart';
+import 'package:audit_info/bloc/SRO/sro_bloc.dart';
 import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
@@ -5,6 +7,7 @@ import 'package:audit_info/utils/customDrawer.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -17,12 +20,21 @@ class Sro extends StatefulWidget {
 }
 
 class _SroState extends State<Sro> {
+  List<SroModel> filledsro = [];
+  List<SroModel> Allsro = [];
+  List<SroModel> branches = [];
   int _selectedIndex = 4;
   void _onitemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
+
+  void initState() async {
+    super.initState();
+    BlocProvider.of<SroBloc>(context).add(fetchSro());
+  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -185,103 +197,14 @@ class _SroState extends State<Sro> {
                     TableRow(
                       decoration: BoxDecoration(color: Colors.grey[300]),
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'E.Code',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Name',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Branch name',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'SRC',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'phone number',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Point Amount',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Status',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Actions',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                        _tableheadRow(heading: "E.Code"),
+                        _tableheadRow(heading: "Name"),
+                        _tableheadRow(heading: "Branch Name"),
+                        _tableheadRow(heading: "SRC"),
+                        _tableheadRow(heading: "phone Number"),
+                        _tableheadRow(heading: "Point Amount"),
+                        _tableheadRow(heading: "Status"),
+                        _tableheadRow(heading: "Actions"),
                       ],
                     ),
                   ],
@@ -295,23 +218,18 @@ class _SroState extends State<Sro> {
   }
 }
 
-TableRow _tableheadRow({required String heading}) {
-  return TableRow(
-    decoration: BoxDecoration(color: Colors.grey[300]),
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 10.0),
-        child: Text(
-          heading,
-          textAlign: TextAlign.center,
-          style: GoogleFonts.poppins(
-            fontSize: 10.sp,
-            color: AppColors.kTextColor,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+Widget _tableheadRow({required String heading}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 10.0),
+    child: Text(
+      heading,
+      textAlign: TextAlign.center,
+      style: GoogleFonts.poppins(
+        fontSize: 10.sp,
+        color: AppColors.kTextColor,
+        fontWeight: FontWeight.bold,
       ),
-    ],
+    ),
   );
 }
 

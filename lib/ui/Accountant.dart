@@ -1,3 +1,7 @@
+import 'dart:async';
+
+import 'package:audit_info/Repositry/Api/SRC/SRCapi.dart';
+import 'package:audit_info/Repositry/model/SRCmodel.dart';
 import 'package:audit_info/Repositry/model/accountant_modal.dart';
 import 'package:audit_info/bloc/accountant/accountant_bloc.dart';
 import 'package:audit_info/ui/loginpage.dart';
@@ -32,8 +36,9 @@ class _AccountantState extends State<Accountant> {
   TextEditingController searchController = TextEditingController();
   List<AccountantModel> filteredAccounts = [];
   List<AccountantModel> AllAccounts = [];
+  List<SrcModel> branches = [];
 
-  String? selectedBranch;
+  SrcModel? selectedBranch;
 
   void initState() {
     super.initState();
@@ -42,21 +47,37 @@ class _AccountantState extends State<Accountant> {
     searchController.addListener(filterAccountsList);
   }
 
-  void filterAccountsList() async {
-    final query = searchController.text.toLowerCase();
-    setState(() {
-      if (query.isEmpty) {
-        filteredAccounts = AllAccounts;
-      } else {
+  Timer? _debounce;
+  void filterAccountsList() {
+    if (_debounce?.isActive ?? false) _debounce?.cancel();
+    _debounce = Timer(Duration(milliseconds: 300), () {
+      final query = searchController.text.toLowerCase();
+      setState(() {
         filteredAccounts =
             AllAccounts.where((account) {
-              return account.name.toLowerCase().contains(query) ||
+              return account.employeeCode.toLowerCase().contains(query) ||
+                  account.name.toLowerCase().contains(query) ||
                   account.email.toLowerCase().contains(query) ||
-                  account.employeeCode.toLowerCase().contains(query) ||
-                  account.phoneNumber.toLowerCase().contains(query);
+                  account.phoneNumber.toLowerCase().contains(query) ||
+                  (account.id.toString().toLowerCase().contains(query) ??
+                      false);
             }).toList();
-      }
+      });
     });
+  }
+
+  Future<void> fetchbranch() async {
+    try {
+      final fetchbranches = await Srcapi().getsrc();
+      setState(() {
+        branches = fetchbranches;
+        if (branches.isNotEmpty) {
+          selectedBranch = branches[0];
+        }
+      });
+    } catch (e) {
+      throw Exception("fetchbranch Error$e");
+    }
   }
 
   TextEditingController employeeCodeController = TextEditingController();
@@ -203,6 +224,7 @@ class _AccountantState extends State<Accountant> {
                         confirmpasswordcontroller,
                         passwordController,
                         salaryController,
+                        branches,
                       );
                     },
                     child: Container(
@@ -330,6 +352,7 @@ class _AccountantState extends State<Accountant> {
                                     ..text = account.password,
                                   passwordController..text = account.password,
                                   salaryController..text = "",
+                                  branches,
                                   isupdate: true,
                                   accountId: account.id,
                                 );
@@ -457,8 +480,8 @@ TableRow _accountantRow({
 
 Future<void> AccountantopenDialog(
   BuildContext context,
-  String? selectedBranch,
-  Function(String) onBranchSelected,
+  SrcModel? selectedBranch,
+  Function(SrcModel) onBranchSelected,
   TextEditingController employecodeController,
   TextEditingController dateOfJoiningController,
   TextEditingController nameController,
@@ -467,7 +490,8 @@ Future<void> AccountantopenDialog(
   TextEditingController phoneController,
   TextEditingController confirmpasswordcontroller,
   TextEditingController passwordController,
-  TextEditingController salaryController, {
+  TextEditingController salaryController,
+  List<SrcModel> branches, {
   bool isupdate = false,
   String? accountId,
 }) async {
@@ -563,14 +587,20 @@ Future<void> AccountantopenDialog(
                     controller: confirmpasswordcontroller,
                   ),
                   SizedBox(height: 10.h),
-                  customDropdown(
-                    context: context,
-                    title: "Select Branch",
-                    selectedValue: selectedBranch,
-                    items: ['Branch 1', 'Branch 2', 'Branch 3'],
-                    onSelected: (value) {
-                      onBranchSelected(value);
+                  _buildDropdownField(
+                    "Select Branch",
+                    selectedBranch?.branchId?.name,
+                    branches.map((e) => e.branchId!.name).toList(),
+                    "Select Branch",
+                    (selected) {
+                      if (selected != null) {
+                        final branch = branches.firstWhere(
+                          (e) => e.branchId!.name == selected,
+                        );
+                        onBranchSelected(branch);
+                      }
                     },
+                    context,
                   ),
                   _fullTextField(
                     title: "Salary",
@@ -623,6 +653,7 @@ Future<void> AccountantopenDialog(
                           'address': addressController.text,
                           'password': passwordController.text,
                           'state': true,
+                          "branchId": selectedBranch?.branchId?.id ?? "",
                         };
                         if (isupdate && accountId != null) {
                           BlocProvider.of<AccountantBloc>(context).add(
@@ -718,57 +749,73 @@ Widget _fullTextField({
   );
 }
 
-Widget customDropdown({
-  required BuildContext context,
-  required String title,
-  required String? selectedValue,
-  required void Function(String value) onSelected,
-  required List<String> items,
-  double? width,
-}) {
+Widget _buildDropdownField(
+  String label,
+  String? selectedValue,
+  List<String> options,
+  String hint,
+  Function(String?) onChanged,
+  BuildContext context,
+) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(title, style: FontStyles.body),
-      SizedBox(height: 4.h),
-      Container(
-        height: 27.h,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(6),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 6),
-        child: GestureDetector(
-          onTapDown: (details) async {
-            final selected = await showMenu<String>(
-              context: context,
-              position: RelativeRect.fromLTRB(
-                details.globalPosition.dx,
-                details.globalPosition.dy,
-                details.globalPosition.dx,
-                details.globalPosition.dy,
-              ),
-              items:
-                  items.map((item) {
-                    return PopupMenuItem<String>(
-                      value: item,
-                      child: Text(item),
-                    );
-                  }).toList(),
-            );
-            if (selected != null) {
-              onSelected(selected);
-            }
-          },
+      Text(label, style: FontStyles.body),
+      SizedBox(height: 8.h),
+      GestureDetector(
+        onTapDown: (TapDownDetails details) async {
+          final selected = await showMenu<String>(
+            context: context,
+            position: RelativeRect.fromLTRB(
+              details.globalPosition.dx,
+              details.globalPosition.dy,
+              MediaQuery.of(context).size.width - details.globalPosition.dx,
+              MediaQuery.of(context).size.height - details.globalPosition.dy,
+            ),
+            items:
+                options.map((option) {
+                  return PopupMenuItem<String>(
+                    value: option,
+                    child: Text(
+                      option,
+                      style: GoogleFonts.poppins(fontSize: 12),
+                    ),
+                  );
+                }).toList(),
+            color: Colors.white,
+          );
+
+          if (selected != null) {
+            onChanged(selected);
+          }
+        },
+        child: Container(
+          height: 30.h,
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(6),
+            border: Border.all(color: AppColors.kBorderColor),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                selectedValue ?? title,
-                style: GoogleFonts.inter(fontSize: 10, color: Colors.grey),
+                selectedValue ?? hint,
+                style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  color:
+                      selectedValue == null
+                          ? const Color(0xFF868686)
+                          : Colors.black,
+                ),
               ),
-              const Icon(Icons.keyboard_arrow_down, size: 16),
+              Icon(
+                Icons.keyboard_arrow_down,
+                size: 16,
+                color: AppColors.kTextColor,
+              ),
             ],
           ),
         ),
