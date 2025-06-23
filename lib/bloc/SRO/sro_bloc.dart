@@ -1,6 +1,5 @@
 import 'package:audit_info/Repositry/Api/SRO/sroapi.dart';
 import 'package:audit_info/Repositry/model/SRO_model.dart';
-import 'package:audit_info/ui/SRO.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
@@ -51,7 +50,7 @@ class SroBloc extends Bloc<SroEvent, SroState> {
       try {
         await Sroapi().updatesro(event.id, event.updatedata);
         final update = await Sroapi().getsro();
-        emit(sroBlocloaded(SRO: SRO));
+        emit(sroBlocloaded(SRO: update));
       } catch (e) {
         print("APISRo update error: $e");
       }

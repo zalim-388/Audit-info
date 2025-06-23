@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:audit_info/Repositry/Api/Api_client.dart';
 import 'package:audit_info/Repositry/model/SRO_model.dart';
-import 'package:http/src/response.dart';
 
 class Sroapi {
   ApiClient api = ApiClient();
@@ -10,8 +9,8 @@ class Sroapi {
   Future<List<SroModel>> getsro() async {
     String trendingpath = "sro/get";
     try {
-      final response = await api.invokeAPI(trendingpath, "GET", "");
-      final List Srodata = jsonDecode(response.body);
+      final response = await api.invokeAPI(trendingpath,"GET","");
+      final Srodata = jsonDecode(response.body);
       return Srodata.map((e) => SroModel.fromJson(e)).toList();
     } catch (e) {
       throw Exception("Failed to fetch sro: $e");
@@ -32,7 +31,7 @@ class Sroapi {
     String trendingpath = "sro/delete/$id";
 
     try {
-      await api.invokeAPI(trendingpath, " PUT", "");
+      await api.invokeAPI(trendingpath,"PUT","");
     } catch (e) {
       throw Exception("Failed to DELETE sro:$e");
     }
@@ -41,7 +40,10 @@ class Sroapi {
   Future<void> updatesro(String id, Map<String, dynamic> updatedata) async {
     String trendingpath = "sro/update/$id";
     final String body = jsonEncode(updatedata);
-    try {} catch (e) {
+
+    try {
+      await api.invokeAPI(trendingpath, "PUT", body);
+    } catch (e) {
       throw Exception("Failed to  update sro:$e");
     }
   }
