@@ -23,9 +23,9 @@ class SroBloc extends Bloc<SroEvent, SroState> {
     on<Addsro>((event, emit) async {
       emit(SroBlocloading());
       try {
+        await Sroapi().AddSro(event.srodata);
         final Addsro = await Sroapi().getsro();
         emit(sroBlocloaded(SRO: Addsro));
-        await Sroapi().AddSro(event.srodata);
       } catch (e) {
         print("SRO add error: $e");
         emit(srcblocError());

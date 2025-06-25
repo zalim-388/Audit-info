@@ -242,7 +242,7 @@ class _SrcState extends State<Src> {
                 builder: (context, state) {
                   if (state is SrcBlocloading) {
                     print("loading");
-                    Center(child: CircularProgressIndicator());
+                    Center(child: CircularProgressIndicator(          color: AppColors.kPrimaryColor,));
                   } else if (state is srcblocError) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,

@@ -59,8 +59,7 @@ class _AccountantState extends State<Accountant> {
                   account.name.toLowerCase().contains(query) ||
                   account.email.toLowerCase().contains(query) ||
                   account.phoneNumber.toLowerCase().contains(query) ||
-                  (account.id.toString().toLowerCase().contains(query) ??
-                      false);
+                  (account.id.toString().toLowerCase().contains(query));
             }).toList();
       });
     });
@@ -225,6 +224,7 @@ class _AccountantState extends State<Accountant> {
                         passwordController,
                         salaryController,
                         branches,
+                        isupdate: false,
                       );
                     },
                     child: Container(
@@ -248,7 +248,11 @@ class _AccountantState extends State<Accountant> {
                   if (state is Accountantblocloading) {
                     print("loading");
 
-                    return Center(child: CircularProgressIndicator());
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.kPrimaryColor,
+                      ),
+                    );
                   } else if (state is AccountantblocError) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,

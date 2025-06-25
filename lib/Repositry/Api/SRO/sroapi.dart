@@ -9,10 +9,14 @@ class Sroapi {
   Future<List<SroModel>> getsro() async {
     String trendingpath = "sro/get";
     try {
-      final response = await api.invokeAPI(trendingpath,"GET","");
-      final Srodata = jsonDecode(response.body);
-      return Srodata.map((e) => SroModel.fromJson(e)).toList();
+      final response = await api.invokeAPI(trendingpath, "GET", "");
+      if (response.statusCode == 200) {
+        return sroModelFromJson(response.body);
+      } else {
+        throw Exception('Failed to load data: ${response.statusCode}');
+      }
     } catch (e) {
+      print('Error in getsro: $e');
       throw Exception("Failed to fetch sro: $e");
     }
   }
@@ -31,7 +35,7 @@ class Sroapi {
     String trendingpath = "sro/delete/$id";
 
     try {
-      await api.invokeAPI(trendingpath,"PUT","");
+      await api.invokeAPI(trendingpath, "PUT", "");
     } catch (e) {
       throw Exception("Failed to DELETE sro:$e");
     }

@@ -5,6 +5,7 @@ import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
+import 'package:audit_info/utils/textfield.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -55,20 +56,20 @@ class _SroState extends State<Sro> {
     });
   }
 
-  // Future<void> fetchsrobranch() async {
-  //   try {
-  //     final fetchsrcbranches = await Sroapi().getsro();
+  Future<void> fetchsrobranch() async {
+    try {
+      final fetchsrcbranches = await Sroapi().getsro();
 
-  //     setState(() {
-  //       branches = fetchsrcbranches;
-  //       if (branches.isNotEmpty) {
-  //         selectedBranch = branches[0];
-  //       }
-  //     });
-  //   } catch (e) {
-  //     throw Exception("fetchsrcbranch Error$e");
-  //   }
-  // }
+      setState(() {
+        branches = fetchsrcbranches;
+        if (branches.isNotEmpty) {
+          selectedBranch = branches[0];
+        }
+      });
+    } catch (e) {
+      throw Exception("fetchsrcbranch Error$e");
+    }
+  }
 
   TextEditingController searchController = TextEditingController();
   TextEditingController employecodeController = TextEditingController();
@@ -159,6 +160,7 @@ class _SroState extends State<Sro> {
                       height: 30.h,
 
                       child: TextField(
+                        controller: searchController,
                         decoration: InputDecoration(
                           prefixIcon: Icon(
                             Icons.search,
@@ -230,7 +232,11 @@ class _SroState extends State<Sro> {
                 builder: (context, state) {
                   if (state is SroBlocloading) {
                     print("loading");
-                    return Center(child: CircularProgressIndicator());
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.kPrimaryColor,
+                      ),
+                    );
                   } else if (state is srcblocError) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -309,7 +315,9 @@ class _SroState extends State<Sro> {
                               onEdit: () {
                                 final SroModel selectedsro = branches
                                     .firstWhere(
-                                      (e) => e.branchId.id == sro.branchId.name,
+                                      (e) =>
+                                          (e.branchId?.id ?? "") ==
+                                          (sro.branchId?.name ?? ""),
                                       orElse:
                                           () =>
                                               branches.isNotEmpty
@@ -344,7 +352,9 @@ class _SroState extends State<Sro> {
                                 );
                               },
                               onDelete: () {
-                                BlocProvider.of<SroBloc>(context).add(deletesro(id: sro.id));
+                                BlocProvider.of<SroBloc>(
+                                  context,
+                                ).add(deletesro(id: sro.id));
                               },
                               status: sro.status,
                               onToggle: (value) {
@@ -528,15 +538,13 @@ Future<void> SROopenDialog(
                     ],
                   ),
                   SizedBox(height: 23.h),
-
-                  _fullTextField(
+                  fullTextField(
                     title: "Employee Code",
                     controller: employecodeController,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Date of Joining",
-
                     icon: Icons.calendar_today,
                     controller: dateController,
                     keyboardType: TextInputType.datetime,
@@ -556,57 +564,91 @@ Future<void> SROopenDialog(
                     },
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Name",
                     controller: nameController,
                     keyboardType: TextInputType.name,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Email",
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Address",
                     controller: addressController,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Phone Number",
                     controller: phonenumber,
                     keyboardType: TextInputType.phone,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Password",
                     isPassword: true,
                     controller: passwordController,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Confirm Password",
                     isPassword: true,
                     controller: confirmController,
                   ),
-
                   SizedBox(height: 10.h),
                   Row(
                     children: [
                       Expanded(
                         child: _buildDropdownField(
                           "select branch",
-                          selectedBranch!.branchId.name,
+                          selectedBranch?.branchId?.name ?? "Select branch",
                           branch
-                              .map((s) => s.branchId.name)
+                              .map((s) => s.branchId?.name)
                               .whereType<String>()
                               .toList(),
                           "select branch",
                           (selected) {
                             if (selected != null) {
                               final Branches = branch.firstWhere(
-                                (s) => s.branchId.name == selected,
+                                (s) => s.branchId?.name == selected,
+                                orElse:
+                                    () =>
+                                        branch.isNotEmpty
+                                            ? branch[0]
+                                            : SroModel(
+                                              id: "",
+                                              name: "",
+                                              email: "",
+                                              password: "",
+                                              position: "",
+                                              employeeCode: "",
+                                              phoneNumber: "",
+                                              dateOfJoining: DateTime.now(),
+                                              address: "",
+                                              status: false,
+                                              pointAmount: 0,
+                                              isAdmin: false,
+                                              headAdministractor: false,
+                                              branchId: BranchId(
+                                                id: "",
+                                                name: "",
+                                                code: "",
+                                                status: false,
+                                                createdAt: DateTime.now(),
+                                                updatedAt: DateTime.now(),
+                                                v: 0,
+                                              ),
+                                              managerPoint: [],
+                                              srcId: "",
+                                              lead: [],
+                                              registration: [],
+                                              createdAt: DateTime.now(),
+                                              updatedAt: DateTime.now(),
+                                              v: 0,
+                                            ),
                               );
                               onBranchSelected(Branches);
                             }
@@ -618,16 +660,51 @@ Future<void> SROopenDialog(
                       Expanded(
                         child: _buildDropdownField(
                           "Select SRC",
-                          selectedSRC?.srcId,
+                          selectedSRC?.srcId ?? "Select SRC",
                           branch
                               .map((s) => s.srcId)
                               .whereType<String>()
                               .toList(),
-                          "select SRO",
+                          "select SRC",
                           (selected) {
                             if (selected != null) {
                               final Branches = branch.firstWhere(
                                 (s) => s.srcId == selected,
+                                orElse:
+                                    () =>
+                                        branch.isNotEmpty
+                                            ? branch[0]
+                                            : SroModel(
+                                              id: "",
+                                              name: "",
+                                              email: "",
+                                              password: "",
+                                              position: "",
+                                              employeeCode: "",
+                                              phoneNumber: "",
+                                              dateOfJoining: DateTime.now(),
+                                              address: "",
+                                              status: false,
+                                              pointAmount: 0,
+                                              isAdmin: false,
+                                              headAdministractor: false,
+                                              branchId: BranchId(
+                                                id: "",
+                                                name: "",
+                                                code: "",
+                                                status: false,
+                                                createdAt: DateTime.now(),
+                                                updatedAt: DateTime.now(),
+                                                v: 0,
+                                              ),
+                                              managerPoint: [],
+                                              srcId: "",
+                                              lead: [],
+                                              registration: [],
+                                              createdAt: DateTime.now(),
+                                              updatedAt: DateTime.now(),
+                                              v: 0,
+                                            ),
                               );
                               onBranchSelected(Branches);
                             }
@@ -641,7 +718,7 @@ Future<void> SROopenDialog(
                   Row(
                     children: [
                       Expanded(
-                        child: _fullTextField(
+                        child: fullTextField(
                           title: "Point Amount",
                           width: double.infinity,
                           controller: pointamountController,
@@ -650,7 +727,7 @@ Future<void> SROopenDialog(
                       ),
                       SizedBox(width: 13.w),
                       Expanded(
-                        child: _fullTextField(
+                        child: fullTextField(
                           title: "Salary",
                           width: double.infinity,
                           controller: salaryController,
@@ -659,7 +736,6 @@ Future<void> SROopenDialog(
                       ),
                     ],
                   ),
-
                   SizedBox(height: 21.h),
                   SizedBox(
                     width: double.infinity,
@@ -672,7 +748,7 @@ Future<void> SROopenDialog(
                         ),
                       ),
                       onPressed: () {
-                        if (passwordController != confirmController) {
+                        if (passwordController.text != confirmController.text) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text("Passwords do not match")),
                           );
@@ -699,9 +775,8 @@ Future<void> SROopenDialog(
                           "address": addressController.text,
                           "phoneNumber": phonenumber.text,
                           "password": passwordController.text,
-                          "branchId": selectedBranch.branchId,
+                          "branchId": selectedBranch?.branchId?.id ?? "",
                           "srcId": selectedSRC?.srcId ?? "",
-
                           "pointAmount":
                               double.tryParse(pointamountController.text) ??
                               0.0,
@@ -709,7 +784,6 @@ Future<void> SROopenDialog(
                               double.tryParse(salaryController.text) ?? 0.0,
                           "status": true,
                         };
-
                         if (isUpdate && sroid != null) {
                           BlocProvider.of<SroBloc>(
                             context,
@@ -719,6 +793,7 @@ Future<void> SROopenDialog(
                             context,
                           ).add(Addsro(srodata: sroData));
                         }
+                        Navigator.pop(context);
                       },
                       child: Text(
                         isUpdate ? "Update" : "Create",
@@ -736,48 +811,6 @@ Future<void> SROopenDialog(
         ),
       );
     },
-  );
-}
-
-Widget _fullTextField({
-  required String title,
-  IconData? icon,
-  bool isPassword = false,
-  double? width,
-  TextEditingController? controller,
-  TextInputType? keyboardType,
-  void Function()? onTap,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(title, style: FontStyles.body),
-      SizedBox(height: 4.h),
-      SizedBox(
-        height: 30.h,
-        width: width ?? 324.w,
-        child: TextField(
-          controller: controller,
-          keyboardType: keyboardType ?? TextInputType.text,
-          obscureText: isPassword,
-          decoration: InputDecoration(
-            hintStyle: GoogleFonts.poppins(fontSize: 12),
-            suffixIcon: icon != null ? Icon(icon, size: 18) : null,
-            contentPadding: EdgeInsets.symmetric(horizontal: 12),
-            filled: true,
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-              borderSide: BorderSide(color: AppColors.kBorderColor),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-              borderSide: BorderSide(color: AppColors.kBorderColor),
-            ),
-          ),
-        ),
-      ),
-    ],
   );
 }
 
@@ -855,6 +888,7 @@ Widget _buildDropdownField(
     ],
   );
 }
+
 // SizedBox(
 //   width: 322.w,
 //   height: 30.h,

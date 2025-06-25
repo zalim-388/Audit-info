@@ -13,4 +13,8 @@ final class AgentBlocloaded extends AgentState {
   AgentBlocloaded({required this.agent});
 }
 
-final class AgentBlocError extends AgentState {}
+final class AgentBlocError extends AgentState {
+  final String error;
+
+  AgentBlocError({required this.error});
+}

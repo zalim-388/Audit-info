@@ -1,14 +1,15 @@
-import 'dart:convert';
-
+import 'package:audit_info/Repositry/model/Agent_model.dart';
+import 'package:audit_info/bloc/Agent/agent_bloc.dart';
+import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Agent extends StatefulWidget {
   const Agent({super.key});
@@ -18,8 +19,8 @@ class Agent extends StatefulWidget {
 }
 
 class _AgentState extends State<Agent> {
-  List<Map<String, dynamic>> Agentlist = [];
-  List<Map<String, dynamic>> filterAgent = [];
+  List<AgentModel> Agentlist = [];
+  List<AgentModel> filterAgent = [];
 
   TextEditingController _namecontroller = TextEditingController();
   TextEditingController _phonecontroller = TextEditingController();
@@ -28,7 +29,11 @@ class _AgentState extends State<Agent> {
 
   void initState() {
     super.initState();
-    getdataAgent();
+    BlocProvider.of<AgentBloc>(context).add(fetchAgent());
+    _filtersearch("");
+    _namecontroller.addListener(() {
+      _filtersearch(searchcontroller.text);
+    });
   }
 
   @override
@@ -37,39 +42,6 @@ class _AgentState extends State<Agent> {
     _phonecontroller.dispose();
     _addresscontroller.dispose();
     super.dispose();
-  }
-
-  Future<void> getdataAgent() async {
-    final prerf = await SharedPreferences.getInstance();
-    final String? data = prerf.getString("agents");
-    if (data != null) {
-      List<Map<String, dynamic>> allAgents = List<Map<String, dynamic>>.from(
-        jsonDecode(data),
-      );
-      setState(() {
-        Agentlist = allAgents;
-        filterAgent = allAgents;
-      });
-    }
-  }
-
-  Future<void> setAgentdata() async {
-    final prefs = await SharedPreferences.getInstance();
-    final agent = {
-      'name': _namecontroller.text.trim(),
-      'phone': _phonecontroller.text.trim(),
-      'address': _addresscontroller.text.trim(),
-    };
-    setState(() {
-      Agentlist.add(agent);
-      filterAgent = Agentlist;
-    });
-
-    await prefs.setString('agents', jsonEncode(Agentlist));
-
-    _namecontroller.clear();
-    _phonecontroller.clear();
-    _addresscontroller.clear();
   }
 
   int _selectedIndex = 6;
@@ -83,9 +55,9 @@ class _AgentState extends State<Agent> {
     setState(() {
       filterAgent =
           Agentlist.where((agent) {
-            final name = agent['name']?.toLowerCase() ?? '';
-            final phone = agent['phone']?.toLowerCase() ?? '';
-            final address = agent['Address']?.toLowerCase() ?? '';
+            final name = agent.name.toLowerCase();
+            final phone = agent.phoneNumber.toString().toLowerCase();
+            final address = agent.address.toLowerCase();
             return name.contains(query.toLowerCase()) ||
                 phone.contains(query.toLowerCase()) ||
                 address.contains(query.toLowerCase());
@@ -140,7 +112,12 @@ class _AgentState extends State<Agent> {
             ),
           ),
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => Loginpage()),
+              );
+            },
             icon: const Icon(Icons.logout_rounded, color: Color(0xFF414143)),
           ),
         ],
@@ -209,7 +186,6 @@ class _AgentState extends State<Agent> {
                         _namecontroller,
                         _phonecontroller,
                         _addresscontroller,
-                        setAgentdata,
                         isEdit: false,
                       );
                     },
@@ -239,148 +215,108 @@ class _AgentState extends State<Agent> {
                 ],
               ),
               SizedBox(height: 13.h),
-              Container(
-                width: 358.w,
-                decoration: BoxDecoration(
-                  color: AppColors.kContainerColor,
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(4),
-                    topRight: Radius.circular(4),
-                  ),
-                  border: Border(
-                    top: BorderSide(color: Colors.black),
-                    left: BorderSide(color: Colors.black),
-                    right: BorderSide(color: Colors.black),
-                  ),
-                ),
-                child: Table(
-                  border: TableBorder(
-                    borderRadius: BorderRadius.circular(4),
-                    horizontalInside: BorderSide(color: AppColors.kBorderColor),
-                    verticalInside: BorderSide(color: AppColors.kBorderColor),
-                    bottom: BorderSide(color: Colors.black),
-                  ),
-                  columnWidths: const <int, TableColumnWidth>{
-                    0: FixedColumnWidth(55),
-                    1: FixedColumnWidth(80),
-                    2: FixedColumnWidth(74),
-                    3: FixedColumnWidth(60),
-                    4: FixedColumnWidth(60),
-                  },
-                  children: [
-                    TableRow(
-                      decoration: BoxDecoration(color: Colors.grey[300]),
+
+              BlocBuilder<AgentBloc, AgentState>(
+                builder: (context, state) {
+                  if (state is AgentBlocloading) {
+                    print("loading");
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.kPrimaryColor,
+                      ),
+                    );
+                  } else if (state is AgentBlocError) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'SI.NO',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Name',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Phone number',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Address',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          child: Text(
-                            'Actions',
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.poppins(
-                              fontSize: 10.sp,
-                              color: AppColors.kTextColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                        Image.asset('assets/icon/Group 99.png', height: 40.h),
+                        SizedBox(height: 4.h),
+                        Text("Error: ${state.error}"),
                       ],
-                    ),
-                    ...List.generate(Agentlist.length, (index) {
-                      final agent = Agentlist[index];
-                      return _AgentRow(
-                        code: (index + 1).toString(),
-                        name: agent['name'] ?? '',
-                        phone: agent['phone'] ?? '',
-                        Address: agent['address'] ?? '',
-                        onEdit: () {
-                          _namecontroller.text = agent['name'] ?? '';
-                          _phonecontroller.text = agent['phone'] ?? '';
-                          _addresscontroller.text = agent['address'] ?? '';
-                          _AgentopenDialog(
-                            context,
-                            _namecontroller,
-                            _phonecontroller,
-                            _addresscontroller,
-                            () async {
-                              setState(() {
-                                Agentlist[index] = {
-                                  'name': _namecontroller.text.trim(),
-                                  'phone': _phonecontroller.text.trim(),
-                                  'address': _addresscontroller.text.trim(),
-                                };
-                              });
-                              final prefs =
-                                  await SharedPreferences.getInstance();
-                              await prefs.setString(
-                                'agents',
-                                jsonEncode(Agentlist),
-                              );
-                            },
-                            isEdit: true,
-                          );
+                    );
+                  } else if (state is AgentBlocloaded) {
+                    var Agentlist = state.agent;
+                    if (searchcontroller.text.isEmpty) {
+                      filterAgent = Agentlist;
+                    }
+
+                    return Container(
+                      width: 358.w,
+                      decoration: BoxDecoration(
+                        color: AppColors.kContainerColor,
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(4),
+                          topRight: Radius.circular(4),
+                        ),
+                        border: Border(
+                          top: BorderSide(color: Colors.black),
+                          left: BorderSide(color: Colors.black),
+                          right: BorderSide(color: Colors.black),
+                        ),
+                      ),
+                      child: Table(
+                        border: TableBorder(
+                          borderRadius: BorderRadius.circular(4),
+                          horizontalInside: BorderSide(
+                            color: AppColors.kBorderColor,
+                          ),
+                          verticalInside: BorderSide(
+                            color: AppColors.kBorderColor,
+                          ),
+                          bottom: BorderSide(color: Colors.black),
+                        ),
+                        columnWidths: const <int, TableColumnWidth>{
+                          0: FixedColumnWidth(55),
+                          1: FixedColumnWidth(80),
+                          2: FixedColumnWidth(74),
+                          3: FixedColumnWidth(60),
+                          4: FixedColumnWidth(60),
                         },
-                        onDelete: () async {
-                          setState(() {
-                            Agentlist.removeAt(index);
-                          });
-                          final prefs = await SharedPreferences.getInstance();
-                          await prefs.setString(
-                            'agents',
-                            jsonEncode(Agentlist),
-                          );
-                        },
-                      );
-                    }),
-                  ],
-                ),
+                        children: [
+                          TableRow(
+                            decoration: BoxDecoration(color: Colors.grey[300]),
+                            children: [
+                              _tableheadRow(heading: 'SI.NO'),
+                              _tableheadRow(heading: 'Name'),
+                              _tableheadRow(heading: 'Phone Number'),
+                              _tableheadRow(heading: 'Address'),
+                              _tableheadRow(heading: 'Actions'),
+                            ],
+                          ),
+                          ...List.generate(filterAgent.length, (index) {
+                            final agent = filterAgent[index];
+                            return _AgentRow(
+                              code: (index + 1).toString(),
+                              name: agent.name,
+                              phone: agent.phoneNumber.toString(),
+                              Address: agent.address,
+                              onEdit: () {
+                                _namecontroller.text = agent.name;
+                                _phonecontroller.text =
+                                    agent.phoneNumber.toString();
+                                _addresscontroller.text = agent.address;
+                                _AgentopenDialog(
+                                  context,
+                                  _namecontroller,
+                                  _phonecontroller,
+                                  _addresscontroller,
+                                  isEdit: true,
+                                  AgentId: agent.id,
+                                );
+                              },
+                              onDelete: () async {
+                                BlocProvider.of<AgentBloc>(
+                                  context,
+                                ).add(DeleteAgent(id: agent.id));
+                              },
+                            );
+                          }),
+                        ],
+                      ),
+                    );
+                  }
+                  return Container();
+                },
               ),
             ],
           ),
@@ -388,6 +324,21 @@ class _AgentState extends State<Agent> {
       ),
     );
   }
+}
+
+Widget _tableheadRow({required String heading}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 10.0),
+    child: Text(
+      heading,
+      textAlign: TextAlign.center,
+      style: GoogleFonts.poppins(
+        fontSize: 10.sp,
+        color: AppColors.kTextColor,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  );
 }
 
 TableRow _AgentRow({
@@ -463,9 +414,9 @@ Future<void> _AgentopenDialog(
   BuildContext context,
   TextEditingController namecontroller,
   TextEditingController phonecontroller,
-  TextEditingController addresscontroller,
-  Future<void> Function() setAgentdata, {
+  TextEditingController addresscontroller, {
   required bool isEdit,
+  String? AgentId,
 }) async {
   return showDialog(
     context: context,
@@ -524,8 +475,41 @@ Future<void> _AgentopenDialog(
                         ),
                       ),
                       onPressed: () async {
-                        await setAgentdata();
-                        Navigator.pop(context);
+                        if (namecontroller.text.isEmpty ||
+                            phonecontroller.text.isEmpty ||
+                            addresscontroller.text.isEmpty) {
+                          print("Validation failed: All fields are required");
+                          return;
+                        }
+                        // if (phonecontroller.text.length < 10) {
+                        //   print(
+                        //     "Validation failed: Phone number must be at least 10 digits",
+                        //   );
+                        //   return;
+                        // }
+                        final agendata = {
+                          // "_id": AgentId ?? "",
+
+                          "name": namecontroller.text.trim(),
+                          "phone_number": phonecontroller.text.trim(),
+
+                          "address": addresscontroller.text.trim(),
+
+                          
+
+                        };
+
+                        if (isEdit && AgentId != null) {
+                          BlocProvider.of<AgentBloc>(
+                            context,
+                          ).add(updateAgent(updatedata: agendata, id: AgentId));
+                          Navigator.pop(context);
+                        } else {
+                          BlocProvider.of<AgentBloc>(
+                            context,
+                          ).add(AddAgent(agentData: agendata));
+                          Navigator.pop(context);
+                        }
                       },
                       child: Text(
                         isEdit ? "Update" : "Create",

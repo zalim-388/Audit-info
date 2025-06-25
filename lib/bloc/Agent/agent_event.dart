@@ -16,3 +16,11 @@ class DeleteAgent extends AgentEvent {
 
   DeleteAgent({required this.id});
 }
+class updateAgent extends AgentEvent {
+  final Map<String, dynamic> updatedata;
+  final String id;
+
+  updateAgent({required this.updatedata, required this.id});
+
+
+}
