@@ -6,35 +6,35 @@ import 'package:google_fonts/google_fonts.dart';
 
 Widget fullTextField({
   required String title,
-  IconData? icon,
-  bool isPassword = false,
-  double? width,
-  TextInputType keyboardType = TextInputType.text,
   TextEditingController? controller,
+  TextInputType? keyboardType,
+  bool isPassword = false,
+  IconData? icon,
   VoidCallback? onTap,
+  double? width,
+  String? Function(String?)? validator,
 }) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(title, style: FontStyles.body),
-      SizedBox(height: 4.h),
+      SizedBox(height: 8.h),
       SizedBox(
+        width: width ?? double.infinity,
         height: 30.h,
-        width: width ?? 324.w,
-        child: TextField(
+        child: TextFormField(
           controller: controller,
           keyboardType: keyboardType,
           obscureText: isPassword,
+          onTap: onTap,
+          validator: validator,
+          readOnly: onTap != null,
           decoration: InputDecoration(
-            hintStyle: GoogleFonts.poppins(fontSize: 12),
-            suffixIcon: IconButton(
-              onPressed: onTap,
-              icon: Icon(icon, size: 18),
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 12.w,
+              vertical: 8.h,
             ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12),
-            filled: true,
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
+            border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(6),
               borderSide: BorderSide(color: AppColors.kBorderColor),
             ),
@@ -42,23 +42,38 @@ Widget fullTextField({
               borderRadius: BorderRadius.circular(6),
               borderSide: BorderSide(color: AppColors.kBorderColor),
             ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: BorderSide(color: AppColors.kBorderColor),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: BorderSide(color: Colors.red),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(6),
+              borderSide: BorderSide(color: Colors.red),
+            ),
+            suffixIcon: icon != null ? Icon(icon, size: 16.sp) : null,
+            hintStyle: GoogleFonts.poppins(
+              fontSize: 12.sp,
+              color: Color(0xFF868686),
+            ),
           ),
+          style: GoogleFonts.poppins(fontSize: 12.sp),
         ),
       ),
     ],
   );
 }
 
-
-
-Widget buildDropdownField(
+Widget DropdownField(
   String label,
   String? selectedValue,
   List<String> options,
   String hint,
   Function(String?) onChanged,
   BuildContext context,
-  //  String? Function(String?)? validator,
 ) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,5 +141,3 @@ Widget buildDropdownField(
     ],
   );
 }
-
-

@@ -233,9 +233,7 @@ class _OfficeadministrationState extends State<Officeadministration> {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       decoration: const BoxDecoration(
                         image: DecorationImage(
-                          image: AssetImage(
-                            "assets/icon/Group 189.png",
-                          ),
+                          image: AssetImage("assets/icon/Group 189.png"),
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -371,6 +369,7 @@ class _OfficeadministrationState extends State<Officeadministration> {
                                   context,
                                 ).add(DeleteAdimini(id: admin.id));
                               },
+                              visibleColumns: [],
                             );
                           }),
                         ],
@@ -495,7 +494,7 @@ Future<void> AdministratoropenDialog(
                     controller: confirmPasswordController,
                   ),
                   SizedBox(height: 10.h),
-                  buildDropdownField(
+                  DropdownField(
                     "Select Branch",
                     selectBranch?.branchId.name,
                     branches.map((e) => e.branchId.name).toList(),

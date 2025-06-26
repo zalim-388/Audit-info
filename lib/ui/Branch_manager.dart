@@ -375,6 +375,7 @@ class _BranchMangerState extends State<BranchManager> {
                                       context,
                                     ).add(DeleteManager(id: manager.id));
                                   },
+                                  visibleColumns: [],
                                 );
                               }),
                             ],

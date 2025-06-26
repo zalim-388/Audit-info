@@ -5,6 +5,8 @@ import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
+import 'package:audit_info/utils/table.dart';
+import 'package:audit_info/utils/textfield.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
@@ -242,7 +244,11 @@ class _SrcState extends State<Src> {
                 builder: (context, state) {
                   if (state is SrcBlocloading) {
                     print("loading");
-                    Center(child: CircularProgressIndicator(          color: AppColors.kPrimaryColor,));
+                    Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.kPrimaryColor,
+                      ),
+                    );
                   } else if (state is srcblocError) {
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -299,25 +305,25 @@ class _SrcState extends State<Src> {
                           TableRow(
                             decoration: BoxDecoration(color: Colors.grey[300]),
                             children: [
-                              _tableheadRow(heading: 'E.Code'),
-                              _tableheadRow(heading: 'Name'),
-                              _tableheadRow(heading: 'Branch name'),
-                              _tableheadRow(heading: "phone number"),
-                              _tableheadRow(heading: 'Point Amount'),
-                              _tableheadRow(heading: 'Status'),
-                              _tableheadRow(heading: 'Actions'),
+                              tableheadRow('E.Code'),
+                              tableheadRow('Name'),
+                              tableheadRow('Branch name'),
+                              tableheadRow("phone number"),
+                              tableheadRow('Status'),
+                              tableheadRow('Actions'),
                             ],
                           ),
                           ...List.generate(filteredsrc.length, (index) {
                             final SRC = filteredsrc[index];
 
-                            return _SrcRow(
+                            return buildTableRow(
                               code: SRC.employeeCode,
                               name: SRC.name,
-                              Branchname: SRC.branchId.toString(),
+                              branchName: SRC.branchId.toString(),
                               phone: SRC.phoneNumber,
-                              PointAmount: SRC.pointAmount.toString(),
+                              pointAmount: SRC.pointAmount.toString(),
                               status: SRC.status,
+
                               onToggle: (bool value) {
                                 filteredsrc[index].status = value;
                               },
@@ -366,6 +372,14 @@ class _SrcState extends State<Src> {
                                   context,
                                 ).add(deletesrc(id: SRC.id));
                               },
+                              visibleColumns: [
+                                "code",
+                                "name",
+                                "branchName",
+                                "phone",
+                                "pointAmount",
+                                "status",
+                              ],
                             );
                           }),
                         ],
@@ -381,110 +395,6 @@ class _SrcState extends State<Src> {
       ),
     );
   }
-}
-
-Widget _tableheadRow({required String heading}) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 10.0),
-    child: Text(
-      heading,
-      textAlign: TextAlign.center,
-      style: GoogleFonts.poppins(
-        fontSize: 10.sp,
-        color: AppColors.kTextColor,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-  );
-}
-
-TableRow _SrcRow({
-  required String code,
-  required String name,
-  required String Branchname,
-  required String phone,
-  required String PointAmount,
-  required VoidCallback onEdit,
-  required VoidCallback onDelete,
-  required bool status,
-  required ValueChanged<bool> onToggle,
-}) {
-  return TableRow(
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(code, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(name, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(Branchname, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(phone, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(PointAmount, style: FontStyles.body)),
-      ),
-      Transform.scale(
-        scale: 0.65,
-        child: Switch(
-          value: status,
-          onChanged: onToggle,
-          activeColor: Colors.white,
-          activeTrackColor: Color(0xFF28AC24),
-          inactiveThumbColor: Colors.white,
-          inactiveTrackColor: Colors.grey[400],
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        ),
-      ),
-
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 25.w,
-              height: 25.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFF4A60E4),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              alignment: Alignment.center,
-              child: GestureDetector(
-                onTap: onEdit,
-                child: Icon(Icons.edit, color: Colors.white, size: 16.sp),
-              ),
-            ),
-            SizedBox(width: 6.w),
-            Container(
-              width: 25.w,
-              height: 25.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFFFF4C4C),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              alignment: Alignment.center,
-              child: GestureDetector(
-                onTap: onDelete,
-                child: Icon(
-                  Icons.delete_outline,
-                  color: Colors.white,
-                  size: 16.sp,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
 }
 
 Future<void> SRCopenDialog(
@@ -597,7 +507,7 @@ Future<void> SRCopenDialog(
                   ),
 
                   SizedBox(height: 10.h),
-                  _buildDropdownField(
+                  DropdownField(
                     "select branch",
                     selectedBranch?.branchId?.name,
                     branch
@@ -766,81 +676,6 @@ Widget _fullTextField({
               borderRadius: BorderRadius.circular(6),
               borderSide: BorderSide(color: AppColors.kBorderColor),
             ),
-          ),
-        ),
-      ),
-    ],
-  );
-}
-
-Widget _buildDropdownField(
-  String label,
-  String? selectedValue,
-  List<String> options,
-  String hint,
-  Function(String?) onChanged,
-  BuildContext context,
-) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(label, style: FontStyles.body),
-      SizedBox(height: 8.h),
-      GestureDetector(
-        onTapDown: (TapDownDetails details) async {
-          final selected = await showMenu<String>(
-            context: context,
-            position: RelativeRect.fromLTRB(
-              details.globalPosition.dx,
-              details.globalPosition.dy,
-              MediaQuery.of(context).size.width - details.globalPosition.dx,
-              MediaQuery.of(context).size.height - details.globalPosition.dy,
-            ),
-            items:
-                options.map((option) {
-                  return PopupMenuItem<String>(
-                    value: option,
-                    child: Text(
-                      option,
-                      style: GoogleFonts.poppins(fontSize: 12),
-                    ),
-                  );
-                }).toList(),
-            color: Colors.white,
-          );
-
-          if (selected != null) {
-            onChanged(selected);
-          }
-        },
-        child: Container(
-          height: 30.h,
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 12.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(6),
-            border: Border.all(color: AppColors.kBorderColor),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                selectedValue ?? hint,
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color:
-                      selectedValue == null
-                          ? const Color(0xFF868686)
-                          : Colors.black,
-                ),
-              ),
-              Icon(
-                Icons.keyboard_arrow_down,
-                size: 16,
-                color: AppColors.kTextColor,
-              ),
-            ],
           ),
         ),
       ),

@@ -4,6 +4,8 @@ import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
+import 'package:audit_info/utils/table.dart';
+import 'package:audit_info/utils/textfield.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -215,15 +217,19 @@ class _AgentState extends State<Agent> {
                 ],
               ),
               SizedBox(height: 13.h),
-
               BlocBuilder<AgentBloc, AgentState>(
                 builder: (context, state) {
                   if (state is AgentBlocloading) {
                     print("loading");
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.kPrimaryColor,
-                      ),
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: CircularProgressIndicator(
+                            color: AppColors.kPrimaryColor,
+                          ),
+                        ),
+                      ],
                     );
                   } else if (state is AgentBlocError) {
                     return Column(
@@ -239,7 +245,6 @@ class _AgentState extends State<Agent> {
                     if (searchcontroller.text.isEmpty) {
                       filterAgent = Agentlist;
                     }
-
                     return Container(
                       width: 358.w,
                       decoration: BoxDecoration(
@@ -276,20 +281,21 @@ class _AgentState extends State<Agent> {
                           TableRow(
                             decoration: BoxDecoration(color: Colors.grey[300]),
                             children: [
-                              _tableheadRow(heading: 'SI.NO'),
-                              _tableheadRow(heading: 'Name'),
-                              _tableheadRow(heading: 'Phone Number'),
-                              _tableheadRow(heading: 'Address'),
-                              _tableheadRow(heading: 'Actions'),
+                              tableheadRow('SI.NO'),
+                              tableheadRow('Name'),
+                              tableheadRow('Phone Number'),
+                              tableheadRow('Address'),
+                              tableheadRow('Actions'),
                             ],
                           ),
                           ...List.generate(filterAgent.length, (index) {
                             final agent = filterAgent[index];
-                            return _AgentRow(
-                              code: (index + 1).toString(),
+                            return buildTableRow(
+                              id: (index + 1).toString(),
                               name: agent.name,
                               phone: agent.phoneNumber.toString(),
                               Address: agent.address,
+                              showSwitch: false,
                               onEdit: () {
                                 _namecontroller.text = agent.name;
                                 _phonecontroller.text =
@@ -309,6 +315,7 @@ class _AgentState extends State<Agent> {
                                   context,
                                 ).add(DeleteAgent(id: agent.id));
                               },
+                                visibleColumns: ['id', 'name', 'phone', 'status', 'toggle'],
                             );
                           }),
                         ],
@@ -326,96 +333,12 @@ class _AgentState extends State<Agent> {
   }
 }
 
-Widget _tableheadRow({required String heading}) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 10.0),
-    child: Text(
-      heading,
-      textAlign: TextAlign.center,
-      style: GoogleFonts.poppins(
-        fontSize: 10.sp,
-        color: AppColors.kTextColor,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-  );
-}
-
-TableRow _AgentRow({
-  required String code,
-  required String name,
-  required String phone,
-  required String Address,
-  required VoidCallback onEdit,
-  required VoidCallback onDelete,
-}) {
-  return TableRow(
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(code, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(name, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(phone, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(Address, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 25.w,
-              height: 25.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFF4A60E4),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              alignment: Alignment.center,
-              child: GestureDetector(
-                onTap: onEdit,
-                child: Icon(Icons.edit, color: Colors.white, size: 16.sp),
-              ),
-            ),
-            SizedBox(width: 6.w),
-            Container(
-              width: 25.w,
-              height: 25.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFFFF4C4C),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              alignment: Alignment.center,
-              child: GestureDetector(
-                onTap: onDelete,
-                child: Icon(
-                  Icons.delete_outline,
-                  color: Colors.white,
-                  size: 16.sp,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
-}
-
 Future<void> _AgentopenDialog(
   BuildContext context,
   TextEditingController namecontroller,
   TextEditingController phonecontroller,
   TextEditingController addresscontroller, {
-  required bool isEdit,
+  bool isEdit = false,
   String? AgentId,
 }) async {
   return showDialog(
@@ -451,15 +374,15 @@ Future<void> _AgentopenDialog(
                     ],
                   ),
                   SizedBox(height: 9.h),
-                  _fullTextField(title: "Name", controller: namecontroller),
+                  fullTextField(title: "Name", controller: namecontroller),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Phone Number",
                     keyboardType: TextInputType.phone,
                     controller: phonecontroller,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Address",
                     controller: addresscontroller,
                   ),
@@ -489,14 +412,10 @@ Future<void> _AgentopenDialog(
                         // }
                         final agendata = {
                           // "_id": AgentId ?? "",
+                          "name": namecontroller.text.toString(),
+                          "phone_number": phonecontroller.text.toString(),
 
-                          "name": namecontroller.text.trim(),
-                          "phone_number": phonecontroller.text.trim(),
-
-                          "address": addresscontroller.text.trim(),
-
-                          
-
+                          "address": addresscontroller.text.toString(),
                         };
 
                         if (isEdit && AgentId != null) {
@@ -527,46 +446,5 @@ Future<void> _AgentopenDialog(
         ),
       );
     },
-  );
-}
-
-Widget _fullTextField({
-  required String title,
-  IconData? icon,
-  bool isPassword = false,
-  double? width,
-  TextInputType keyboardType = TextInputType.text,
-  required TextEditingController controller,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(title, style: FontStyles.body),
-      SizedBox(height: 4.h),
-      SizedBox(
-        height: 30.h,
-        width: width ?? 324.w,
-        child: TextField(
-          controller: controller,
-          keyboardType: keyboardType,
-          obscureText: isPassword,
-          decoration: InputDecoration(
-            hintStyle: GoogleFonts.poppins(fontSize: 12),
-            suffixIcon: icon != null ? Icon(icon, size: 18) : null,
-            contentPadding: EdgeInsets.symmetric(horizontal: 12),
-            filled: true,
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-              borderSide: BorderSide(color: AppColors.kBorderColor),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-              borderSide: BorderSide(color: AppColors.kBorderColor),
-            ),
-          ),
-        ),
-      ),
-    ],
   );
 }

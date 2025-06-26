@@ -5,6 +5,7 @@ import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
+import 'package:audit_info/utils/table.dart';
 import 'package:audit_info/utils/textfield.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class _SroState extends State<Sro> {
     BlocProvider.of<SroBloc>(context).add(fetchSro());
     searchController.addListener(filtersroList);
 
-    // fetchsrobranch();
+    fetchsrobranch();
   }
 
   void filtersroList() async {
@@ -59,15 +60,18 @@ class _SroState extends State<Sro> {
   Future<void> fetchsrobranch() async {
     try {
       final fetchsrcbranches = await Sroapi().getsro();
-
       setState(() {
         branches = fetchsrcbranches;
         if (branches.isNotEmpty) {
           selectedBranch = branches[0];
+          // selectedSRC = branches[0];
         }
       });
     } catch (e) {
-      throw Exception("fetchsrcbranch Error$e");
+      print("fetchsrcbranch Error: $e");
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Failed to load branches: $e")));
     }
   }
 
@@ -292,26 +296,37 @@ class _SroState extends State<Sro> {
                           TableRow(
                             decoration: BoxDecoration(color: Colors.grey[300]),
                             children: [
-                              _tableheadRow(heading: "E.Code"),
-                              _tableheadRow(heading: "Name"),
-                              _tableheadRow(heading: "Branch Name"),
-                              _tableheadRow(heading: "SRC"),
-                              _tableheadRow(heading: "phone Number"),
-                              _tableheadRow(heading: "Point Amount"),
-                              _tableheadRow(heading: "Status"),
-                              _tableheadRow(heading: "Actions"),
+                              tableheadRow("E.Code"),
+                              tableheadRow("Name"),
+                              tableheadRow("Branch Name"),
+                              tableheadRow("SRC"),
+                              tableheadRow("phone Number"),
+                              tableheadRow("Point Amount"),
+                              tableheadRow("Status"),
+                              tableheadRow("Actions"),
                             ],
                           ),
 
                           ...List.generate(filledsro.length, (index) {
                             final sro = filledsro[index];
-                            return _SroRow(
+                            return _AgentTableRow(
                               code: sro.employeeCode,
                               name: sro.name,
-                              Branchname: sro.branchId.toString(),
-                              SRC: sro.srcId,
+                              branchName: sro.branchId.toString(),
+                              Src: sro.srcId,
                               phone: sro.phoneNumber,
-                              PointAmount: sro.pointAmount.toString(),
+                              pointAmount: sro.pointAmount.toString(),
+                              showSwitch: true,
+                              switchValue: sro.status,
+                              onToggle: (value) {
+                                filledsro[index].status = value;
+                                BlocProvider.of<SroBloc>(context).add(
+                                  updatesro(
+                                    updatedata: {"status": value},
+                                    id: sro.id,
+                                  ),
+                                );
+                              },
                               onEdit: () {
                                 final SroModel selectedsro = branches
                                     .firstWhere(
@@ -356,10 +371,6 @@ class _SroState extends State<Sro> {
                                   context,
                                 ).add(deletesro(id: sro.id));
                               },
-                              status: sro.status,
-                              onToggle: (value) {
-                                filledsro[index].status = value;
-                              },
                             );
                           }),
                         ],
@@ -377,131 +388,22 @@ class _SroState extends State<Sro> {
   }
 }
 
-Widget _tableheadRow({required String heading}) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 10.0),
-    child: Text(
-      heading,
-      textAlign: TextAlign.center,
-      style: GoogleFonts.poppins(
-        fontSize: 10.sp,
-        color: AppColors.kTextColor,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-  );
-}
-
-TableRow _SroRow({
-  required String code,
-  required String name,
-  required String Branchname,
-  required String SRC,
-  required String phone,
-  required String PointAmount,
-  required VoidCallback onEdit,
-  required VoidCallback onDelete,
-  required bool status,
-  required ValueChanged<bool> onToggle,
-}) {
-  return TableRow(
-    children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(code, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(name, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(Branchname, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(SRC, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(phone, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(PointAmount, style: FontStyles.body)),
-      ),
-      Transform.scale(
-        scale: 0.65,
-        child: Switch(
-          value: status,
-          onChanged: onToggle,
-          activeColor: Colors.white,
-          activeTrackColor: Color(0xFF28AC24),
-          inactiveThumbColor: Colors.white,
-          inactiveTrackColor: Colors.grey[400],
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        ),
-      ),
-
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 25.w,
-              height: 25.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFF4A60E4),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              alignment: Alignment.center,
-              child: GestureDetector(
-                onTap: onEdit,
-                child: Icon(Icons.edit, color: Colors.white, size: 16.sp),
-              ),
-            ),
-            SizedBox(width: 6.w),
-            Container(
-              width: 25.w,
-              height: 25.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFFFF4C4C),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              alignment: Alignment.center,
-              child: GestureDetector(
-                onTap: onDelete,
-                child: Icon(
-                  Icons.delete_outline,
-                  color: Colors.white,
-                  size: 16.sp,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    ],
-  );
-}
-
 Future<void> SROopenDialog(
   BuildContext context,
   SroModel? selectedBranch,
   SroModel? selectedSRC,
   Function(SroModel) onBranchSelected,
   List<SroModel> branch,
-  employecodeController,
-  dateController,
-  nameController,
-  emailController,
-  addressController,
-  phonenumber,
-  passwordController,
-  confirmController,
-  pointamountController,
-  salaryController, {
+  TextEditingController employecodeController,
+  TextEditingController dateController,
+  TextEditingController nameController,
+  TextEditingController emailController,
+  TextEditingController addressController,
+  TextEditingController phonenumber,
+  TextEditingController passwordController,
+  TextEditingController confirmController,
+  TextEditingController pointamountController,
+  TextEditingController salaryController, {
   bool isUpdate = false,
   String? sroid,
 }) async {
@@ -541,6 +443,10 @@ Future<void> SROopenDialog(
                   fullTextField(
                     title: "Employee Code",
                     controller: employecodeController,
+                    keyboardType: TextInputType.text,
+                    validator:
+                        (Value) =>
+                            Value!.isEmpty ? "Employee Code is required" : null,
                   ),
                   SizedBox(height: 10.h),
                   fullTextField(
@@ -562,47 +468,89 @@ Future<void> SROopenDialog(
                         }
                       });
                     },
+
+                    validator:
+                        (Value) =>
+                            Value!.isEmpty
+                                ? "Date of Joining is required"
+                                : null,
                   ),
                   SizedBox(height: 10.h),
                   fullTextField(
                     title: "Name",
                     controller: nameController,
                     keyboardType: TextInputType.name,
+                    validator:
+                        (Value) => Value!.isEmpty ? "Name is required" : null,
                   ),
                   SizedBox(height: 10.h),
                   fullTextField(
                     title: "Email",
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
+                    validator:
+                        (Value) =>
+                            Value!.isEmpty
+                                ? "Email is required"
+                                : !RegExp(
+                                  r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+                                ).hasMatch(Value)
+                                ? "Enter a valid email"
+                                : null,
                   ),
                   SizedBox(height: 10.h),
                   fullTextField(
                     title: "Address",
                     controller: addressController,
+                    keyboardType: TextInputType.text,
+                    validator:
+                        (Value) =>
+                            Value!.isEmpty ? "Address is required" : null,
                   ),
                   SizedBox(height: 10.h),
                   fullTextField(
                     title: "Phone Number",
                     controller: phonenumber,
                     keyboardType: TextInputType.phone,
+                    validator:
+                        (Value) =>
+                            Value!.isEmpty
+                                ? "Phone Number is required"
+                                : !RegExp(r"^\+?[0-9]{10,15}$").hasMatch(Value)
+                                ? "Enter a valid phone number"
+                                : null,
                   ),
                   SizedBox(height: 10.h),
                   fullTextField(
                     title: "Password",
                     isPassword: true,
                     controller: passwordController,
+                    validator:
+                        (Value) =>
+                            Value!.isEmpty
+                                ? "Password is required"
+                                : Value.length < 6
+                                ? "Password must be at least 6 characters"
+                                : null,
                   ),
                   SizedBox(height: 10.h),
                   fullTextField(
                     title: "Confirm Password",
                     isPassword: true,
                     controller: confirmController,
+                    validator:
+                        (Value) =>
+                            Value!.isEmpty
+                                ? "Confirm Password is required"
+                                : Value != passwordController.text
+                                ? "Passwords do not match"
+                                : null,
                   ),
                   SizedBox(height: 10.h),
                   Row(
                     children: [
                       Expanded(
-                        child: _buildDropdownField(
+                        child: DropdownField(
                           "select branch",
                           selectedBranch?.branchId?.name ?? "Select branch",
                           branch
@@ -658,7 +606,7 @@ Future<void> SROopenDialog(
                       ),
                       SizedBox(width: 13.w),
                       Expanded(
-                        child: _buildDropdownField(
+                        child: DropdownField(
                           "Select SRC",
                           selectedSRC?.srcId ?? "Select SRC",
                           branch
@@ -723,6 +671,11 @@ Future<void> SROopenDialog(
                           width: double.infinity,
                           controller: pointamountController,
                           keyboardType: TextInputType.number,
+                          validator:
+                              (Value) =>
+                                  Value!.isEmpty
+                                      ? "Point Amount is required"
+                                      : null,
                         ),
                       ),
                       SizedBox(width: 13.w),
@@ -732,6 +685,9 @@ Future<void> SROopenDialog(
                           width: double.infinity,
                           controller: salaryController,
                           keyboardType: TextInputType.number,
+                          validator:
+                              (Value) =>
+                                  Value!.isEmpty ? "Salary is required" : null,
                         ),
                       ),
                     ],
@@ -768,13 +724,14 @@ Future<void> SROopenDialog(
                           formattedDate = dateController.text;
                         }
                         final sroData = {
-                          "employee_code": employecodeController.text,
+                          "employee_code":
+                              employecodeController.text.toString(),
                           "dateOfJoining": formattedDate,
-                          "name": nameController.text,
-                          "email": emailController.text,
-                          "address": addressController.text,
-                          "phoneNumber": phonenumber.text,
-                          "password": passwordController.text,
+                          "name": nameController.text.toString(),
+                          "email": emailController.text.toString(),
+                          "address": addressController.text.toString(),
+                          "phoneNumber": phonenumber.text.toString(),
+                          "password": passwordController.text.toString(),
                           "branchId": selectedBranch?.branchId?.id ?? "",
                           "srcId": selectedSRC?.srcId ?? "",
                           "pointAmount":
@@ -783,6 +740,15 @@ Future<void> SROopenDialog(
                           "salary":
                               double.tryParse(salaryController.text) ?? 0.0,
                           "status": true,
+                          "position": "SRO",
+                          "isAdmin": false,
+                          "headAdministractor": false,
+                          "managerPoint": [],
+                          "lead": [],
+                          "registration": [],
+                          "createdAt": DateTime.now().toIso8601String(),
+                          "updatedAt": DateTime.now().toIso8601String(),
+                          "v": 0,
                         };
                         if (isUpdate && sroid != null) {
                           BlocProvider.of<SroBloc>(
@@ -814,77 +780,35 @@ Future<void> SROopenDialog(
   );
 }
 
-Widget _buildDropdownField(
-  String label,
-  String? selectedValue,
-  List<String> options,
-  String hint,
-  Function(String?) onChanged,
-  BuildContext context,
-) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+TableRow _AgentTableRow({
+  required String id,
+  required String name,
+  required String phone,
+  required bool status,
+  required VoidCallback onEdit,
+  required VoidCallback onDelete,
+  required ValueChanged<bool> onToggle,
+}) {
+  return TableRow(
     children: [
-      Text(label, style: FontStyles.body),
-      SizedBox(height: 8.h),
-      GestureDetector(
-        onTapDown: (TapDownDetails details) async {
-          final selected = await showMenu<String>(
-            context: context,
-            position: RelativeRect.fromLTRB(
-              details.globalPosition.dx,
-              details.globalPosition.dy,
-              MediaQuery.of(context).size.width - details.globalPosition.dx,
-              MediaQuery.of(context).size.height - details.globalPosition.dy,
-            ),
-            items:
-                options.map((option) {
-                  return PopupMenuItem<String>(
-                    value: option,
-                    child: Text(
-                      option,
-                      style: GoogleFonts.poppins(fontSize: 12),
-                    ),
-                  );
-                }).toList(),
-            color: Colors.white,
-          );
-
-          if (selected != null) {
-            onChanged(selected);
-          }
-        },
-        child: Container(
-          height: 30.h,
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 12.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(6),
-            border: Border.all(color: AppColors.kBorderColor),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                selectedValue ?? hint,
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color:
-                      selectedValue == null
-                          ? const Color(0xFF868686)
-                          : Colors.black,
-                ),
-              ),
-              Icon(
-                Icons.keyboard_arrow_down,
-                size: 16,
-                color: AppColors.kTextColor,
-              ),
-            ],
+      cell(id),
+      cell(name),
+      cell(phone),
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: Center(
+          child: Switch(
+            value: status,
+            onChanged: onToggle,
+            activeColor: Colors.white,
+            activeTrackColor: const Color(0xFF28AC24),
+            inactiveThumbColor: Colors.white,
+            inactiveTrackColor: Colors.grey[400],
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
         ),
       ),
+      actionCell(onEdit, onDelete),
     ],
   );
 }

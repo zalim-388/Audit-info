@@ -8,6 +8,7 @@ import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
+import 'package:audit_info/utils/table.dart' show buildTableRow, tableheadRow;
 import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
@@ -310,23 +311,23 @@ class _AccountantState extends State<Accountant> {
                           TableRow(
                             decoration: BoxDecoration(color: Colors.grey[300]),
                             children: [
-                              _tableheadRow(heading: 'E.Code'),
-                              _tableheadRow(heading: 'Name'),
-                              _tableheadRow(heading: 'Email'),
-                              _tableheadRow(heading: "phone number"),
-                              _tableheadRow(heading: 'Status'),
-                              _tableheadRow(heading: 'Actions'),
+                              tableheadRow('E.Code'),
+                              tableheadRow('Name'),
+                              tableheadRow('Email'),
+                              tableheadRow("phone number"),
+                              tableheadRow('Status'),
+                              tableheadRow('Actions'),
                             ],
                           ),
 
                           ...List.generate(filteredAccounts.length, (index) {
                             final account = filteredAccounts[index];
-                            return _accountantRow(
-                              code: account.employeeCode.toString(),
+                            return buildTableRow(
+                            code  : account.employeeCode.toString(),
                               name: account.name.toString(),
                               email: account.email.toString(),
                               phone: account.phoneNumber.toString(),
-                              status: account.status,
+                              status: account.status.toString(),
                               onToggle: (bool value) {
                                 setState(() {
                                   filteredAccounts[index].status = value;
@@ -381,21 +382,6 @@ class _AccountantState extends State<Accountant> {
       ),
     );
   }
-}
-
-Widget _tableheadRow({required String heading}) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 10.0),
-    child: Text(
-      heading,
-      textAlign: TextAlign.center,
-      style: GoogleFonts.poppins(
-        fontSize: 10.sp,
-        color: AppColors.kTextColor,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-  );
 }
 
 TableRow _accountantRow({
