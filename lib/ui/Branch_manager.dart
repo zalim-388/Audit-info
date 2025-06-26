@@ -312,15 +312,17 @@ class _BranchMangerState extends State<BranchManager> {
                                 final manager = filteredmanger[index];
                                 return _BranchmanagertableRow(
                                   code: manager.employeeCode,
-                             
+
                                   status: manager.refresh,
                                   onToggle: (bool value) {
                                     setState(() {
                                       filteredmanger[index].refresh = value;
-                                        BlocProvider.of<BranchManagerBloc>(context).add(
-                              updatemanger(manager.id, updatedata: {"status":value});
-                                );
-
+                                      BlocProvider.of<ManagerBloc>(context).add(
+                                        updatemanger(
+                                          manager.id,
+                                          updatedata: {"status": value},
+                                        ),
+                                      );
                                     });
                                   },
 
@@ -380,7 +382,6 @@ class _BranchMangerState extends State<BranchManager> {
                                       context,
                                     ).add(DeleteManager(id: manager.id));
                                   },
-                          
                                 );
                               }),
                             ],
@@ -717,12 +718,9 @@ Widget _buildDropdownField(
   );
 }
 
-
 TableRow _BranchmanagertableRow({
   required String code,
 
-
-  
   required bool status,
   required VoidCallback onEdit,
   required VoidCallback onDelete,
@@ -731,7 +729,6 @@ TableRow _BranchmanagertableRow({
   return TableRow(
     children: [
       cell(code),
-   
 
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
