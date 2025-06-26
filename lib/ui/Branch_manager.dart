@@ -1,5 +1,6 @@
 import 'package:audit_info/Repositry/Api/manager/managerApi.dart';
 import 'package:audit_info/Repositry/model/manager_model.dart';
+import 'package:audit_info/bloc/branch/branch_manager_bloc.dart';
 import 'package:audit_info/bloc/manger/manager_bloc.dart';
 import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';
@@ -309,13 +310,17 @@ class _BranchMangerState extends State<BranchManager> {
                               ),
                               ...List.generate(filteredmanger.length, (index) {
                                 final manager = filteredmanger[index];
-                                return buildTableRow(
-                                  id: manager.employeeCode,
-                                  showSwitch: true,
-                                  switchValue: manager.refresh,
+                                return _BranchmanagertableRow(
+                                  code: manager.employeeCode,
+                             
+                                  status: manager.refresh,
                                   onToggle: (bool value) {
                                     setState(() {
                                       filteredmanger[index].refresh = value;
+                                        BlocProvider.of<BranchManagerBloc>(context).add(
+                              updatemanger(manager.id, updatedata: {"status":value});
+                                );
+
                                     });
                                   },
 
@@ -375,7 +380,7 @@ class _BranchMangerState extends State<BranchManager> {
                                       context,
                                     ).add(DeleteManager(id: manager.id));
                                   },
-                                  visibleColumns: [],
+                          
                                 );
                               }),
                             ],
@@ -708,6 +713,41 @@ Widget _buildDropdownField(
           ),
         ),
       ),
+    ],
+  );
+}
+
+
+TableRow _BranchmanagertableRow({
+  required String code,
+
+
+  
+  required bool status,
+  required VoidCallback onEdit,
+  required VoidCallback onDelete,
+  required ValueChanged<bool> onToggle,
+}) {
+  return TableRow(
+    children: [
+      cell(code),
+   
+
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: Center(
+          child: Switch(
+            value: status,
+            onChanged: onToggle,
+            activeColor: Colors.white,
+            activeTrackColor: const Color(0xFF28AC24),
+            inactiveThumbColor: Colors.white,
+            inactiveTrackColor: Colors.grey[400],
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+        ),
+      ),
+      actionCell(onEdit, onDelete),
     ],
   );
 }

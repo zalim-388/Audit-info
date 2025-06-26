@@ -316,7 +316,7 @@ class _SrcState extends State<Src> {
                           ...List.generate(filteredsrc.length, (index) {
                             final SRC = filteredsrc[index];
 
-                            return buildTableRow(
+                            return _SrcTableRow(
                               code: SRC.employeeCode,
                               name: SRC.name,
                               branchName: SRC.branchId.toString(),
@@ -326,6 +326,12 @@ class _SrcState extends State<Src> {
 
                               onToggle: (bool value) {
                                 filteredsrc[index].status = value;
+                                BlocProvider.of<SrcBlocBloc>(context).add(
+                                  updatesrc(
+                                    updatedData: {"status": value},
+                                    id: SRC.id,
+                                  ),
+                                );
                               },
                               onEdit: () {
                                 final SrcModel selected = branch.firstWhere(
@@ -372,14 +378,6 @@ class _SrcState extends State<Src> {
                                   context,
                                 ).add(deletesrc(id: SRC.id));
                               },
-                              visibleColumns: [
-                                "code",
-                                "name",
-                                "branchName",
-                                "phone",
-                                "pointAmount",
-                                "status",
-                              ],
                             );
                           }),
                         ],
@@ -449,12 +447,12 @@ Future<void> SRCopenDialog(
                   ),
                   SizedBox(height: 23.h),
 
-                  _fullTextField(
+                  fullTextField(
                     title: "Employee Code",
                     controller: employecodeController,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Date of Joining",
                     controller: dateController,
                     icon: Icons.calendar_today,
@@ -474,32 +472,32 @@ Future<void> SRCopenDialog(
                     },
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(title: "Name", controller: nameController),
+                  fullTextField(title: "Name", controller: nameController),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Email",
                     keyboardType: TextInputType.emailAddress,
                     controller: emailController,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Address",
                     controller: addressController,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Phone Number",
                     keyboardType: TextInputType.number,
                     controller: phonenumber,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Password",
                     isPassword: true,
                     controller: passwordController,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Confirm Password",
                     isPassword: true,
 
@@ -529,7 +527,7 @@ Future<void> SRCopenDialog(
                   Row(
                     children: [
                       Expanded(
-                        child: _fullTextField(
+                        child: fullTextField(
                           title: "Salary",
                           width: double.infinity,
                           keyboardType: TextInputType.number,
@@ -538,7 +536,7 @@ Future<void> SRCopenDialog(
                       ),
                       SizedBox(width: 13.w),
                       Expanded(
-                        child: _fullTextField(
+                        child: fullTextField(
                           controller: pointamountController,
                           title: "point Amount",
                           width: double.infinity,
@@ -637,48 +635,41 @@ Future<void> SRCopenDialog(
   );
 }
 
-Widget _fullTextField({
-  required String title,
-  IconData? icon,
-  bool isPassword = false,
-  double? width,
-  TextInputType keyboardType = TextInputType.text,
-  VoidCallback? onTap,
-  TextEditingController? controller,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(title, style: FontStyles.body),
-      SizedBox(height: 4.h),
-      SizedBox(
-        height: 30.h,
-        width: width ?? 324.w,
+TableRow _SrcTableRow({
+  required String code,
+  required String branchName,
+  required String name,
+  required String phone,
 
-        child: TextField(
-          controller: controller,
-          keyboardType: keyboardType,
-          obscureText: isPassword,
-          decoration: InputDecoration(
-            hintStyle: GoogleFonts.poppins(fontSize: 12),
-            suffixIcon: IconButton(
-              onPressed: onTap,
-              icon: Icon(icon, size: 18),
-            ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12),
-            filled: true,
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-              borderSide: BorderSide(color: AppColors.kBorderColor),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-              borderSide: BorderSide(color: AppColors.kBorderColor),
-            ),
+  required String pointAmount,
+  required bool status,
+  required VoidCallback onEdit,
+  required VoidCallback onDelete,
+  required ValueChanged<bool> onToggle,
+}) {
+  return TableRow(
+    children: [
+      cell(code),
+      cell(name),
+      cell(branchName),
+      cell(phone),
+      cell(pointAmount),
+
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: Center(
+          child: Switch(
+            value: status,
+            onChanged: onToggle,
+            activeColor: Colors.white,
+            activeTrackColor: const Color(0xFF28AC24),
+            inactiveThumbColor: Colors.white,
+            inactiveTrackColor: Colors.grey[400],
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
           ),
         ),
       ),
+      actionCell(onEdit, onDelete),
     ],
   );
 }

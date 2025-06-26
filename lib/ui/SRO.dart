@@ -309,15 +309,14 @@ class _SroState extends State<Sro> {
 
                           ...List.generate(filledsro.length, (index) {
                             final sro = filledsro[index];
-                            return _AgentTableRow(
+                            return _SroTableRow(
                               code: sro.employeeCode,
                               name: sro.name,
                               branchName: sro.branchId.toString(),
                               Src: sro.srcId,
                               phone: sro.phoneNumber,
                               pointAmount: sro.pointAmount.toString(),
-                              showSwitch: true,
-                              switchValue: sro.status,
+                              status: sro.status,
                               onToggle: (value) {
                                 filledsro[index].status = value;
                                 BlocProvider.of<SroBloc>(context).add(
@@ -780,10 +779,13 @@ Future<void> SROopenDialog(
   );
 }
 
-TableRow _AgentTableRow({
-  required String id,
+TableRow _SroTableRow({
+  required String code,
+  required String branchName,
   required String name,
   required String phone,
+  required String Src,
+  required String pointAmount,
   required bool status,
   required VoidCallback onEdit,
   required VoidCallback onDelete,
@@ -791,9 +793,13 @@ TableRow _AgentTableRow({
 }) {
   return TableRow(
     children: [
-      cell(id),
+      cell(code),
       cell(name),
+      cell(branchName),
+      cell(Src),
       cell(phone),
+          cell(pointAmount),
+
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: Center(

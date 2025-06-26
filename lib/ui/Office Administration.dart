@@ -324,15 +324,23 @@ class _OfficeadministrationState extends State<Officeadministration> {
                           ),
                           ...List.generate(filteredAdimi.length, (index) {
                             final admin = filteredAdimi[index];
-                            return buildTableRow(
-                              id: admin.employeeCode,
+                            return _AdiministationTableRow(
+                              code: admin.employeeCode,
                               name: admin.name,
                               phone: admin.phoneNumber,
-                              showSwitch: true,
-                              switchValue: admin.status,
+
+                              status: admin.status,
                               onToggle: (value) {
                                 setState(() {
-                                  admin.status = value;
+                                  filteredAdimi[index].status = value;
+                                  BlocProvider.of<AdiministactorBloc>(
+                                    context,
+                                  ).add(
+                                    UpdateAdimini(
+                                      updatedata: {"status": value},
+                                      id: admin.id,
+                                    ),
+                                  );
                                 });
                               },
                               onEdit: () {
@@ -369,7 +377,6 @@ class _OfficeadministrationState extends State<Officeadministration> {
                                   context,
                                 ).add(DeleteAdimini(id: admin.id));
                               },
-                              visibleColumns: [],
                             );
                           }),
                         ],
@@ -632,5 +639,42 @@ Future<void> AdministratoropenDialog(
         ),
       );
     },
+  );
+}
+
+TableRow _AdiministationTableRow({
+  required String code,
+
+  required String name,
+  required String phone,
+
+  required bool status,
+  required VoidCallback onEdit,
+  required VoidCallback onDelete,
+  required ValueChanged<bool> onToggle,
+}) {
+  return TableRow(
+    children: [
+      cell(code),
+      cell(name),
+
+      cell(phone),
+
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 5),
+        child: Center(
+          child: Switch(
+            value: status,
+            onChanged: onToggle,
+            activeColor: Colors.white,
+            activeTrackColor: const Color(0xFF28AC24),
+            inactiveThumbColor: Colors.white,
+            inactiveTrackColor: Colors.grey[400],
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+        ),
+      ),
+      actionCell(onEdit, onDelete),
+    ],
   );
 }

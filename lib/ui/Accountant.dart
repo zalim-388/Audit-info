@@ -322,15 +322,21 @@ class _AccountantState extends State<Accountant> {
 
                           ...List.generate(filteredAccounts.length, (index) {
                             final account = filteredAccounts[index];
-                            return buildTableRow(
-                            code  : account.employeeCode.toString(),
+                            return _accountantRow(
+                              code: account.employeeCode.toString(),
                               name: account.name.toString(),
                               email: account.email.toString(),
                               phone: account.phoneNumber.toString(),
-                              status: account.status.toString(),
+                              status: account.status,
                               onToggle: (bool value) {
                                 setState(() {
                                   filteredAccounts[index].status = value;
+                                  BlocProvider.of<AccountantBloc>(context).add(
+                                    UpdateAccount(
+                                      updatedData: {"status": value},
+                                      id: account.status.toString(),
+                                    ),
+                                  );
                                 });
                               },
 
@@ -396,22 +402,7 @@ TableRow _accountantRow({
 }) {
   return TableRow(
     children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(code, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(name, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(email, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(phone, style: FontStyles.body)),
-      ),
+     
       Transform.scale(
         scale: 0.65,
         child: Switch(

@@ -290,12 +290,12 @@ class _AgentState extends State<Agent> {
                           ),
                           ...List.generate(filterAgent.length, (index) {
                             final agent = filterAgent[index];
-                            return buildTableRow(
+                            return _AgentTableRow(
                               id: (index + 1).toString(),
                               name: agent.name,
                               phone: agent.phoneNumber.toString(),
                               Address: agent.address,
-                              showSwitch: false,
+
                               onEdit: () {
                                 _namecontroller.text = agent.name;
                                 _phonecontroller.text =
@@ -315,7 +315,6 @@ class _AgentState extends State<Agent> {
                                   context,
                                 ).add(DeleteAgent(id: agent.id));
                               },
-                                visibleColumns: ['id', 'name', 'phone', 'status', 'toggle'],
                             );
                           }),
                         ],
@@ -446,5 +445,28 @@ Future<void> _AgentopenDialog(
         ),
       );
     },
+  );
+}
+
+TableRow _AgentTableRow({
+  required String id,
+
+  required String name,
+  required String phone,
+  required String Address,
+
+  required VoidCallback onEdit,
+  required VoidCallback onDelete,
+}) {
+  return TableRow(
+    children: [
+      cell(id),
+      cell(name),
+      cell(Address),
+
+      cell(phone),
+
+      actionCell(onEdit, onDelete),
+    ],
   );
 }
