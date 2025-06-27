@@ -8,7 +8,8 @@ import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
-import 'package:audit_info/utils/table.dart' show buildTableRow, tableheadRow;
+import 'package:audit_info/utils/table.dart';
+
 import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
@@ -303,8 +304,8 @@ class _AccountantState extends State<Accountant> {
                           2: FixedColumnWidth(70), // Email
                           3: FixedColumnWidth(70), // Phone
                           4: FixedColumnWidth(40), // Status
-                          5: FixedColumnWidth(60),
-                          6: FlexColumnWidth(70), // Actions
+
+                          5: FlexColumnWidth(70), // Actions
                         },
 
                         children: [
@@ -395,14 +396,18 @@ TableRow _accountantRow({
   required String name,
   required String email,
   required String phone,
+  required bool status,
   required VoidCallback onEdit,
   required VoidCallback onDelete,
   required ValueChanged<bool> onToggle,
-  required bool status,
 }) {
   return TableRow(
     children: [
-     
+      cell(code),
+      cell(name),
+      cell(email),
+      cell(phone),
+
       Transform.scale(
         scale: 0.65,
         child: Switch(
@@ -416,45 +421,7 @@ TableRow _accountantRow({
         ),
       ),
 
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 25.w,
-              height: 25.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFF4A60E4),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              alignment: Alignment.center,
-              child: GestureDetector(
-                onTap: onEdit,
-                child: Icon(Icons.edit, color: Colors.white, size: 16.sp),
-              ),
-            ),
-            SizedBox(width: 6.w),
-            Container(
-              width: 25.w,
-              height: 25.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFFFF4C4C),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              alignment: Alignment.center,
-              child: GestureDetector(
-                onTap: onDelete,
-                child: Icon(
-                  Icons.delete_outline,
-                  color: Colors.white,
-                  size: 16.sp,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      actionCell(onEdit, onDelete),
     ],
   );
 }

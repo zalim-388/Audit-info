@@ -33,15 +33,16 @@ class AgentBloc extends Bloc<AgentEvent, AgentState> {
       }
     });
 
-    on<DeleteAgent>((event, emit) async {
+ on<DeleteAgent>((event, emit) async {
       emit(AgentBlocloading());
       try {
         await Agentapi().deleteAgent(event.id);
-        agent.removeWhere((a) => a.id == event.id);
-        emit(AgentBlocloaded(agent: agent));
+        final updatedAgents = await Agentapi().getAgent(); 
+        print("Fetched ${updatedAgents.length} agents after deletion");
+        emit(AgentBlocloaded(agent: updatedAgents));
       } catch (e) {
         print("Agent delete error: $e");
-      emit(AgentBlocError(error: e.toString()));
+        emit(AgentBlocError(error: e.toString()));
       }
     });
     on<updateAgent>((event, emit) async {

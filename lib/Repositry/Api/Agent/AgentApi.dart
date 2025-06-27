@@ -17,18 +17,22 @@ class Agentapi {
     }
   }
 
-  Future<void> addAgent(Map<String, dynamic> agentData) async {
-    String tringingpath = "agent/create";
-
+Future<void> addAgent(Map<String, dynamic> agentData) async {
+    String trendingPath = "agent/create";
     try {
       final body = jsonEncode(agentData);
-      await api.invokeAPI(tringingpath,"POST",body);
-      print("add agent $body");
+      print('Add agent request: $body');
+      final response = await api.invokeAPI(trendingPath, "POST", body);
+      print('Add agent response: ${response.statusCode} ${response.body}');
+      if (response.statusCode != 201) {
+        final error = jsonDecode(response.body)['message'] ?? 'Unknown error';
+        throw Exception('Failed to add agent: $error (Status: ${response.statusCode})');
+      }
     } catch (e) {
+      print('Add agent error: $e');
       throw Exception('Failed to add agent: $e');
     }
   }
-
   Future<void> deleteAgent(String id) async {
     String tringingpath = "agent/delete/$id";
 

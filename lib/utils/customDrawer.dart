@@ -29,6 +29,80 @@ class Customdrawer extends StatefulWidget {
 class _CustomdrawerState extends State<Customdrawer> {
   bool showSubMenu = false;
 
+  // Navigation methods for Settings
+  void _navigateToBranchManagement() {
+    Navigator.pop(context);
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => BranchManagementPage()));
+    print("Navigate to Branch Management");
+  }
+
+  void _navigateToCollegeManagement() {
+    Navigator.pop(context);
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => CollegeManagementPage()));
+    print("Navigate to College Management");
+  }
+
+  void _navigateToSchoolManagement() {
+    Navigator.pop(context);
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => SchoolManagementPage()));
+    print("Navigate to School Management");
+  }
+
+  void _navigateToParticularManagement() {
+    Navigator.pop(context);
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => ParticularManagementPage()));
+    print("Navigate to Particular Management");
+  }
+
+  // Navigation methods for Reports
+  void _navigateToSeatBookings() {
+    Navigator.pop(context);
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => SeatBookingsPage()));
+    print("Navigate to Seat Bookings");
+  }
+
+  void _navigateToEmployeeSale() {
+    Navigator.pop(context);
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => EmployeeSalePage()));
+    print("Navigate to Employee Sale");
+  }
+
+  void _navigateToAgentCollege() {
+    Navigator.pop(context);
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => AgentCollegePage()));
+    print("Navigate to Agent College");
+  }
+
+  void _navigateToCancelledStudent() {
+    Navigator.pop(context);
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => CancelledStudentPage()));
+    print("Navigate to Cancelled Student");
+  }
+
+  void _navigateToAccountsDetail() {
+    Navigator.pop(context);
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => AccountsDetailPage()));
+    print("Navigate to Accounts Detail");
+  }
+
+  void _navigateToCollegeAccounts() {
+    Navigator.pop(context);
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => CollegeAccountsPage()));
+    print("Navigate to College Accounts");
+  }
+
+  void _navigateToEmployeeAccounts() {
+    Navigator.pop(context);
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => EmployeeAccountsPage()));
+    print("Navigate to Employee Accounts");
+  }
+
+  void _navigateToAgentAccounts() {
+    Navigator.pop(context);
+    // Navigator.push(context, MaterialPageRoute(builder: (context) => AgentAccountsPage()));
+    print("Navigate to Agent Accounts");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -238,7 +312,6 @@ class _CustomdrawerState extends State<Customdrawer> {
             selectedIndex: widget.SelectedIndex,
             onTap: () {
               widget.onitemTapped(9);
-              Navigator.pop(context);
             },
             isPopupMenu: true,
             popupItems: [
@@ -247,8 +320,26 @@ class _CustomdrawerState extends State<Customdrawer> {
               "School Management",
               "Particular Management",
             ],
+            showDividers: true,
+            onPopupSelected: (String value) {
+              switch (value) {
+                case "Branch Management":
+                  _navigateToBranchManagement();
+                  break;
+                case "College Management":
+                  _navigateToCollegeManagement();
+                  break;
+                case "School Management":
+                  _navigateToSchoolManagement();
+                  break;
+                case "Particular Management":
+                  _navigateToParticularManagement();
+                  break;
+              }
+            },
           ),
           SizedBox(height: 25.h),
+
           DrawerItemWithMultiLevel(
             icon: null,
             svgpath: "assets/icon/Reports.png",
@@ -256,10 +347,38 @@ class _CustomdrawerState extends State<Customdrawer> {
             index: 10,
             onBaseItemTap: () {
               setState(() {
-                showSubMenu;
+                showSubMenu = !showSubMenu;
               });
             },
             selectedIndex: widget.SelectedIndex,
+            onReportSelected: (String value) {
+              switch (value) {
+                case 'seat_bookings':
+                  _navigateToSeatBookings();
+                  break;
+                case 'employee_sale':
+                  _navigateToEmployeeSale();
+                  break;
+                case 'agent_college':
+                  _navigateToAgentCollege();
+                  break;
+                case 'cancelled_student':
+                  _navigateToCancelledStudent();
+                  break;
+                case 'accounts_detail_main':
+                  _navigateToAccountsDetail();
+                  break;
+                case 'college_accounts_report':
+                  _navigateToCollegeAccounts();
+                  break;
+                case 'employee_accounts_report':
+                  _navigateToEmployeeAccounts();
+                  break;
+                case 'agent_accounts_report':
+                  _navigateToAgentAccounts();
+                  break;
+              }
+            },
           ),
 
           SizedBox(height: 25.h),
@@ -317,6 +436,7 @@ class DrawerItemWithMultiLevel extends StatefulWidget {
   final int index;
   final int selectedIndex;
   final VoidCallback onBaseItemTap;
+  final Function(String)? onReportSelected;
 
   const DrawerItemWithMultiLevel({
     super.key,
@@ -326,6 +446,7 @@ class DrawerItemWithMultiLevel extends StatefulWidget {
     required this.index,
     required this.selectedIndex,
     required this.onBaseItemTap,
+    this.onReportSelected,
   });
 
   @override
@@ -340,21 +461,34 @@ class _DrawerItemWithMultiLevelState extends State<DrawerItemWithMultiLevel> {
   List<PopupMenuEntry<String>> _buildMainItems() {
     return [
       _popupItem('seat_bookings', 'Seat Bookings'),
-      const PopupMenuDivider(),
+      PopupMenuDivider(height: 1), // Set consistent divider height
       _popupItem('employee_sale', 'Employee Sale'),
-      const PopupMenuDivider(),
+      PopupMenuDivider(height: 1),
       _popupItem('agent_college', 'Agent College'),
-      const PopupMenuDivider(),
+      PopupMenuDivider(height: 1),
       _popupItem('cancelled_student', 'Cancelled Student'),
-      const PopupMenuDivider(),
+      PopupMenuDivider(height: 1),
       PopupMenuItem<String>(
         value: 'show_accounts_submenu',
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            Text('Accounts'),
-            Icon(Icons.keyboard_arrow_down, color: Colors.black54),
-          ],
+        height: 33.h, // Consistent height
+        padding: EdgeInsets.zero, // Remove default padding
+        child: Container(
+          height: 33.h,
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(
+            horizontal: 16.0,
+          ), // Add consistent padding
+          alignment: Alignment.centerLeft,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Accounts',
+                style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+              ),
+              Icon(Icons.keyboard_arrow_down, color: Colors.black54),
+            ],
+          ),
         ),
       ),
     ];
@@ -364,29 +498,51 @@ class _DrawerItemWithMultiLevelState extends State<DrawerItemWithMultiLevel> {
     return [
       PopupMenuItem<String>(
         value: 'back_to_reports_main',
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
-            Text('Accounts'),
-            Icon(Icons.keyboard_arrow_up, color: Colors.black54),
-          ],
+        height: 33.h,
+        padding: EdgeInsets.zero,
+        child: Container(
+          height: 33.h,
+          width: double.infinity,
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          alignment: Alignment.centerLeft,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Accounts',
+                style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+              ),
+              Icon(Icons.keyboard_arrow_up, color: Colors.black54),
+            ],
+          ),
         ),
       ),
-      const PopupMenuDivider(),
+      PopupMenuDivider(height: 1),
       _popupItem('accounts_detail_main', 'Accounts Detail'),
-      const PopupMenuDivider(),
+      PopupMenuDivider(height: 1),
       _popupItem('college_accounts_report', 'College Accounts'),
-      const PopupMenuDivider(),
+      PopupMenuDivider(height: 1),
       _popupItem('employee_accounts_report', 'Employee Accounts'),
-      const PopupMenuDivider(),
+      PopupMenuDivider(height: 1),
       _popupItem('agent_accounts_report', 'Agent Accounts'),
     ];
   }
 
-  PopupMenuItem<String> _popupItem(String value, String label) {
+  PopupMenuItem<String> _popupItem(String value, String text) {
     return PopupMenuItem<String>(
       value: value,
-      child: SizedBox(height: 33.h, width: 139.w, child: Text(label)),
+      height: 33.h,
+      padding: EdgeInsets.zero,
+      child: Container(
+        height: 33.h,
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        alignment: Alignment.centerLeft,
+        child: Text(
+          text,
+          style: GoogleFonts.poppins(color: Colors.black, fontSize: 14),
+        ),
+      ),
     );
   }
 
@@ -397,7 +553,11 @@ class _DrawerItemWithMultiLevelState extends State<DrawerItemWithMultiLevel> {
     } else if (value == 'back_to_reports_main') {
       setState(() => _currentPage = ReportsPopupPage.main);
       _reopenMenu();
-    } else {}
+    } else {
+      if (widget.onReportSelected != null) {
+        widget.onReportSelected!(value);
+      }
+    }
   }
 
   void _reopenMenu() {
@@ -428,7 +588,7 @@ class _DrawerItemWithMultiLevelState extends State<DrawerItemWithMultiLevel> {
         child: PopupMenuButton<String>(
           key: _popupMenuKey,
           tooltip: "Show Reports Options",
-          offset: Offset(0, 40.h), // Corrected alignment
+          offset: Offset(70, 20.h),
           onSelected: _handleSelection,
           onCanceled:
               () => setState(() => _currentPage = ReportsPopupPage.main),
@@ -477,6 +637,7 @@ Widget _Draweritems({
   bool isPopupMenu = false,
   List<String>? popupItems,
   Function(String)? onPopupSelected,
+  bool showDividers = false,
 }) {
   final bool isSelected = selectedIndex == index;
 
@@ -513,28 +674,48 @@ Widget _Draweritems({
     ),
     child:
         isPopupMenu
-            ? PopupMenuButton<String>(
-              onSelected:
-                  onPopupSelected ??
-                  (String value) => print("Selected: $value"),
-              itemBuilder:
-                  (context) =>
-                      popupItems!
-                          .map(
-                            (item) => PopupMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: GoogleFonts.poppins(
-                                  color: Colors.black,
-                                  fontSize: 14,
-                                ),
-                              ),
+            ? Theme(
+              data: ThemeData(
+                cardColor: Colors.white,
+                popupMenuTheme: PopupMenuThemeData(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              child: PopupMenuButton<String>(
+                onSelected:
+                    onPopupSelected ??
+                    (String value) => print("Selected: $value"),
+                itemBuilder: (context) {
+                  List<PopupMenuEntry<String>> items = [];
+                  for (int i = 0; i < popupItems!.length; i++) {
+                    items.add(
+                      PopupMenuItem<String>(
+                        value: popupItems[i],
+                        height: 33.h,
+                        child: Container(
+                          height: 33.h,
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            popupItems[i],
+                            style: GoogleFonts.poppins(
+                              color: Colors.black,
+                              fontSize: 14,
                             ),
-                          )
-                          .toList(),
-              offset: Offset(0, 40.h),
-              child: listTile,
+                          ),
+                        ),
+                      ),
+                    );
+                    if (showDividers && i < popupItems.length - 1) {
+                      items.add(const PopupMenuDivider());
+                    }
+                  }
+                  return items;
+                },
+                offset: Offset(70, 10.h),
+                child: listTile,
+              ),
             )
             : listTile,
   );

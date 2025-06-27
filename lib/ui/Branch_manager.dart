@@ -1,6 +1,6 @@
 import 'package:audit_info/Repositry/Api/manager/managerApi.dart';
 import 'package:audit_info/Repositry/model/manager_model.dart';
-import 'package:audit_info/bloc/branch/branch_manager_bloc.dart';
+
 import 'package:audit_info/bloc/manger/manager_bloc.dart';
 import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';
@@ -720,8 +720,7 @@ Widget _buildDropdownField(
 
 TableRow _BranchmanagertableRow({
   required String code,
-
-  required bool status,
+ required bool status,
   required VoidCallback onEdit,
   required VoidCallback onDelete,
   required ValueChanged<bool> onToggle,
@@ -729,18 +728,20 @@ TableRow _BranchmanagertableRow({
   return TableRow(
     children: [
       cell(code),
-
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: Center(
-          child: Switch(
-            value: status,
-            onChanged: onToggle,
-            activeColor: Colors.white,
-            activeTrackColor: const Color(0xFF28AC24),
-            inactiveThumbColor: Colors.white,
-            inactiveTrackColor: Colors.grey[400],
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          child: Transform.scale(
+            scale: 0.6,
+            child: Switch(
+              value: status,
+              onChanged: onToggle,
+              activeColor: Colors.white,
+              activeTrackColor: const Color(0xFF28AC24),
+              inactiveThumbColor: Colors.white,
+              inactiveTrackColor: Colors.grey[400],
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
           ),
         ),
       ),

@@ -36,8 +36,9 @@ class SroBloc extends Bloc<SroEvent, SroState> {
       emit(SroBlocloading());
       try {
         await Sroapi().deletesro(event.id);
-        SRO.removeWhere((e) => e.id == event.id);
-        emit(sroBlocloaded(SRO: SRO));
+        final updatedelete = await Sroapi().getsro();
+        print("Fetched ${updatedelete.length} agents after deletion");
+        emit(sroBlocloaded(SRO: updatedelete));
       } catch (e) {
         print("SRC delete error: $e");
         emit(srcblocError());

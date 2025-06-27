@@ -241,22 +241,7 @@ class _OfficeadministrationState extends State<Officeadministration> {
                   ),
                 ],
               ),
-              // if (searchController.text.isNotEmpty) ...[
-              //   Align(
-              //     alignment: Alignment.centerLeft,
-              //     child: Padding(
-              //       padding: EdgeInsets.only(bottom: 8.h),
-              //       child: Text(
-              //         "Found ${filteredAdimi.length} result(s) for '${searchController.text}'",
-              //         style: GoogleFonts.poppins(
-              //           fontSize: 12,
-              //           color: Colors.grey[600],
-              //           fontStyle: FontStyle.italic,
-              //         ),
-              //       ),
-              //     ),
-              //   ),
-              // ],
+
               SizedBox(height: 13.h),
               BlocBuilder<AdiministactorBloc, AdiministactorState>(
                 builder: (context, state) {
@@ -569,9 +554,9 @@ Future<void> AdministratoropenDialog(
                           'phone_number': phoneController.text.trim(),
                           'password':
                               passwordController.text
-                                  .trim(), // Consider hashing on server
+                                  .trim(), 
                           'position':
-                              'Administrator', // Add default or get from UI
+                              'Administrator', 
                           'branchId':
                               selectBranch?.branchId.id ??
                               '', // Ensure branchId is just the ID

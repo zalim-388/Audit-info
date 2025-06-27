@@ -41,8 +41,9 @@ class AccountantBloc extends Bloc<AccountantEvent, AccountantState> {
       emit(Accountantblocloading());
       try {
         await Accountantapi().deleteaccount(event.id);
-        account.removeWhere((a) => a.id == event.id);
-        emit(Accountantblocloaded(Account: account));
+        final updateddelete = await Accountantapi().getAccountant();
+        print("Fetched ${updateddelete.length} agents after deletion");
+        emit(Accountantblocloaded(Account: updateddelete));
       } catch (e) {
         print("API delete error: $e");
         emit(AccountantblocError());

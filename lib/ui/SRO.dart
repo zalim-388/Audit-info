@@ -798,22 +798,25 @@ TableRow _SroTableRow({
       cell(branchName),
       cell(Src),
       cell(phone),
-          cell(pointAmount),
-
+      cell(pointAmount),
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: Center(
-          child: Switch(
-            value: status,
-            onChanged: onToggle,
-            activeColor: Colors.white,
-            activeTrackColor: const Color(0xFF28AC24),
-            inactiveThumbColor: Colors.white,
-            inactiveTrackColor: Colors.grey[400],
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          child: Transform.scale(
+            scale: 0.6,
+            child: Switch(
+              value: status,
+              onChanged: onToggle,
+              activeColor: Colors.white,
+              activeTrackColor: const Color(0xFF28AC24),
+              inactiveThumbColor: Colors.white,
+              inactiveTrackColor: Colors.grey[400],
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
           ),
         ),
       ),
+
       actionCell(onEdit, onDelete),
     ],
   );

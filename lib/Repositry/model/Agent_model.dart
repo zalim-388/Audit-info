@@ -13,7 +13,7 @@ String agentModelToJson(List<AgentModel> data) =>
 class AgentModel {
   String id;
   String name;
-  String email;
+  String? email;
   int phoneNumber;
   String address;
   DateTime createdAt;

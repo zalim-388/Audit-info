@@ -43,9 +43,10 @@ class SrcBlocBloc extends Bloc<SrcBlocEvent, SrcBlocState> {
       try {
         await Srcapi().deletesrc(event.id);
 
-        SRC.removeWhere((s) => s.id == event.id);
+        final updatedelete = await Srcapi().getsrc();
+         print("Fetched ${updatedelete.length} agents after deletion");
+        emit(srcBlocloaded(SRC: updatedelete));
 
-        emit(srcBlocloaded(SRC: SRC));
       } catch (e) {
         print("SRC delete error: $e");
         emit(srcblocError());

@@ -27,6 +27,7 @@ class _AgentState extends State<Agent> {
   TextEditingController _namecontroller = TextEditingController();
   TextEditingController _phonecontroller = TextEditingController();
   TextEditingController _addresscontroller = TextEditingController();
+  TextEditingController _emailcontroller = TextEditingController();
   TextEditingController searchcontroller = TextEditingController();
 
   void initState() {
@@ -43,6 +44,7 @@ class _AgentState extends State<Agent> {
     _namecontroller.dispose();
     _phonecontroller.dispose();
     _addresscontroller.dispose();
+    _emailcontroller.dispose();
     super.dispose();
   }
 
@@ -60,9 +62,11 @@ class _AgentState extends State<Agent> {
             final name = agent.name.toLowerCase();
             final phone = agent.phoneNumber.toString().toLowerCase();
             final address = agent.address.toLowerCase();
+            final email = agent.email?.toLowerCase();
             return name.contains(query.toLowerCase()) ||
                 phone.contains(query.toLowerCase()) ||
-                address.contains(query.toLowerCase());
+                address.contains(query.toLowerCase()) ||
+                (email != null && email.contains(query.toLowerCase()));
           }).toList();
     });
   }
@@ -180,15 +184,15 @@ class _AgentState extends State<Agent> {
                   SizedBox(width: 6.w),
                   GestureDetector(
                     onTap: () {
-                      _namecontroller.clear();
-                      _phonecontroller.clear();
-                      _addresscontroller.clear();
+                      // _namecontroller.clear();
+                      // _phonecontroller.clear();
+                      // _addresscontroller.clear();
                       _AgentopenDialog(
                         context,
                         _namecontroller,
                         _phonecontroller,
                         _addresscontroller,
-                        isEdit: false,
+                        _emailcontroller,
                       );
                     },
                     child: Container(
@@ -237,16 +241,16 @@ class _AgentState extends State<Agent> {
                       children: [
                         Image.asset('assets/icon/Group 99.png', height: 40.h),
                         SizedBox(height: 4.h),
-                        Text("Error: ${state.error}"),
                       ],
                     );
                   } else if (state is AgentBlocloaded) {
-                    var Agentlist = state.agent;
+                    Agentlist = state.agent;
                     if (searchcontroller.text.isEmpty) {
                       filterAgent = Agentlist;
                     }
                     return Container(
                       width: 358.w,
+
                       decoration: BoxDecoration(
                         color: AppColors.kContainerColor,
                         borderRadius: const BorderRadius.only(
@@ -270,12 +274,13 @@ class _AgentState extends State<Agent> {
                           ),
                           bottom: BorderSide(color: Colors.black),
                         ),
-                        columnWidths: const <int, TableColumnWidth>{
-                          0: FixedColumnWidth(55),
-                          1: FixedColumnWidth(80),
+                        columnWidths: <int, TableColumnWidth>{
+                          0: FixedColumnWidth(30),
+                          1: FixedColumnWidth(60),
                           2: FixedColumnWidth(74),
                           3: FixedColumnWidth(60),
                           4: FixedColumnWidth(60),
+                          5: FixedColumnWidth(60),
                         },
                         children: [
                           TableRow(
@@ -284,6 +289,7 @@ class _AgentState extends State<Agent> {
                               tableheadRow('SI.NO'),
                               tableheadRow('Name'),
                               tableheadRow('Phone Number'),
+                              tableheadRow('Email'),
                               tableheadRow('Address'),
                               tableheadRow('Actions'),
                             ],
@@ -292,25 +298,29 @@ class _AgentState extends State<Agent> {
                             final agent = filterAgent[index];
                             return _AgentTableRow(
                               id: (index + 1).toString(),
-                              name: agent.name,
+                              name: agent.name.toString(),
                               phone: agent.phoneNumber.toString(),
-                              Address: agent.address,
-
+                              email: agent.email.toString(),
+                              Address: agent.address.toString(),
                               onEdit: () {
-                                _namecontroller.text = agent.name;
+                                _namecontroller.text = agent.name.toString();
                                 _phonecontroller.text =
                                     agent.phoneNumber.toString();
-                                _addresscontroller.text = agent.address;
+                                _addresscontroller.text =
+                                    agent.address.toString();
+                                _emailcontroller.text = agent.email.toString();
                                 _AgentopenDialog(
                                   context,
                                   _namecontroller,
                                   _phonecontroller,
                                   _addresscontroller,
+                                  _emailcontroller,
+
                                   isEdit: true,
                                   AgentId: agent.id,
                                 );
                               },
-                              onDelete: () async {
+                              onDelete: (){
                                 BlocProvider.of<AgentBloc>(
                                   context,
                                 ).add(DeleteAgent(id: agent.id));
@@ -336,7 +346,8 @@ Future<void> _AgentopenDialog(
   BuildContext context,
   TextEditingController namecontroller,
   TextEditingController phonecontroller,
-  TextEditingController addresscontroller, {
+  TextEditingController addresscontroller,
+  TextEditingController emailController, {
   bool isEdit = false,
   String? AgentId,
 }) async {
@@ -347,7 +358,7 @@ Future<void> _AgentopenDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
         child: Container(
           width: 358.w,
-          height: 282.h,
+          height: 350.h,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
             color: Colors.white,
@@ -363,7 +374,7 @@ Future<void> _AgentopenDialog(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        isEdit ? "Edit Agent" : "Create Agents",
+                        isEdit ? "Update Agent" : "Create Agents",
                         style: FontStyles.heading,
                       ),
                       InkWell(
@@ -380,6 +391,8 @@ Future<void> _AgentopenDialog(
                     keyboardType: TextInputType.phone,
                     controller: phonecontroller,
                   ),
+                  SizedBox(height: 10.h),
+                  fullTextField(title: "email", controller: emailController),
                   SizedBox(height: 10.h),
                   fullTextField(
                     title: "Address",
@@ -399,23 +412,25 @@ Future<void> _AgentopenDialog(
                       onPressed: () async {
                         if (namecontroller.text.isEmpty ||
                             phonecontroller.text.isEmpty ||
-                            addresscontroller.text.isEmpty) {
+                            addresscontroller.text.isEmpty ||
+                            emailController.text.isEmpty) {
                           print("Validation failed: All fields are required");
                           return;
                         }
-                        // if (phonecontroller.text.length < 10) {
-                        //   print(
-                        //     "Validation failed: Phone number must be at least 10 digits",
-                        //   );
-                        //   return;
-                        // }
+                        if (phonecontroller.text.length < 10) {
+                          print(
+                            "Validation failed: Phone number must be at least 10 digits",
+                          );
+                          return;
+                        }
                         final agendata = {
-                          // "_id": AgentId ?? "",
-                          "name": namecontroller.text.toString(),
-                          "phone_number": phonecontroller.text.toString(),
-
-                          "address": addresscontroller.text.toString(),
+                          "name": namecontroller.text.trim(),
+                          "phone_number":
+                              int.tryParse(phonecontroller.text.trim()) ?? 0,
+                          "email": emailController.text.trim(),
+                          "address": addresscontroller.text.trim(),
                         };
+                        print('Sending agendata: $agendata');
 
                         if (isEdit && AgentId != null) {
                           BlocProvider.of<AgentBloc>(
@@ -450,11 +465,10 @@ Future<void> _AgentopenDialog(
 
 TableRow _AgentTableRow({
   required String id,
-
   required String name,
   required String phone,
   required String Address,
-
+  required String email,
   required VoidCallback onEdit,
   required VoidCallback onDelete,
 }) {
@@ -462,10 +476,9 @@ TableRow _AgentTableRow({
     children: [
       cell(id),
       cell(name),
-      cell(Address),
-
       cell(phone),
-
+      cell(email),
+      cell(Address),
       actionCell(onEdit, onDelete),
     ],
   );

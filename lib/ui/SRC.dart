@@ -309,6 +309,7 @@ class _SrcState extends State<Src> {
                               tableheadRow('Name'),
                               tableheadRow('Branch name'),
                               tableheadRow("phone number"),
+                              tableheadRow('Point Amount'),
                               tableheadRow('Status'),
                               tableheadRow('Actions'),
                             ],
@@ -640,7 +641,6 @@ TableRow _SrcTableRow({
   required String branchName,
   required String name,
   required String phone,
-
   required String pointAmount,
   required bool status,
   required VoidCallback onEdit,
@@ -654,18 +654,20 @@ TableRow _SrcTableRow({
       cell(branchName),
       cell(phone),
       cell(pointAmount),
-
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 5),
         child: Center(
-          child: Switch(
-            value: status,
-            onChanged: onToggle,
-            activeColor: Colors.white,
-            activeTrackColor: const Color(0xFF28AC24),
-            inactiveThumbColor: Colors.white,
-            inactiveTrackColor: Colors.grey[400],
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          child: Transform.scale(
+            scale: 0.6,
+            child: Switch(
+              value: status,
+              onChanged: onToggle,
+              activeColor: Colors.white,
+              activeTrackColor: const Color(0xFF28AC24),
+              inactiveThumbColor: Colors.white,
+              inactiveTrackColor: Colors.grey[400],
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
           ),
         ),
       ),
