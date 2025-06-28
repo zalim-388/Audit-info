@@ -4,6 +4,7 @@ import 'package:audit_info/ui/Branch_manager.dart';
 import 'package:audit_info/ui/Dashboard.dart';
 import 'package:audit_info/ui/Lead_managment.dart';
 import 'package:audit_info/ui/Office%20Administration.dart';
+import 'package:audit_info/ui/Request%E2%80%99s.dart';
 import 'package:audit_info/ui/SRC.dart';
 import 'package:audit_info/ui/SRO.dart';
 import 'package:audit_info/ui/student_managment.dart';
@@ -417,6 +418,10 @@ class _CustomdrawerState extends State<Customdrawer> {
             selectedIndex: widget.SelectedIndex,
             onTap: () {
               widget.onitemTapped(13);
+                   Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Request()),
+              );
               Navigator.pop(context);
             },
           ),

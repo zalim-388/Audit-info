@@ -145,7 +145,7 @@ class _SroState extends State<Sro> {
                 ),
               );
             },
-            icon: const Icon(Icons.logout_rounded, color: Color(0xFF414143)),
+            icon:  Icon(Icons.logout_rounded, color: Color(0xFF414143)),
           ),
         ],
       ),

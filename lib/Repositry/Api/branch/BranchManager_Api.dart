@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:audit_info/Repositry/Api/Api_client.dart';
-import 'package:audit_info/Repositry/model/BranchManager.dart';
+import 'package:audit_info/Repositry/model/Settings/BranchManagement.dart';
 
 
 import 'package:http/http.dart';
