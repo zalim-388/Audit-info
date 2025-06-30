@@ -17,7 +17,7 @@ class AdiministactorApi {
     }
   }
 
-  Future<void> AddAdimini(adiminiData) async {
+  Future<void> AddAdimini(Map<String, dynamic> adiminiData) async {
     String trendingpath = "administractor/create";
     try {
       final body = await jsonEncode(adiminiData);

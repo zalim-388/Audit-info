@@ -19,13 +19,13 @@ Widget tableheadRow(String heading) {
     ),
   );
 }
+
 Widget cell(String text) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 5),
     child: Center(child: Text(text, style: FontStyles.body)),
   );
 }
-
 
 Widget actionCell(VoidCallback onEdit, VoidCallback onDelete) {
   return Padding(

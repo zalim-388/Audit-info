@@ -8,7 +8,7 @@ import 'package:audit_info/utils/customDrawer.dart';
 import 'package:audit_info/utils/table.dart';
 import 'package:audit_info/utils/textfield.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
-import 'package:date_picker_plus/date_picker_plus.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,6 +45,7 @@ class _SrcState extends State<Src> {
   }
 
   TextEditingController searchController = TextEditingController();
+
   TextEditingController employecodeController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController nameController = TextEditingController();
@@ -181,6 +182,16 @@ class _SrcState extends State<Src> {
                           ),
                           hintText: "search",
                           hintStyle: FontStyles.body,
+                          suffixIcon:
+                              searchController.text.isNotEmpty
+                                  ? IconButton(
+                                    icon: const Icon(Icons.clear, size: 16),
+                                    onPressed: () {
+                                      searchController.clear();
+                                      filtersrcList();
+                                    },
+                                  )
+                                  : null,
                           focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                               color: AppColors.kBorderColor,
@@ -258,7 +269,7 @@ class _SrcState extends State<Src> {
                       ],
                     );
                   } else if (state is srcBlocloaded) {
-                    var allsrc = state.SRC;
+                     allsrc = state.SRC;
                     if (searchController.text.isEmpty) {
                       filteredsrc = allsrc;
                     }
@@ -458,19 +469,25 @@ Future<void> SRCopenDialog(
                     controller: dateController,
                     icon: Icons.calendar_today,
                     onTap: () async {
-                      final dateRange = await showRangePickerDialog(
+                      showDatePicker(
                         context: context,
                         initialDate: DateTime.now(),
-                        minDate: DateTime(2021, 1, 1),
-                        maxDate: DateTime(2025, 12, 31),
-                      );
-
-                      if (dateRange != null) {
-                        dateController.text = DateFormat(
-                          'yyyy-MM-dd',
-                        ).format(dateRange.start);
-                      }
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                      ).then((pickedDate) {
+                        if (pickedDate != null) {
+                          dateController.text = DateFormat(
+                            'yyyy-MM-dd',
+                          ).format(pickedDate);
+                        }
+                      });
                     },
+
+                    validator:
+                        (Value) =>
+                            Value!.isEmpty
+                                ? "Date of Joining is required"
+                                : null,
                   ),
                   SizedBox(height: 10.h),
                   fullTextField(title: "Name", controller: nameController),

@@ -1,3 +1,4 @@
+import 'package:audit_info/Repositry/Api/Adiministactor/Adiministactor_Api.dart';
 import 'package:audit_info/Repositry/model/Adiministactor.dart';
 import 'package:audit_info/bloc/Adiministactor/adiministactor_bloc.dart';
 import 'package:audit_info/ui/loginpage.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class Officeadministration extends StatefulWidget {
   const Officeadministration({super.key});
@@ -23,25 +25,67 @@ class Officeadministration extends StatefulWidget {
 class _OfficeadministrationState extends State<Officeadministration> {
   List<Adiministactormodel> filteredAdimi = [];
   List<Adiministactormodel> allAdimi = [];
-  final TextEditingController searchController = TextEditingController();
-  Adiministactormodel? selectBranch;
   List<Adiministactormodel> branches = [];
-  int _selectedIndex = 5;
+  Adiministactormodel? selectBranch;
 
+  int _selectedIndex = 5;
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
 
-  @override
   void initState() {
     super.initState();
     BlocProvider.of<AdiministactorBloc>(context).add(fetchAdiministactor());
     searchController.addListener(() {
-      _filterAdministrators(searchController.text);
+      _filterAdministrators();
+      fetchAdimini();
     });
   }
+
+  void _filterAdministrators() async {
+    final qeury = searchController.text.toLowerCase();
+    setState(() {
+      filteredAdimi =
+          allAdimi.where((admin) {
+            return admin.employeeCode.toLowerCase().contains(qeury) ||
+                admin.name.toLowerCase().contains(qeury) ||
+                admin.email.toLowerCase().contains(qeury) ||
+                admin.phoneNumber.toLowerCase().contains(qeury) ||
+                admin.branchId.toString().toLowerCase().contains(qeury);
+          }).toList();
+    });
+  }
+
+  Future<void> fetchAdimini() async {
+    try {
+      final fetchsrcbranches = await AdiministactorApi().getAdiministactor();
+
+      setState(() {
+        branches = fetchsrcbranches;
+        if (branches.isNotEmpty) {
+          selectBranch = branches[0];
+        }
+      });
+    } catch (e) {
+      throw Exception("fetchsrcbranch Error$e");
+    }
+  }
+
+  final TextEditingController searchController = TextEditingController();
+  final TextEditingController _employeeCodeController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  final TextEditingController _branchController = TextEditingController();
+  final TextEditingController _salaryController = TextEditingController();
+  final TextEditingController _headAdminController = TextEditingController();
 
   @override
   void dispose() {
@@ -60,40 +104,6 @@ class _OfficeadministrationState extends State<Officeadministration> {
     super.dispose();
   }
 
-  void _filterAdministrators(String query) {
-    setState(() {
-      if (query.isEmpty) {
-        filteredAdimi = allAdimi;
-      } else {
-        filteredAdimi =
-            allAdimi.where((admin) {
-              return admin.name.toLowerCase().contains(query.toLowerCase()) ||
-                  admin.employeeCode.toLowerCase().contains(
-                    query.toLowerCase(),
-                  ) ||
-                  admin.phoneNumber.toLowerCase().contains(
-                    query.toLowerCase(),
-                  ) ||
-                  admin.email.toLowerCase().contains(query.toLowerCase());
-            }).toList();
-      }
-    });
-  }
-
-  final TextEditingController _employeeCodeController = TextEditingController();
-  final TextEditingController _dateController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _addressController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
-  final TextEditingController _branchController = TextEditingController();
-  final TextEditingController _salaryController = TextEditingController();
-  final TextEditingController _headAdminController = TextEditingController();
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Customdrawer(
@@ -180,7 +190,7 @@ class _OfficeadministrationState extends State<Officeadministration> {
                                     icon: const Icon(Icons.clear, size: 16),
                                     onPressed: () {
                                       searchController.clear();
-                                      _filterAdministrators('');
+                                      _filterAdministrators();
                                     },
                                   )
                                   : null,
@@ -207,9 +217,10 @@ class _OfficeadministrationState extends State<Officeadministration> {
                     onTap: () {
                       AdministratoropenDialog(
                         context,
-                        (selectedBranch) {
+                        selectBranch,
+                        (Value) {
                           setState(() {
-                            selectBranch = selectedBranch;
+                            selectBranch = Value;
                           });
                         },
                         _employeeCodeController,
@@ -223,7 +234,6 @@ class _OfficeadministrationState extends State<Officeadministration> {
                         _branchController,
                         _salaryController,
                         _headAdminController,
-                        selectBranch,
                         branches,
                       );
                     },
@@ -261,9 +271,12 @@ class _OfficeadministrationState extends State<Officeadministration> {
                       ],
                     );
                   } else if (state is AdiministactorLoaded) {
+                      print('loaded..');
                     allAdimi = state.adiministactors;
 
-                    _filterAdministrators(searchController.text);
+                    if (searchController.text.isEmpty) {
+                      filteredAdimi = allAdimi;
+                    }
                     return Container(
                       width: 358.w,
                       decoration: BoxDecoration(
@@ -287,7 +300,9 @@ class _OfficeadministrationState extends State<Officeadministration> {
                           verticalInside: const BorderSide(
                             color: AppColors.kBorderColor,
                           ),
-                          bottom: const BorderSide(color: Colors.black),
+                          bottom: const BorderSide(
+                            color: AppColors.kBorderColor,
+                          ),
                         ),
                         columnWidths: const <int, TableColumnWidth>{
                           0: FixedColumnWidth(55), // E.Code
@@ -313,32 +328,47 @@ class _OfficeadministrationState extends State<Officeadministration> {
                               code: admin.employeeCode,
                               name: admin.name,
                               phone: admin.phoneNumber,
-
                               status: admin.status,
                               onToggle: (value) {
-                                setState(() {
-                                  filteredAdimi[index].status = value;
-                                  BlocProvider.of<AdiministactorBloc>(
-                                    context,
-                                  ).add(
-                                    UpdateAdimini(
-                                      updatedata: {"status": value},
-                                      id: admin.id,
-                                    ),
-                                  );
-                                });
+                                filteredAdimi[index].status = value;
+                                BlocProvider.of<AdiministactorBloc>(
+                                  context,
+                                ).add(
+                                  UpdateAdimini(
+                                    updatedata: {"status": value},
+                                    id: admin.id,
+                                  ),
+                                );
                               },
                               onEdit: () {
+                                final Adiministactormodel selected = branches
+                                    .firstWhere(
+                                      (e) =>
+                                          e.branchId.id == admin.branchId.name,
+                                      orElse:
+                                          () =>
+                                              branches.isNotEmpty
+                                                  ? branches[0]
+                                                  : admin,
+                                    );
+                                setState(() {
+                                  selectBranch = selected;
+                                });
                                 AdministratoropenDialog(
                                   context,
-                                  (selectedBranch) {
+                                  selectBranch,
+                                  (Value) {
                                     setState(() {
-                                      selectBranch = selectedBranch;
+                                      selectBranch = Value;
                                     });
                                   },
                                   _employeeCodeController
                                     ..text = admin.employeeCode,
-                                  _dateController,
+                                  _dateController
+                                    ..text = DateFormat(
+                                      'yyyy-MM-dd',
+                                    ).format(admin.dateOfJoining),
+
                                   _nameController..text = admin.name,
                                   _emailController..text = admin.email,
                                   _addressController..text = admin.address,
@@ -351,7 +381,7 @@ class _OfficeadministrationState extends State<Officeadministration> {
                                   _headAdminController
                                     ..text =
                                         admin.headAdministractor.toString(),
-                                  selectBranch,
+
                                   branches,
                                   isupdate: true,
                                   adminId: admin.id,
@@ -381,6 +411,7 @@ class _OfficeadministrationState extends State<Officeadministration> {
 
 Future<void> AdministratoropenDialog(
   BuildContext context,
+  Adiministactormodel? selectBranch,
   Function(Adiministactormodel) onBranchSelected,
   TextEditingController employeeCodeController,
   TextEditingController dateController,
@@ -393,7 +424,7 @@ Future<void> AdministratoropenDialog(
   TextEditingController branchController,
   TextEditingController salaryController,
   TextEditingController headAdminController,
-  Adiministactormodel? selectBranch,
+
   List<Adiministactormodel> branches, {
   bool isupdate = false,
   String? adminId,
@@ -459,9 +490,17 @@ Future<void> AdministratoropenDialog(
                     },
                   ),
                   SizedBox(height: 10.h),
-                  fullTextField(title: "Name", controller: nameController),
+                  fullTextField(
+                    title: "Name",
+                    controller: nameController,
+                    keyboardType: TextInputType.name,
+                  ),
                   SizedBox(height: 10.h),
-                  fullTextField(title: "Email", controller: emailController),
+                  fullTextField(
+                    title: "Email",
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                  ),
                   SizedBox(height: 10.h),
                   fullTextField(
                     title: "Address",
@@ -489,7 +528,10 @@ Future<void> AdministratoropenDialog(
                   DropdownField(
                     "Select Branch",
                     selectBranch?.branchId.name,
-                    branches.map((e) => e.branchId.name).toList(),
+                    branches
+                        .map((e) => e.branchId.name)
+                        .whereType<String>()
+                        .toList(),
                     "Select Branch",
                     (selected) {
                       if (selected != null) {
@@ -544,41 +586,35 @@ Future<void> AdministratoropenDialog(
                           );
                           return;
                         }
-
+                        String formattedDate = '';
+                        try {
+                          if (dateController.text.isNotEmpty) {
+                            DateTime parsedDate = DateFormat(
+                              'yyyy-MM-dd',
+                            ).parse(dateController.text);
+                            formattedDate = DateFormat(
+                              'yyyy-MM-dd',
+                            ).format(parsedDate);
+                          }
+                        } catch (e) {
+                          formattedDate = dateController.text;
+                        }
                         final adminData = {
-                          'employee_code': employeeCodeController.text.trim(),
-                          'date_of_joining': dateController.text.trim(),
-                          'name': nameController.text.trim(),
-                          'email': emailController.text.trim(),
-                          'address': addressController.text.trim(),
-                          'phone_number': phoneController.text.trim(),
-                          'password':
-                              passwordController.text
-                                  .trim(), 
-                          'position':
-                              'Administrator', 
-                          'branchId':
-                              selectBranch?.branchId.id ??
-                              '', // Ensure branchId is just the ID
+                          'employee_code': employeeCodeController.text,
+                          'date_of_joining': formattedDate,
+                          'name': nameController.text,
+                          'email': emailController.text,
+                          'address': addressController.text,
+                          'phone_number': phoneController.text,
+                          'password': passwordController.text,
+                          'position': 'Administrator',
+                          'branchId': selectBranch?.branchId.id ?? '',
                           'head_administractor':
                               headAdminController.text.trim() == "true"
                                   ? true
                                   : false,
                           'salary':
-                              double.tryParse(salaryController.text.trim()) ??
-                              0.0,
-                          'status': true,
-                          'is_admin': true, // Adjust based on your logic
-                          'managerPoint': [], // Default empty list
-                          'lead': [], // Default empty list
-                          'registration': [], // Default empty list
-                          'createdAt':
-                              DateTime.now()
-                                  .toIso8601String(), // Add current timestamp
-                          'updatedAt':
-                              DateTime.now()
-                                  .toIso8601String(), // Add current timestamp
-                          '__v': 0, // Default version
+                              double.tryParse(salaryController.text) ?? 0.0,
                         };
 
                         if (isupdate && adminId != null) {
@@ -590,19 +626,19 @@ Future<void> AdministratoropenDialog(
                             context,
                           ).add(AddAdimini(adiminiData: adminData));
                         }
-
-                        employeeCodeController.clear();
-                        dateController.clear();
-                        nameController.clear();
-                        emailController.clear();
-                        addressController.clear();
-                        phoneController.clear();
-                        passwordController.clear();
-                        confirmPasswordController.clear();
-                        branchController.clear();
-                        salaryController.clear();
-                        headAdminController.clear();
-
+                        if (!isupdate) {
+                          employeeCodeController.clear();
+                          dateController.clear();
+                          nameController.clear();
+                          emailController.clear();
+                          addressController.clear();
+                          phoneController.clear();
+                          passwordController.clear();
+                          confirmPasswordController.clear();
+                          branchController.clear();
+                          salaryController.clear();
+                          headAdminController.clear();
+                        }
                         Navigator.pop(context);
                         BlocProvider.of<AdiministactorBloc>(
                           context,
@@ -642,7 +678,6 @@ TableRow _AdiministationTableRow({
     children: [
       cell(code),
       cell(name),
-
       cell(phone),
 
       Padding(

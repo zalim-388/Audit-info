@@ -1,6 +1,5 @@
 import 'package:audit_info/Repositry/Api/manager/managerApi.dart';
 import 'package:audit_info/Repositry/model/manager_model.dart';
-
 import 'package:audit_info/bloc/manger/manager_bloc.dart';
 import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';
@@ -9,7 +8,6 @@ import 'package:audit_info/utils/customDrawer.dart';
 import 'package:audit_info/utils/table.dart';
 import 'package:audit_info/utils/textfield.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
-import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -312,40 +310,35 @@ class _BranchMangerState extends State<BranchManager> {
                                 final manager = filteredmanger[index];
                                 return _BranchmanagertableRow(
                                   code: manager.employeeCode,
-
-                                  status: manager.refresh,
+                                   status: manager.refresh,
                                   onToggle: (bool value) {
-                                    setState(() {
+                                
                                       filteredmanger[index].refresh = value;
                                       BlocProvider.of<ManagerBloc>(context).add(
                                         updatemanger(
                                           manager.id,
-                                          updatedata: {"status": value},
+                                          updatedata: {"refresh": value},
                                         ),
                                       );
-                                    });
+                            
                                   },
 
                                   onEdit: () {
-                                    final Managermodel selected = branches
-                                        .firstWhere(
-                                          (b) =>
-                                              b.branchId.id ==
-                                              manager.branchId.name,
+                             final Managermodel selected = branches.firstWhere(
+                                  (e) => e.branchId.id == manager.branchId.name,
+                                  orElse:
+                                      () => branches.isNotEmpty ? branches[0] : manager,
+                                );
+                                setState(() {
+                                  selectedBranch = selected;
+                                });
 
-                                          orElse:
-                                              () =>
-                                                  branches.isNotEmpty
-                                                      ? branches[0]
-                                                      : manager,
-                                        );
                                     setState(() {
                                       selectedBranch = selected;
                                     });
 
                                     _BranchManageropenDialog(
                                       context,
-
                                       selectedBranch,
                                       (value) {
                                         setState(() {
@@ -358,7 +351,6 @@ class _BranchMangerState extends State<BranchManager> {
                                         ..text = DateFormat(
                                           'yyyy-MM-dd',
                                         ).format(manager.dateOfJoining),
-
                                       nameController..text = manager.name,
                                       emailController..text = manager.email,
                                       addressController..text = manager.address,
@@ -390,7 +382,7 @@ class _BranchMangerState extends State<BranchManager> {
                       ],
                     );
                   }
-                  return SizedBox();
+                  return Container();
                 },
               ),
             ],
@@ -449,7 +441,7 @@ Future<void> _BranchManageropenDialog(
                       ),
                       InkWell(
                         onTap: () => Navigator.pop(context),
-                        child: Icon(Icons.close, color: AppColors.kBorderColor),
+                        child: Icon(Icons.close, color: Colors.black),
                       ),
                     ],
                   ),
@@ -461,21 +453,28 @@ Future<void> _BranchManageropenDialog(
                   SizedBox(height: 10.h),
                   fullTextField(
                     title: "Date of Joining",
-
+                    controller: dateController,
                     icon: Icons.calendar_today,
                     onTap: () async {
-                      final dateRange = await showRangePickerDialog(
+                      showDatePicker(
                         context: context,
                         initialDate: DateTime.now(),
-                        minDate: DateTime(2021, 1, 1),
-                        maxDate: DateTime(2025, 12, 31),
-                      );
-                      if (dateRange != null) {
-                        dateController.text = DateFormat(
-                          'yyyy-MM-dd',
-                        ).format(dateRange.start);
-                      }
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                      ).then((pickedDate) {
+                        if (pickedDate != null) {
+                          dateController.text = DateFormat(
+                            'yyyy-MM-dd',
+                          ).format(pickedDate);
+                        }
+                      });
                     },
+
+                    validator:
+                        (Value) =>
+                            Value!.isEmpty
+                                ? "Date of Joining is required"
+                                : null,
                   ),
                   fullTextField(title: "Name", controller: nameController),
                   SizedBox(height: 10.h),
@@ -508,10 +507,12 @@ Future<void> _BranchManageropenDialog(
                     controller: confirmController,
                   ),
                   SizedBox(height: 10.h),
-                  _buildDropdownField(
+                  DropdownField(
                     "Select Branch",
                     selectedBranch?.branchId.name,
-                    branches.map((e) => e.branchId.name).toList(),
+                    branches.map((e) => e.branchId.name).
+                     whereType<String>().
+                    toList(),
                     "Select Branch",
                     (selected) {
                       if (selected != null) {
@@ -580,22 +581,22 @@ Future<void> _BranchManageropenDialog(
                         }
 
                         final managerdata = {
-                          "name": nameController.text.trim(),
-                          "email": emailController.text.trim(),
-                          "password": passwordController.text.trim(),
-                          "position": "Manager",
-                          "employee_code": employecodeController.text.trim(),
+                          "name": nameController.text,
+                          "email": emailController.text,
+                          "password": passwordController.text,
+
+                          "employee_code": employecodeController.text,
                           "phone_number":
-                              int.tryParse(phonenumber.text.trim()) ?? 0,
+                              int.tryParse(phonenumber.text,) ?? 0,
                           "date_of_joining": formattedDate,
-                          "address": addressController.text.trim(),
+                          "address": addressController.text,
                           "head_administractor": true,
                           "point_amount":
-                              int.tryParse(pointamountController.text.trim()) ??
+                              int.tryParse(pointamountController.text,) ??
                               0,
-                          "salary":
+                           "salary":
                               int.tryParse(salaryController.text.trim()) ?? 0,
-                          "branchId": selectedBranch?.branchId.id ?? "",
+                          "branchId": selectedBranch?.branchId.id,
                         };
                         if (isUpdate && managerid != null) {
                           BlocProvider.of<ManagerBloc>(context).add(
@@ -643,84 +644,10 @@ Future<void> _BranchManageropenDialog(
   );
 }
 
-Widget _buildDropdownField(
-  String label,
-  String? selectedValue,
-  List<String> options,
-  String hint,
-  Function(String?) onChanged,
-  BuildContext context,
-) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(label, style: FontStyles.body),
-      SizedBox(height: 8.h),
-      GestureDetector(
-        onTapDown: (TapDownDetails details) async {
-          final selected = await showMenu<String>(
-            context: context,
-            position: RelativeRect.fromLTRB(
-              details.globalPosition.dx,
-              details.globalPosition.dy,
-              MediaQuery.of(context).size.width - details.globalPosition.dx,
-              MediaQuery.of(context).size.height - details.globalPosition.dy,
-            ),
-            items:
-                options.map((option) {
-                  return PopupMenuItem<String>(
-                    value: option,
-                    child: Text(
-                      option,
-                      style: GoogleFonts.poppins(fontSize: 12),
-                    ),
-                  );
-                }).toList(),
-            color: Colors.white,
-          );
-
-          if (selected != null) {
-            onChanged(selected);
-          }
-        },
-        child: Container(
-          height: 30.h,
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 12.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(6),
-            border: Border.all(color: AppColors.kBorderColor),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                selectedValue ?? hint,
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color:
-                      selectedValue == null
-                          ? const Color(0xFF868686)
-                          : Colors.black,
-                ),
-              ),
-              Icon(
-                Icons.keyboard_arrow_down,
-                size: 16,
-                color: AppColors.kTextColor,
-              ),
-            ],
-          ),
-        ),
-      ),
-    ],
-  );
-}
 
 TableRow _BranchmanagertableRow({
   required String code,
- required bool status,
+  required bool status,
   required VoidCallback onEdit,
   required VoidCallback onDelete,
   required ValueChanged<bool> onToggle,

@@ -57,7 +57,7 @@ class AccountantBloc extends Bloc<AccountantEvent, AccountantState> {
 
         final result = await Accountantapi().getAccountant();
 
-        emit(Accountantblocloaded(Account: List.from(result)));
+        emit(Accountantblocloaded(Account: result));
       } catch (e) {
         print("API update error: $e");
         emit(AccountantblocError());

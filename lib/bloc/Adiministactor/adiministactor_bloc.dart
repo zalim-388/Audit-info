@@ -19,7 +19,7 @@ class AdiministactorBloc
         emit(AdiministactorError(message: e.toString()));
       }
     });
-on<AddAdimini>((event, emit) async {
+    on<AddAdimini>((event, emit) async {
       emit(AdiministactorLoading());
       try {
         await AdiministactorApi().AddAdimini(event.adiminiData);
@@ -34,8 +34,10 @@ on<AddAdimini>((event, emit) async {
       emit(AdiministactorLoading());
       try {
         await AdiministactorApi().DeleteAdimini(event.id);
-        adiministactors.removeWhere((a) => a.id == event.id);
-        emit(AdiministactorLoaded(adiministactors: adiministactors));
+
+        final updatedelete = await AdiministactorApi().getAdiministactor();
+        print("Fetched ${updatedelete.length} Adiministactor after deletion");
+        emit(AdiministactorLoaded(adiministactors: updatedelete));
       } catch (e) {
         emit(AdiministactorError(message: e.toString()));
       }
@@ -51,10 +53,5 @@ on<AddAdimini>((event, emit) async {
         emit(AdiministactorError(message: e.toString()));
       }
     });
-
-
-
-
-
   }
 }

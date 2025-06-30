@@ -218,7 +218,6 @@ class _StudentManagmentState extends State<StudentManagment> {
                       padding: const EdgeInsets.only(left: 250),
                       child: GestureDetector(
                         onTap: () {
-                          // Add your show functionality here
                           print('Show button tapped');
                         },
                         child: Container(
@@ -719,9 +718,10 @@ Widget downbotton(BuildContext context) {
               borderRadius: BorderRadius.circular(4),
             ),
             alignment: Alignment.center,
-            child:Text("Add Amount",
-            style: FontStyles.body.copyWith(color: Colors.white),
-            )
+            child: Text(
+              "Add Amount",
+              style: FontStyles.body.copyWith(color: Colors.white),
+            ),
           ),
         ),
       ],

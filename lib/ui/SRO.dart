@@ -145,7 +145,7 @@ class _SroState extends State<Sro> {
                 ),
               );
             },
-            icon:  Icon(Icons.logout_rounded, color: Color(0xFF414143)),
+            icon: Icon(Icons.logout_rounded, color: Color(0xFF414143)),
           ),
         ],
       ),
@@ -351,16 +351,23 @@ class _SroState extends State<Sro> {
                                     });
                                   },
                                   branches,
-                                  employecodeController,
-                                  dateController,
-                                  nameController,
-                                  emailController,
-                                  addressController,
-                                  phonenumber,
-                                  passwordController,
-                                  confirmController,
-                                  pointamountController,
+                                  employecodeController
+                                    ..text = sro.employeeCode,
+                                  dateController
+                                    ..text = DateFormat(
+                                      'yyyy-MM-dd',
+                                    ).format(sro.dateOfJoining),
+
+                                  nameController..text = sro.name,
+                                  emailController..text = sro.email,
+                                  addressController..text = sro.address,
+                                  phonenumber..text = sro.phoneNumber,
+                                  passwordController..text = sro.password,
+                                  confirmController..text = sro.password,
+                                  pointamountController
+                                    ..text = sro.pointAmount.toString(),
                                   salaryController,
+
                                   isUpdate: true,
                                   sroid: sro.id,
                                 );

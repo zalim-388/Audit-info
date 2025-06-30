@@ -9,9 +9,8 @@ import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
 import 'package:audit_info/utils/table.dart';
-
+import 'package:audit_info/utils/textfield.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
-import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -168,6 +167,7 @@ class _AccountantState extends State<Accountant> {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 22),
         child: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
           child: Column(
             children: [
               SizedBox(height: 13.h),
@@ -303,9 +303,8 @@ class _AccountantState extends State<Accountant> {
                           1: FixedColumnWidth(40), // Name
                           2: FixedColumnWidth(70), // Email
                           3: FixedColumnWidth(70), // Phone
-                          4: FixedColumnWidth(40), // Status
-
-                          5: FlexColumnWidth(70), // Actions
+                          4: FixedColumnWidth(50), // Status
+                          5: FlexColumnWidth(50), // Actions
                         },
 
                         children: [
@@ -330,7 +329,7 @@ class _AccountantState extends State<Accountant> {
                               phone: account.phoneNumber.toString(),
                               status: account.status,
                               onToggle: (bool value) {
-                                setState(() {
+                    
                                   filteredAccounts[index].status = value;
                                   BlocProvider.of<AccountantBloc>(context).add(
                                     UpdateAccount(
@@ -338,10 +337,13 @@ class _AccountantState extends State<Accountant> {
                                       id: account.status.toString(),
                                     ),
                                   );
-                                });
+                            
                               },
 
                               onEdit: () {
+
+                                
+
                                 AccountantopenDialog(
                                   context,
                                   selectedBranch,
@@ -479,63 +481,69 @@ Future<void> AccountantopenDialog(
                   ),
                   SizedBox(height: 20.h),
 
-                  _fullTextField(
+                  fullTextField(
                     title: "Employee Code",
                     keyboardType: TextInputType.name,
                     controller: employecodeController,
                   ),
-                  _fullTextField(
+                  fullTextField(
                     title: "Date of Joining",
                     controller: dateOfJoiningController,
                     icon: Icons.calendar_today,
                     onTap: () async {
-                      final dateRange = await showRangePickerDialog(
+                      showDatePicker(
                         context: context,
                         initialDate: DateTime.now(),
-                        minDate: DateTime(2021, 1, 1),
-                        maxDate: DateTime(2025, 12, 31),
-                      );
-
-                      if (dateRange != null) {
-                        dateOfJoiningController.text = DateFormat(
-                          'yyyy-MM-dd',
-                        ).format(dateRange.start);
-                      }
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2101),
+                      ).then((pickedDate) {
+                        if (pickedDate != null) {
+                          dateOfJoiningController.text = DateFormat(
+                            'yyyy-MM-dd',
+                          ).format(pickedDate);
+                        }
+                      });
                     },
+
+                    validator:
+                        (Value) =>
+                            Value!.isEmpty
+                                ? "Date of Joining is required"
+                                : null,
                   ),
-                  _fullTextField(title: "Name", controller: nameController),
+                  fullTextField(title: "Name", controller: nameController),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Email",
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Address",
                     controller: addressController,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Phone Number",
                     controller: phoneController,
                     keyboardType: TextInputType.phone,
                   ),
                   SizedBox(height: 10.h),
-                  _fullTextField(
+                  fullTextField(
                     title: "Password",
                     isPassword: true,
                     controller: passwordController,
                   ),
                   SizedBox(height: 10.h),
 
-                  _fullTextField(
+                  fullTextField(
                     title: "Confirm Password",
                     isPassword: true,
                     controller: confirmpasswordcontroller,
                   ),
                   SizedBox(height: 10.h),
-                  _buildDropdownField(
+                  DropdownField(
                     "Select Branch",
                     selectedBranch?.branchId?.name,
                     branches.map((e) => e.branchId!.name).toList(),
@@ -550,7 +558,7 @@ Future<void> AccountantopenDialog(
                     },
                     context,
                   ),
-                  _fullTextField(
+                  fullTextField(
                     title: "Salary",
                     keyboardType: TextInputType.number,
                     controller: salaryController,
@@ -647,127 +655,5 @@ Future<void> AccountantopenDialog(
         ),
       );
     },
-  );
-}
-
-Widget _fullTextField({
-  required String title,
-  IconData? icon,
-  bool isPassword = false,
-  double? width,
-  TextInputType keyboardType = TextInputType.text,
-  TextEditingController? controller,
-
-  VoidCallback? onTap,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(title, style: FontStyles.body),
-      SizedBox(height: 4.h),
-      SizedBox(
-        height: 30.h,
-        width: width ?? 324.w,
-        child: TextField(
-          controller: controller,
-          keyboardType: keyboardType,
-          obscureText: isPassword,
-          decoration: InputDecoration(
-            hintStyle: GoogleFonts.poppins(fontSize: 12),
-            suffixIcon: IconButton(
-              onPressed: onTap,
-              icon: Icon(icon, size: 18),
-            ),
-
-            contentPadding: EdgeInsets.symmetric(horizontal: 12),
-            filled: true,
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-              borderSide: BorderSide(color: AppColors.kBorderColor),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-              borderSide: BorderSide(color: AppColors.kBorderColor),
-            ),
-          ),
-        ),
-      ),
-    ],
-  );
-}
-
-Widget _buildDropdownField(
-  String label,
-  String? selectedValue,
-  List<String> options,
-  String hint,
-  Function(String?) onChanged,
-  BuildContext context,
-) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(label, style: FontStyles.body),
-      SizedBox(height: 8.h),
-      GestureDetector(
-        onTapDown: (TapDownDetails details) async {
-          final selected = await showMenu<String>(
-            context: context,
-            position: RelativeRect.fromLTRB(
-              details.globalPosition.dx,
-              details.globalPosition.dy,
-              MediaQuery.of(context).size.width - details.globalPosition.dx,
-              MediaQuery.of(context).size.height - details.globalPosition.dy,
-            ),
-            items:
-                options.map((option) {
-                  return PopupMenuItem<String>(
-                    value: option,
-                    child: Text(
-                      option,
-                      style: GoogleFonts.poppins(fontSize: 12),
-                    ),
-                  );
-                }).toList(),
-            color: Colors.white,
-          );
-
-          if (selected != null) {
-            onChanged(selected);
-          }
-        },
-        child: Container(
-          height: 30.h,
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 12.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(6),
-            border: Border.all(color: AppColors.kBorderColor),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                selectedValue ?? hint,
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color:
-                      selectedValue == null
-                          ? const Color(0xFF868686)
-                          : Colors.black,
-                ),
-              ),
-              Icon(
-                Icons.keyboard_arrow_down,
-                size: 16,
-                color: AppColors.kTextColor,
-              ),
-            ],
-          ),
-        ),
-      ),
-    ],
   );
 }

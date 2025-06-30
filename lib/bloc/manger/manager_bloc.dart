@@ -13,7 +13,7 @@ class ManagerBloc extends Bloc<ManagerEvent, ManagerState> {
     on<fetchmanager>((event, emit) async {
       emit(ManagerBlocloading());
       try {
-        final  result = await ManagerApi().getManager();
+        final result = await ManagerApi().getManager();
         print("Fecth${result.length} mangaer");
         emit(ManagerBlocloaded(manager: result));
       } catch (e) {
@@ -27,8 +27,7 @@ class ManagerBloc extends Bloc<ManagerEvent, ManagerState> {
       try {
         await ManagerApi().addManager(event.managerdata);
         final result = await ManagerApi().getManager();
-
-        emit(ManagerBlocloaded(manager: result));
+         emit(ManagerBlocloaded(manager: result));
       } catch (e) {
         print("Manager add error: $e");
         emit(ManagerBlocError());
@@ -39,8 +38,9 @@ class ManagerBloc extends Bloc<ManagerEvent, ManagerState> {
       emit(ManagerBlocloading());
       try {
         await ManagerApi().deleteManager(event.id);
-        manager.removeWhere((m) => m.id == event.id);
-        emit(ManagerBlocloaded(manager: manager));
+        final updatedelete = await ManagerApi().getManager();
+        print("Fetched ${updatedelete.length} manager after deletion");
+        emit(ManagerBlocloaded(manager: updatedelete));
       } catch (e) {
         print("Manager delete error: $e");
         emit(ManagerBlocError());
@@ -51,9 +51,7 @@ class ManagerBloc extends Bloc<ManagerEvent, ManagerState> {
       emit(ManagerBlocloading());
       try {
         await ManagerApi().updatemanger(event.updatedata, event.id);
-
         final result = await ManagerApi().getManager();
-        // manager=result;
         emit(ManagerBlocloaded(manager: result));
       } catch (e) {
         print("API update error: $e");

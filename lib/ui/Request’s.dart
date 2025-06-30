@@ -28,15 +28,29 @@ class _RequestState extends State<Request> {
     "Admission",
     "Registration",
     "Booking",
-    "Fees",
-    "Confirmation",
+    "College Fees",
+    "Booking Confirmation",
     "Acknowledgement",
     "Refund",
     "Amount Collection",
     "Agent Payment",
   ];
 
+  // Sample data for table
+  List<Map<String, String>> tableData = [
+    {
+      "slNo": "1",
+      "studentName": "Salim",
+      "collegeName": "MSP",
+      "courseName": "BBA",
+      "fullAmount": "700000",
+      "receivedAmount": "50000",
+    },
+    // Add more data as needed
+  ];
+
   TextEditingController searchController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +72,7 @@ class _RequestState extends State<Request> {
                 },
               ),
         ),
-        title: Text(" Request’s", style: FontStyles.heading),
+        title: Text(" Request's", style: FontStyles.heading),
         actions: [
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 6.0),
@@ -106,13 +120,13 @@ class _RequestState extends State<Request> {
           child: Column(
             children: [
               SizedBox(height: 13.h),
+              // Search Field
               Row(
                 children: [
                   Expanded(
                     child: SizedBox(
                       width: 322.w,
                       height: 30.h,
-
                       child: TextField(
                         controller: searchController,
                         decoration: InputDecoration(
@@ -143,6 +157,8 @@ class _RequestState extends State<Request> {
                 ],
               ),
               SizedBox(height: 13.h),
+
+              // Request Grid
               GridView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -162,24 +178,25 @@ class _RequestState extends State<Request> {
                         selectedRequestIndex = index;
                       });
                     },
-                    child: IntrinsicWidth(
-                      child: Container(
-                        height: 25.h,
-
-                        decoration: BoxDecoration(
-                          color:
-                              isSelected
-                                  ? AppColors.kPrimaryColor
-                                  : Colors.black,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        alignment: Alignment.center,
+                    child: Container(
+                      height: 25.h,
+                      decoration: BoxDecoration(
+                        color:
+                            isSelected ? AppColors.kPrimaryColor : Colors.black,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      alignment: Alignment.center,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 4.0),
                         child: Text(
                           request,
                           style: FontStyles.body.copyWith(
                             color: Colors.white,
                             fontSize: 11,
                           ),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                     ),
@@ -187,51 +204,100 @@ class _RequestState extends State<Request> {
                 },
               ),
               SizedBox(height: 23.h),
+
               if (selectedRequestIndex != -1) ...[
                 Container(
-                  width: 358.w,
-
+                  width: double.infinity,
                   decoration: BoxDecoration(
-                    color: AppColors.kContainerColor,
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(4),
-                      topRight: Radius.circular(4),
-                    ),
-                    border: Border(
-                      top: BorderSide(color: Colors.black),
-                      left: BorderSide(color: Colors.black),
-                      right: BorderSide(color: Colors.black),
-                    ),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: AppColors.kBorderColor),
                   ),
-                  child: Table(
-                    border: TableBorder(
-                      borderRadius: BorderRadius.circular(4),
-                      horizontalInside: BorderSide(
-                        color: AppColors.kBorderColor,
-                      ),
-                      verticalInside: BorderSide(color: AppColors.kBorderColor),
-                      bottom: BorderSide(color: Colors.black),
-                    ),
-                    columnWidths: <int, TableColumnWidth>{
-                      0: FixedColumnWidth(50),
-                      1: FixedColumnWidth(50),
-                      2: FixedColumnWidth(30),
-                      3: FixedColumnWidth(30),
-                      4: FixedColumnWidth(60),
-                      5: FixedColumnWidth(30),
-                    },
-
+                  child: Column(
                     children: [
-                      TableRow(
-                        decoration: BoxDecoration(color: Colors.grey[300]),
+                      Table(
+                        border: TableBorder(
+                          horizontalInside: BorderSide(
+                            color: AppColors.kBorderColor,
+                          ),
+                          verticalInside: BorderSide(
+                            color: AppColors.kBorderColor,
+                          ),
+                        ),
+                        columnWidths: <int, TableColumnWidth>{
+                          0: FixedColumnWidth(50),
+                          1: FixedColumnWidth(50),
+                          2: FixedColumnWidth(30),
+                          3: FixedColumnWidth(30),
+                          4: FixedColumnWidth(60),
+                          5: FixedColumnWidth(30),
+                        },
                         children: [
-                          tableheadRow("Sl.No"),
-                          tableheadRow("Student Name"),
-                          tableheadRow("College Name"),
-                          tableheadRow("Course name"),
-                          tableheadRow("Full amount"),
-                          tableheadRow("Recived amount"),
+                          TableRow(
+                            decoration: BoxDecoration(color: Colors.grey[300]),
+                            children: [
+                              tableheadRow("Sl.No"),
+                              tableheadRow("Student name"),
+                              tableheadRow("College Name"),
+                              tableheadRow("Course name"),
+                              tableheadRow("Full amount"),
+                              tableheadRow("Received amount"),
+                            ],
+                          ),
+
+                          ...tableData
+                              .map(
+                                (data) => _AdmissionTableRow(
+                                  slNo: data["slNo"]!,
+                                  studentName: data["studentName"]!,
+                                  collegeName: data["collegeName"]!,
+                                  courseName: data["courseName"]!,
+                                  fullAmount: data["fullAmount"]!,
+                                  receivedAmount: data["receivedAmount"]!,
+                                ),
+                              )
+                              .toList(),
                         ],
+                      ),
+
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.all(16.0),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(4),
+                            bottomRight: Radius.circular(4),
+                          ),
+                          border: Border(
+                            top: BorderSide(color: AppColors.kBorderColor),
+                          ),
+                        ),
+                        child: Center(
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _showAddAmountDialog();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.kPrimaryColor,
+                              foregroundColor: Colors.white,
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 24,
+                                vertical: 12,
+                              ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                            ),
+                            child: Text(
+                              "Add amount",
+                              style: FontStyles.body.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -243,26 +309,60 @@ class _RequestState extends State<Request> {
       ),
     );
   }
-}
 
-Future<Widget> Contaiers({required String title}) async {
-  return Column(
-    children: [
-      IntrinsicWidth(
-        child: Container(
-          height: 25.h,
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          decoration: BoxDecoration(
-            color: Colors.black,
-            borderRadius: BorderRadius.circular(5),
+  TableRow _AdmissionTableRow({
+    required String slNo,
+    required String studentName,
+    required String collegeName,
+    required String courseName,
+    required String fullAmount,
+    required String receivedAmount,
+  }) {
+    return TableRow(
+      children: [
+        cell(slNo),
+        cell(studentName),
+        cell(collegeName),
+        cell(courseName),
+        cell(fullAmount),
+        cell(receivedAmount),
+      ],
+    );
+  }
+
+  void _showAddAmountDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Add Amount"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(
+                decoration: InputDecoration(
+                  labelText: "Amount",
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+              ),
+            ],
           ),
-          alignment: Alignment.center,
-          child: Text(
-            title,
-            style: FontStyles.body.copyWith(color: Colors.white, fontSize: 11),
-          ),
-        ),
-      ),
-    ],
-  );
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                // Handle save action
+                Navigator.pop(context);
+              },
+              child: Text("Save"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
