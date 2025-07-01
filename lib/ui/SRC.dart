@@ -8,7 +8,6 @@ import 'package:audit_info/utils/customDrawer.dart';
 import 'package:audit_info/utils/table.dart';
 import 'package:audit_info/utils/textfield.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -269,7 +268,7 @@ class _SrcState extends State<Src> {
                       ],
                     );
                   } else if (state is srcBlocloaded) {
-                     allsrc = state.SRC;
+                    allsrc = state.SRC;
                     if (searchController.text.isEmpty) {
                       filteredsrc = allsrc;
                     }
@@ -284,115 +283,124 @@ class _SrcState extends State<Src> {
                           topRight: Radius.circular(4),
                         ),
                         border: Border(
-                          bottom: BorderSide(color: AppColors.kBorderColor),
-
+                          left: BorderSide(color: AppColors.kBorderColor),
+                          right: BorderSide(color: AppColors.kBorderColor),
                           top: BorderSide(color: AppColors.kBorderColor),
                         ),
                       ),
-                      child: Table(
-                        border: TableBorder(
-                          borderRadius: BorderRadius.circular(4),
-                          horizontalInside: BorderSide(
-                            color: AppColors.kBorderColor,
-                          ),
-                          verticalInside: BorderSide(
-                            color: AppColors.kBorderColor,
-                          ),
-
-                          left: BorderSide(color: AppColors.kBorderColor),
-                          right: BorderSide(color: AppColors.kBorderColor),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(4),
+                          topRight: Radius.circular(4),
                         ),
-                        columnWidths: const <int, TableColumnWidth>{
-                          0: FixedColumnWidth(50), // E.CODE
-                          1: FixedColumnWidth(50), // Name
-                          2: FixedColumnWidth(40), // Branch Name
-                          3: FixedColumnWidth(70), // Phone Number
-                          4: FixedColumnWidth(40), // Point Amount
-                          5: FixedColumnWidth(40), // Status (toggle)
-                          6: FixedColumnWidth(80), // Actions (icons)
-                        },
 
-                        children: [
-                          TableRow(
-                            decoration: BoxDecoration(color: Colors.grey[300]),
-                            children: [
-                              tableheadRow('E.Code'),
-                              tableheadRow('Name'),
-                              tableheadRow('Branch name'),
-                              tableheadRow("phone number"),
-                              tableheadRow('Point Amount'),
-                              tableheadRow('Status'),
-                              tableheadRow('Actions'),
-                            ],
+                        child: Table(
+                          border: TableBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            horizontalInside: BorderSide(
+                              color: AppColors.kBorderColor,
+                            ),
+                            verticalInside: BorderSide(
+                              color: AppColors.kBorderColor,
+                            ),
+
+                            bottom: BorderSide(color: AppColors.kBorderColor),
                           ),
-                          ...List.generate(filteredsrc.length, (index) {
-                            final SRC = filteredsrc[index];
+                          columnWidths: const <int, TableColumnWidth>{
+                            0: FixedColumnWidth(50), // E.CODE
+                            1: FixedColumnWidth(50), // Name
+                            2: FixedColumnWidth(40), // Branch Name
+                            3: FixedColumnWidth(70), // Phone Number
+                            4: FixedColumnWidth(40), // Point Amount
+                            5: FixedColumnWidth(40), // Status (toggle)
+                            6: FixedColumnWidth(80), // Actions (icons)
+                          },
 
-                            return _SrcTableRow(
-                              code: SRC.employeeCode,
-                              name: SRC.name,
-                              branchName: SRC.branchId.toString(),
-                              phone: SRC.phoneNumber,
-                              pointAmount: SRC.pointAmount.toString(),
-                              status: SRC.status,
+                          children: [
+                            TableRow(
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                              ),
+                              children: [
+                                tableheadRow('E.Code'),
+                                tableheadRow('Name'),
+                                tableheadRow('Branch name'),
+                                tableheadRow("phone number"),
+                                tableheadRow('Point Amount'),
+                                tableheadRow('Status'),
+                                tableheadRow('Actions'),
+                              ],
+                            ),
+                            ...List.generate(filteredsrc.length, (index) {
+                              final SRC = filteredsrc[index];
 
-                              onToggle: (bool value) {
-                                filteredsrc[index].status = value;
-                                BlocProvider.of<SrcBlocBloc>(context).add(
-                                  updatesrc(
-                                    updatedData: {"status": value},
-                                    id: SRC.id,
-                                  ),
-                                );
-                              },
-                              onEdit: () {
-                                final SrcModel selected = branch.firstWhere(
-                                  (e) => e.branchId?.id == SRC.branchId?.name,
-                                  orElse:
-                                      () => branch.isNotEmpty ? branch[0] : SRC,
-                                );
-                                setState(() {
-                                  selectedBranch = selected;
-                                });
+                              return _SrcTableRow(
+                                code: SRC.employeeCode,
+                                name: SRC.name,
+                                branchName: SRC.branchId.toString(),
+                                phone: SRC.phoneNumber,
+                                pointAmount: SRC.pointAmount.toString(),
+                                status: SRC.status,
 
-                                SRCopenDialog(
-                                  context,
-                                  selectedBranch,
-                                  (value) {
-                                    setState(() {
-                                      selectedBranch = value;
-                                    });
-                                  },
-                                  employecodeController
-                                    ..text = SRC.employeeCode,
-                                  dateController
-                                    ..text = DateFormat(
-                                      'yyyy-MM-dd',
-                                    ).format(SRC.dateOfJoining),
+                                onToggle: (bool value) {
+                                  filteredsrc[index].status = value;
+                                  BlocProvider.of<SrcBlocBloc>(context).add(
+                                    updatesrc(
+                                      updatedData: {"status": value},
+                                      id: SRC.id,
+                                    ),
+                                  );
+                                },
+                                onEdit: () {
+                                  final SrcModel selected = branch.firstWhere(
+                                    (e) => e.branchId?.id == SRC.branchId?.name,
+                                    orElse:
+                                        () =>
+                                            branch.isNotEmpty ? branch[0] : SRC,
+                                  );
+                                  setState(() {
+                                    selectedBranch = selected;
+                                  });
 
-                                  nameController..text = SRC.name,
-                                  emailController..text = SRC.email,
-                                  addressController..text = SRC.address,
-                                  phonenumber
-                                    ..text = SRC.phoneNumber.toString(),
-                                  confirmController..text = SRC.password,
-                                  pointamountController
-                                    ..text = SRC.pointAmount.toString(),
-                                  salaryController,
-                                  passwordController..text = SRC.password,
-                                  branch,
-                                  isUpdate: true,
-                                  srcId: SRC.id,
-                                );
-                              },
-                              onDelete: () {
-                                BlocProvider.of<SrcBlocBloc>(
-                                  context,
-                                ).add(deletesrc(id: SRC.id));
-                              },
-                            );
-                          }),
-                        ],
+                                  SRCopenDialog(
+                                    context,
+                                    selectedBranch,
+                                    (value) {
+                                      setState(() {
+                                        selectedBranch = value;
+                                      });
+                                    },
+                                    employecodeController
+                                      ..text = SRC.employeeCode,
+                                    dateController
+                                      ..text = DateFormat(
+                                        'yyyy-MM-dd',
+                                      ).format(SRC.dateOfJoining),
+
+                                    nameController..text = SRC.name,
+                                    emailController..text = SRC.email,
+                                    addressController..text = SRC.address,
+                                    phonenumber
+                                      ..text = SRC.phoneNumber.toString(),
+                                    confirmController..text = SRC.password,
+                                    pointamountController
+                                      ..text = SRC.pointAmount.toString(),
+                                    salaryController,
+                                    passwordController..text = SRC.password,
+                                    branch,
+                                    isUpdate: true,
+                                    srcId: SRC.id,
+                                  );
+                                },
+                                onDelete: () {
+                                  BlocProvider.of<SrcBlocBloc>(
+                                    context,
+                                  ).add(deletesrc(id: SRC.id));
+                                },
+                              );
+                            }),
+                          ],
+                        ),
                       ),
                     );
                   }

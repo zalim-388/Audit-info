@@ -271,65 +271,70 @@ class _AccountantState extends State<Accountant> {
                     }
                     return Container(
                       width: 358.w,
-                      height: 25.12.h,
+
                       decoration: BoxDecoration(
                         color: AppColors.kContainerColor,
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(4),
                           topRight: Radius.circular(4),
                         ),
 
                         border: Border(
-                          bottom: BorderSide(color: AppColors.kBorderColor),
-
                           top: BorderSide(color: AppColors.kBorderColor),
-                        ),
-                      ),
-                      child: Table(
-                        border: TableBorder(
-                          borderRadius: BorderRadius.circular(4),
-                          horizontalInside: BorderSide(
-                            color: AppColors.kBorderColor,
-                          ),
-                          verticalInside: BorderSide(
-                            color: AppColors.kBorderColor,
-                          ),
-
                           left: BorderSide(color: AppColors.kBorderColor),
                           right: BorderSide(color: AppColors.kBorderColor),
                         ),
-                        columnWidths: const <int, TableColumnWidth>{
-                          0: FixedColumnWidth(40), // E.Code
-                          1: FixedColumnWidth(40), // Name
-                          2: FixedColumnWidth(70), // Email
-                          3: FixedColumnWidth(70), // Phone
-                          4: FixedColumnWidth(50), // Status
-                          5: FlexColumnWidth(50), // Actions
-                        },
+                      ),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(4),
+                          topRight: Radius.circular(4),
+                        ),
+                        child: Table(
+                          border: TableBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            horizontalInside: BorderSide(
+                              color: AppColors.kBorderColor,
+                            ),
+                            verticalInside: BorderSide(
+                              color: AppColors.kBorderColor,
+                            ),
 
-                        children: [
-                          TableRow(
-                            decoration: BoxDecoration(color: Colors.grey[300]),
-                            children: [
-                              tableheadRow('E.Code'),
-                              tableheadRow('Name'),
-                              tableheadRow('Email'),
-                              tableheadRow("phone number"),
-                              tableheadRow('Status'),
-                              tableheadRow('Actions'),
-                            ],
+                            bottom: BorderSide(color: AppColors.kBorderColor),
                           ),
+                          columnWidths: const <int, TableColumnWidth>{
+                            0: FixedColumnWidth(40), // E.Code
+                            1: FixedColumnWidth(40), // Name
+                            2: FixedColumnWidth(70), // Email
+                            3: FixedColumnWidth(70), // Phone
+                            4: FixedColumnWidth(50), // Status
+                            5: FlexColumnWidth(50), // Actions
+                          },
 
-                          ...List.generate(filteredAccounts.length, (index) {
-                            final account = filteredAccounts[index];
-                            return _accountantRow(
-                              code: account.employeeCode.toString(),
-                              name: account.name.toString(),
-                              email: account.email.toString(),
-                              phone: account.phoneNumber.toString(),
-                              status: account.status,
-                              onToggle: (bool value) {
-                    
+                          children: [
+                            TableRow(
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                              ),
+                              children: [
+                                tableheadRow('E.Code'),
+                                tableheadRow('Name'),
+                                tableheadRow('Email'),
+                                tableheadRow("phone number"),
+                                tableheadRow('Status'),
+                                tableheadRow('Actions'),
+                              ],
+                            ),
+
+                            ...List.generate(filteredAccounts.length, (index) {
+                              final account = filteredAccounts[index];
+                              return _accountantRow(
+                                code: account.employeeCode.toString(),
+                                name: account.name.toString(),
+                                email: account.email.toString(),
+                                phone: account.phoneNumber.toString(),
+                                status: account.status,
+                                onToggle: (bool value) {
                                   filteredAccounts[index].status = value;
                                   BlocProvider.of<AccountantBloc>(context).add(
                                     UpdateAccount(
@@ -337,48 +342,55 @@ class _AccountantState extends State<Accountant> {
                                       id: account.status.toString(),
                                     ),
                                   );
-                            
-                              },
+                                },
 
-                              onEdit: () {
+                                onEdit: () {
+                                  //  final AccountantModel selected = branches.firstWhere(
+                                  //                                   (e) => e.branchId?.id == account.?.name,
+                                  //                                   orElse:
+                                  //                                       () =>
+                                  //                                           branches.isNotEmpty ? branches[0] : SRC,
+                                  //                                 );
+                                  //                                 setState(() {
+                                  //                                   selectedBranch = selected;
+                                  //                                 });
 
-                                
-
-                                AccountantopenDialog(
-                                  context,
-                                  selectedBranch,
-                                  (value) {
-                                    setState(() {
-                                      selectedBranch = value;
-                                    });
-                                  },
-                                  employeeCodeController
-                                    ..text = account.employeeCode.toString(),
-                                  dateOfJoiningController
-                                    ..text = DateFormat(
-                                      'yyyy-MM-dd',
-                                    ).format(account.dateOfJoining),
-                                  nameController..text = account.name,
-                                  emailController..text = account.email,
-                                  addressController..text = account.address,
-                                  phoneController..text = account.phoneNumber,
-                                  confirmpasswordcontroller
-                                    ..text = account.password,
-                                  passwordController..text = account.password,
-                                  salaryController..text = "",
-                                  branches,
-                                  isupdate: true,
-                                  accountId: account.id,
-                                );
-                              },
-                              onDelete: () {
-                                BlocProvider.of<AccountantBloc>(
-                                  context,
-                                ).add(deleteaccount(id: account.id));
-                              },
-                            );
-                          }),
-                        ],
+                                  AccountantopenDialog(
+                                    context,
+                                    selectedBranch,
+                                    (value) {
+                                      setState(() {
+                                        selectedBranch = value;
+                                      });
+                                    },
+                                    employeeCodeController
+                                      ..text = account.employeeCode.toString(),
+                                    dateOfJoiningController
+                                      ..text = DateFormat(
+                                        'yyyy-MM-dd',
+                                      ).format(account.dateOfJoining),
+                                    nameController..text = account.name,
+                                    emailController..text = account.email,
+                                    addressController..text = account.address,
+                                    phoneController..text = account.phoneNumber,
+                                    confirmpasswordcontroller
+                                      ..text = account.password,
+                                    passwordController..text = account.password,
+                                    salaryController..text = "",
+                                    branches,
+                                    isupdate: true,
+                                    accountId: account.id,
+                                  );
+                                },
+                                onDelete: () {
+                                  BlocProvider.of<AccountantBloc>(
+                                    context,
+                                  ).add(deleteaccount(id: account.id));
+                                },
+                              );
+                            }),
+                          ],
+                        ),
                       ),
                     );
                   }

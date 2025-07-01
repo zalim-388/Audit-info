@@ -255,131 +255,122 @@ class _BranchMangerState extends State<BranchManager> {
                     if (searchController.text.isEmpty) {
                       filteredmanger = allManagers;
                     }
-                    return Column(
-                      children: [
-                        Container(
-                          height: 20.h,
-                          width: 354.w,
-                          decoration: BoxDecoration(
-                            color: AppColors.kContainerColor,
-                            border: Border(
-                              top: BorderSide(color: AppColors.kBorderColor),
-
-                              bottom: BorderSide(color: AppColors.kBorderColor),
-                            ),
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(9),
-                              topLeft: Radius.circular(9),
-                              topRight: Radius.circular(9),
-                              bottomRight: Radius.circular(9),
-                            ),
-                          ),
-                          child: Table(
-                            border: TableBorder(
-                              horizontalInside: BorderSide(
-                                color: AppColors.kBorderColor,
-                              ),
-                              verticalInside: BorderSide(
-                                color: AppColors.kBorderColor,
-                              ),
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(9),
-                                topRight: Radius.circular(9),
-                              ),
-                              bottom: BorderSide(color: AppColors.kBorderColor),
-                              left: BorderSide(color: AppColors.kBorderColor),
-                              right: BorderSide(color: AppColors.kBorderColor),
-                            ),
-                            columnWidths: {
-                              0: FixedColumnWidth(150),
-                              1: FixedColumnWidth(40),
-                              2: FixedColumnWidth(70),
-                            },
-                            children: [
-                              TableRow(
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[300],
-                                ),
-                                children: [
-                                  tableheadRow("Id"),
-                                  tableheadRow("Status"),
-                                  tableheadRow("Actions"),
-                                ],
-                              ),
-                              ...List.generate(filteredmanger.length, (index) {
-                                final manager = filteredmanger[index];
-                                return _BranchmanagertableRow(
-                                  code: manager.employeeCode,
-                                   status: manager.refresh,
-                                  onToggle: (bool value) {
-                                
-                                      filteredmanger[index].refresh = value;
-                                      BlocProvider.of<ManagerBloc>(context).add(
-                                        updatemanger(
-                                          manager.id,
-                                          updatedata: {"refresh": value},
-                                        ),
-                                      );
-                            
-                                  },
-
-                                  onEdit: () {
-                             final Managermodel selected = branches.firstWhere(
-                                  (e) => e.branchId.id == manager.branchId.name,
-                                  orElse:
-                                      () => branches.isNotEmpty ? branches[0] : manager,
-                                );
-                                setState(() {
-                                  selectedBranch = selected;
-                                });
-
-                                    setState(() {
-                                      selectedBranch = selected;
-                                    });
-
-                                    _BranchManageropenDialog(
-                                      context,
-                                      selectedBranch,
-                                      (value) {
-                                        setState(() {
-                                          selectedBranch = value;
-                                        });
-                                      },
-                                      employecodeController
-                                        ..text = manager.employeeCode,
-                                      dateController
-                                        ..text = DateFormat(
-                                          'yyyy-MM-dd',
-                                        ).format(manager.dateOfJoining),
-                                      nameController..text = manager.name,
-                                      emailController..text = manager.email,
-                                      addressController..text = manager.address,
-                                      phonenumberController
-                                        ..text = manager.phoneNumber.toString(),
-                                      confirmController
-                                        ..text = manager.password,
-                                      pointamountController
-                                        ..text = manager.pointAmount.toString(),
-                                      salaryController
-                                        ..text = manager.salary.toString(),
-                                      passwordController
-                                        ..text = manager.password,
-                                      branches,
-                                      isUpdate: true,
-                                      managerid: manager.id,
-                                    );
-                                  },
-                                  onDelete: () {
-                                    BlocProvider.of<ManagerBloc>(
-                                      context,
-                                    ).add(DeleteManager(id: manager.id));
-                                  },
-                                );
-                              }),
-                            ],
-                          ),
+                    return Container(
+                      width: 354.w,
+                      decoration: BoxDecoration(
+                        color: AppColors.kContainerColor,
+                        border: const Border(
+                          top: BorderSide(color: AppColors.kBorderColor),
+                          bottom: BorderSide(color: AppColors.kBorderColor),
+                          left: BorderSide(color: AppColors.kBorderColor),
+                          right: BorderSide(color: AppColors.kBorderColor),
                         ),
-                      ],
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(9),
+                          topRight: Radius.circular(9),
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(9),
+                          topRight: Radius.circular(9),
+                        ),
+                        child: Table(
+                          border: const TableBorder(
+                            horizontalInside: BorderSide(
+                              color: AppColors.kBorderColor,
+                            ),
+                            verticalInside: BorderSide(
+                              color: AppColors.kBorderColor,
+                            ),
+                          ),
+                          columnWidths: <int, TableColumnWidth>{
+                            0: FixedColumnWidth(150),
+                            1: FixedColumnWidth(40),
+                            2: FixedColumnWidth(70),
+                          },
+                          children: [
+                            TableRow(
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                              ),
+                              children: [
+                                tableheadRow("Id"),
+                                tableheadRow("Status"),
+                                tableheadRow("Actions"),
+                              ],
+                            ),
+                            ...List.generate(filteredmanger.length, (index) {
+                              final manager = filteredmanger[index];
+                              return _BranchmanagertableRow(
+                                code: manager.employeeCode,
+                                status: manager.refresh,
+                                onToggle: (bool value) {
+                                  filteredmanger[index].refresh = value;
+                                  BlocProvider.of<ManagerBloc>(context).add(
+                                    updatemanger(
+                                      manager.id,
+                                      updatedata: {"refresh": value},
+                                    ),
+                                  );
+                                },
+
+                                onEdit: () {
+                                  final Managermodel selected = branches
+                                      .firstWhere(
+                                        (e) =>
+                                            e.branchId.id ==
+                                            manager.branchId.name,
+                                        orElse:
+                                            () =>
+                                                branches.isNotEmpty
+                                                    ? branches[0]
+                                                    : manager,
+                                      );
+                                  setState(() {
+                                    selectedBranch = selected;
+                                  });
+
+                                  _BranchManageropenDialog(
+                                    context,
+                                    selectedBranch,
+                                    (value) {
+                                      setState(() {
+                                        selectedBranch = value;
+                                      });
+                                    },
+                                    employecodeController
+                                      ..text = manager.employeeCode,
+                                    dateController
+                                      ..text = DateFormat(
+                                        'yyyy-MM-dd',
+                                      ).format(manager.dateOfJoining),
+                                    nameController..text = manager.name,
+                                    emailController..text = manager.email,
+                                    addressController..text = manager.address,
+                                    phonenumberController
+                                      ..text = manager.phoneNumber.toString(),
+                                    confirmController..text = manager.password,
+                                    pointamountController
+                                      ..text = manager.pointAmount.toString(),
+                                    salaryController
+                                      ..text = manager.salary.toString(),
+                                    passwordController..text = manager.password,
+                                    branches,
+                                    isUpdate: true,
+                                    managerid: manager.id,
+                                  );
+                                },
+                                onDelete: () {
+                                  BlocProvider.of<ManagerBloc>(
+                                    context,
+                                  ).add(DeleteManager(id: manager.id));
+                                },
+                              );
+                            }),
+                          ],
+                        ),
+                      ),
                     );
                   }
                   return Container();
@@ -510,9 +501,10 @@ Future<void> _BranchManageropenDialog(
                   DropdownField(
                     "Select Branch",
                     selectedBranch?.branchId.name,
-                    branches.map((e) => e.branchId.name).
-                     whereType<String>().
-                    toList(),
+                    branches
+                        .map((e) => e.branchId.name)
+                        .whereType<String>()
+                        .toList(),
                     "Select Branch",
                     (selected) {
                       if (selected != null) {
@@ -586,15 +578,13 @@ Future<void> _BranchManageropenDialog(
                           "password": passwordController.text,
 
                           "employee_code": employecodeController.text,
-                          "phone_number":
-                              int.tryParse(phonenumber.text,) ?? 0,
+                          "phone_number": int.tryParse(phonenumber.text) ?? 0,
                           "date_of_joining": formattedDate,
                           "address": addressController.text,
                           "head_administractor": true,
                           "point_amount":
-                              int.tryParse(pointamountController.text,) ??
-                              0,
-                           "salary":
+                              int.tryParse(pointamountController.text) ?? 0,
+                          "salary":
                               int.tryParse(salaryController.text.trim()) ?? 0,
                           "branchId": selectedBranch?.branchId.id,
                         };
@@ -643,7 +633,6 @@ Future<void> _BranchManageropenDialog(
     },
   );
 }
-
 
 TableRow _BranchmanagertableRow({
   required String code,

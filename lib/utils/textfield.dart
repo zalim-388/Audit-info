@@ -1,6 +1,7 @@
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -28,6 +29,13 @@ Widget fullTextField({
           obscureText: isPassword,
           onTap: onTap,
           validator: validator,
+          inputFormatters:
+              title == "Phone Number"
+                  ? [
+                    LengthLimitingTextInputFormatter(10),
+                    FilteringTextInputFormatter.digitsOnly,
+                  ]
+                  : [],
           readOnly: onTap != null,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(

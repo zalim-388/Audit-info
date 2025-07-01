@@ -265,121 +265,129 @@ class _SroState extends State<Sro> {
                           topRight: Radius.circular(4),
                         ),
                         border: Border(
-                          top: BorderSide(color: Colors.black),
-                          left: BorderSide(color: Colors.black),
-                          right: BorderSide(color: Colors.black),
+                          top: BorderSide(color: AppColors.kBorderColor),
+                          left: BorderSide(color: AppColors.kBorderColor),
+                          right: BorderSide(color: AppColors.kBorderColor),
                         ),
                       ),
-                      child: Table(
-                        border: TableBorder(
-                          borderRadius: BorderRadius.circular(4),
-                          horizontalInside: BorderSide(
-                            color: AppColors.kBorderColor,
-                          ),
-                          verticalInside: BorderSide(
-                            color: AppColors.kBorderColor,
-                          ),
-                          bottom: BorderSide(color: Colors.black),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(4),
+                          topRight: Radius.circular(4),
                         ),
-                        columnWidths: const <int, TableColumnWidth>{
-                          0: FixedColumnWidth(50), // E.CODE
-                          1: FixedColumnWidth(50), // Name
-                          2: FixedColumnWidth(30), // Branch Name
-                          3: FixedColumnWidth(30), //SRC
-                          4: FixedColumnWidth(60), // Phone Number
-                          5: FixedColumnWidth(30), // Point Amount
-                          6: FixedColumnWidth(40), // Status (toggle)
-                          7: FixedColumnWidth(80), // Actions (icons)
-                        },
-
-                        children: [
-                          TableRow(
-                            decoration: BoxDecoration(color: Colors.grey[300]),
-                            children: [
-                              tableheadRow("E.Code"),
-                              tableheadRow("Name"),
-                              tableheadRow("Branch Name"),
-                              tableheadRow("SRC"),
-                              tableheadRow("phone Number"),
-                              tableheadRow("Point Amount"),
-                              tableheadRow("Status"),
-                              tableheadRow("Actions"),
-                            ],
+                        child: Table(
+                          border: TableBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            horizontalInside: BorderSide(
+                              color: AppColors.kBorderColor,
+                            ),
+                            verticalInside: BorderSide(
+                              color: AppColors.kBorderColor,
+                            ),
+                            bottom: BorderSide(color: AppColors.kBorderColor),
                           ),
+                          columnWidths: const <int, TableColumnWidth>{
+                            0: FixedColumnWidth(50), // E.CODE
+                            1: FixedColumnWidth(50), // Name
+                            2: FixedColumnWidth(30), // Branch Name
+                            3: FixedColumnWidth(30), //SRC
+                            4: FixedColumnWidth(60), // Phone Number
+                            5: FixedColumnWidth(30), // Point Amount
+                            6: FixedColumnWidth(40), // Status (toggle)
+                            7: FixedColumnWidth(80), // Actions (icons)
+                          },
 
-                          ...List.generate(filledsro.length, (index) {
-                            final sro = filledsro[index];
-                            return _SroTableRow(
-                              code: sro.employeeCode,
-                              name: sro.name,
-                              branchName: sro.branchId.toString(),
-                              Src: sro.srcId,
-                              phone: sro.phoneNumber,
-                              pointAmount: sro.pointAmount.toString(),
-                              status: sro.status,
-                              onToggle: (value) {
-                                filledsro[index].status = value;
-                                BlocProvider.of<SroBloc>(context).add(
-                                  updatesro(
-                                    updatedata: {"status": value},
-                                    id: sro.id,
-                                  ),
-                                );
-                              },
-                              onEdit: () {
-                                final SroModel selectedsro = branches
-                                    .firstWhere(
-                                      (e) =>
-                                          (e.branchId?.id ?? "") ==
-                                          (sro.branchId?.name ?? ""),
-                                      orElse:
-                                          () =>
-                                              branches.isNotEmpty
-                                                  ? branches[0]
-                                                  : sro,
-                                    );
-                                setState(() {
-                                  selectedBranch = selectedsro;
-                                });
-                                SROopenDialog(
-                                  context,
-                                  selectedBranch,
-                                  selectedSRC,
-                                  (value) {
-                                    setState(() {
-                                      selectedBranch = value;
-                                    });
-                                  },
-                                  branches,
-                                  employecodeController
-                                    ..text = sro.employeeCode,
-                                  dateController
-                                    ..text = DateFormat(
-                                      'yyyy-MM-dd',
-                                    ).format(sro.dateOfJoining),
+                          children: [
+                            TableRow(
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                              ),
+                              children: [
+                                tableheadRow("E.Code"),
+                                tableheadRow("Name"),
+                                tableheadRow("Branch Name"),
+                                tableheadRow("SRC"),
+                                tableheadRow("phone Number"),
+                                tableheadRow("Point Amount"),
+                                tableheadRow("Status"),
+                                tableheadRow("Actions"),
+                              ],
+                            ),
 
-                                  nameController..text = sro.name,
-                                  emailController..text = sro.email,
-                                  addressController..text = sro.address,
-                                  phonenumber..text = sro.phoneNumber,
-                                  passwordController..text = sro.password,
-                                  confirmController..text = sro.password,
-                                  pointamountController
-                                    ..text = sro.pointAmount.toString(),
-                                  salaryController,
+                            ...List.generate(filledsro.length, (index) {
+                              final sro = filledsro[index];
+                              return _SroTableRow(
+                                code: sro.employeeCode,
+                                name: sro.name,
+                                branchName: sro.branchId.toString(),
+                                Src: sro.srcId,
+                                phone: sro.phoneNumber,
+                                pointAmount: sro.pointAmount.toString(),
+                                status: sro.status,
+                                onToggle: (value) {
+                                  filledsro[index].status = value;
+                                  BlocProvider.of<SroBloc>(context).add(
+                                    updatesro(
+                                      updatedata: {"status": value},
+                                      id: sro.id,
+                                    ),
+                                  );
+                                },
+                                onEdit: () {
+                                  final SroModel selectedsro = branches
+                                      .firstWhere(
+                                        (e) =>
+                                            (e.branchId?.id ?? "") ==
+                                            (sro.branchId?.name ?? ""),
+                                        orElse:
+                                            () =>
+                                                branches.isNotEmpty
+                                                    ? branches[0]
+                                                    : sro,
+                                      );
+                                  setState(() {
+                                    selectedBranch = selectedsro;
+                                  });
+                                  SROopenDialog(
+                                    context,
+                                    selectedBranch,
+                                    selectedSRC,
+                                    (value) {
+                                      setState(() {
+                                        selectedBranch = value;
+                                      });
+                                    },
+                                    branches,
+                                    employecodeController
+                                      ..text = sro.employeeCode,
+                                    dateController
+                                      ..text = DateFormat(
+                                        'yyyy-MM-dd',
+                                      ).format(sro.dateOfJoining),
 
-                                  isUpdate: true,
-                                  sroid: sro.id,
-                                );
-                              },
-                              onDelete: () {
-                                BlocProvider.of<SroBloc>(
-                                  context,
-                                ).add(deletesro(id: sro.id));
-                              },
-                            );
-                          }),
-                        ],
+                                    nameController..text = sro.name,
+                                    emailController..text = sro.email,
+                                    addressController..text = sro.address,
+                                    phonenumber..text = sro.phoneNumber,
+                                    passwordController..text = sro.password,
+                                    confirmController..text = sro.password,
+                                    pointamountController
+                                      ..text = sro.pointAmount.toString(),
+                                    salaryController,
+
+                                    isUpdate: true,
+                                    sroid: sro.id,
+                                  );
+                                },
+                                onDelete: () {
+                                  BlocProvider.of<SroBloc>(
+                                    context,
+                                  ).add(deletesro(id: sro.id));
+                                },
+                              );
+                            }),
+                          ],
+                        ),
                       ),
                     );
                   }

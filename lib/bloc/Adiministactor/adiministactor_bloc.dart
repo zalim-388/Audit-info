@@ -10,10 +10,11 @@ class AdiministactorBloc
     extends Bloc<AdiministactorEvent, AdiministactorState> {
   List<Adiministactormodel> adiministactors = [];
   AdiministactorBloc() : super(AdiministactorInitial()) {
-    on<AdiministactorEvent>((event, emit) async {
+    on<fetchAdiministactor>((event, emit) async {
       emit(AdiministactorInitial());
       try {
         final Adimi = await AdiministactorApi().getAdiministactor();
+        print("Fetched ${Adimi.length} agents");
         emit(AdiministactorLoaded(adiministactors: Adimi));
       } catch (e) {
         emit(AdiministactorError(message: e.toString()));
@@ -23,6 +24,7 @@ class AdiministactorBloc
       emit(AdiministactorLoading());
       try {
         await AdiministactorApi().AddAdimini(event.adiminiData);
+
         final adimi = await AdiministactorApi().getAdiministactor();
         emit(AdiministactorLoaded(adiministactors: adimi));
       } catch (e) {
@@ -36,6 +38,7 @@ class AdiministactorBloc
         await AdiministactorApi().DeleteAdimini(event.id);
 
         final updatedelete = await AdiministactorApi().getAdiministactor();
+
         print("Fetched ${updatedelete.length} Adiministactor after deletion");
         emit(AdiministactorLoaded(adiministactors: updatedelete));
       } catch (e) {

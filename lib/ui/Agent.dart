@@ -173,8 +173,8 @@ class _AgentState extends State<Agent> {
                   Container(
                     height: 20.h,
                     width: 22.w,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    decoration: const BoxDecoration(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    decoration: BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage("assets/icon/Group 199.png"),
                         fit: BoxFit.cover,
@@ -184,9 +184,10 @@ class _AgentState extends State<Agent> {
                   SizedBox(width: 6.w),
                   GestureDetector(
                     onTap: () {
-                      // _namecontroller.clear();
-                      // _phonecontroller.clear();
-                      // _addresscontroller.clear();
+                      _namecontroller.clear();
+                      _phonecontroller.clear();
+                      _addresscontroller.clear();
+                      _emailcontroller.clear();
                       _AgentopenDialog(
                         context,
                         _namecontroller,
@@ -258,76 +259,85 @@ class _AgentState extends State<Agent> {
                           topRight: Radius.circular(4),
                         ),
                         border: Border(
-                          top: BorderSide(color: Colors.black),
-                          left: BorderSide(color: Colors.black),
-                          right: BorderSide(color: Colors.black),
+                          top: BorderSide(color: AppColors.kBorderColor),
+                          left: BorderSide(color: AppColors.kBorderColor),
+                          right: BorderSide(color: AppColors.kBorderColor),
                         ),
                       ),
-                      child: Table(
-                        border: TableBorder(
-                          borderRadius: BorderRadius.circular(4),
-                          horizontalInside: BorderSide(
-                            color: AppColors.kBorderColor,
-                          ),
-                          verticalInside: BorderSide(
-                            color: AppColors.kBorderColor,
-                          ),
-                          bottom: BorderSide(color: Colors.black),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(4),
+                          topRight: Radius.circular(4),
                         ),
-                        columnWidths: <int, TableColumnWidth>{
-                          0: FixedColumnWidth(30),
-                          1: FixedColumnWidth(60),
-                          2: FixedColumnWidth(74),
-                          3: FixedColumnWidth(60),
-                          4: FixedColumnWidth(60),
-                          5: FixedColumnWidth(60),
-                        },
-                        children: [
-                          TableRow(
-                            decoration: BoxDecoration(color: Colors.grey[300]),
-                            children: [
-                              tableheadRow('SI.NO'),
-                              tableheadRow('Name'),
-                              tableheadRow('Phone Number'),
-                              tableheadRow('Email'),
-                              tableheadRow('Address'),
-                              tableheadRow('Actions'),
-                            ],
+                        child: Table(
+                          border: TableBorder(
+                            borderRadius: BorderRadius.circular(4),
+                            horizontalInside: BorderSide(
+                              color: AppColors.kBorderColor,
+                            ),
+                            verticalInside: BorderSide(
+                              color: AppColors.kBorderColor,
+                            ),
+                            bottom: BorderSide(color: AppColors.kBorderColor),
                           ),
-                          ...List.generate(filterAgent.length, (index) {
-                            final agent = filterAgent[index];
-                            return _AgentTableRow(
-                              id: (index + 1).toString(),
-                              name: agent.name.toString(),
-                              phone: agent.phoneNumber.toString(),
-                              email: agent.email.toString(),
-                              Address: agent.address.toString(),
-                              onEdit: () {
-                                _namecontroller.text = agent.name.toString();
-                                _phonecontroller.text =
-                                    agent.phoneNumber.toString();
-                                _addresscontroller.text =
-                                    agent.address.toString();
-                                _emailcontroller.text = agent.email.toString();
-                                _AgentopenDialog(
-                                  context,
-                                  _namecontroller,
-                                  _phonecontroller,
-                                  _addresscontroller,
-                                  _emailcontroller,
+                          columnWidths: <int, TableColumnWidth>{
+                            0: FixedColumnWidth(40),
+                            1: FixedColumnWidth(60),
+                            2: FixedColumnWidth(60),
 
-                                  isEdit: true,
-                                  AgentId: agent.id,
-                                );
-                              },
-                              onDelete: (){
-                                BlocProvider.of<AgentBloc>(
-                                  context,
-                                ).add(DeleteAgent(id: agent.id));
-                              },
-                            );
-                          }),
-                        ],
+                            3: FixedColumnWidth(50),
+                            4: FixedColumnWidth(70),
+                          },
+                          children: [
+                            TableRow(
+                              decoration: BoxDecoration(
+                                color: Colors.grey[300],
+                              ),
+                              children: [
+                                tableheadRow('SI.NO'),
+                                tableheadRow('Name'),
+                                tableheadRow('Phone Number'),
+                                // tableheadRow('Email'),
+                                tableheadRow('Address'),
+                                tableheadRow('Actions'),
+                              ],
+                            ),
+                            ...List.generate(filterAgent.length, (index) {
+                              final agent = filterAgent[index];
+                              return _AgentTableRow(
+                                id: (index + 1).toString(),
+                                name: agent.name.toString(),
+                                phone: agent.phoneNumber.toString(),
+                                // email: agent.email.toString(),
+                                Address: agent.address.toString(),
+                                onEdit: () {
+                                  _namecontroller.text = agent.name.toString();
+                                  _phonecontroller.text =
+                                      agent.phoneNumber.toString();
+                                  _addresscontroller.text =
+                                      agent.address.toString();
+                                  _emailcontroller.text =
+                                      agent.email.toString();
+                                  _AgentopenDialog(
+                                    context,
+                                    _namecontroller,
+                                    _phonecontroller,
+                                    _addresscontroller,
+                                    _emailcontroller,
+
+                                    isEdit: true,
+                                    AgentId: agent.id,
+                                  );
+                                },
+                                onDelete: () {
+                                  BlocProvider.of<AgentBloc>(
+                                    context,
+                                  ).add(DeleteAgent(id: agent.id));
+                                },
+                              );
+                            }),
+                          ],
+                        ),
                       ),
                     );
                   }
@@ -384,7 +394,11 @@ Future<void> _AgentopenDialog(
                     ],
                   ),
                   SizedBox(height: 9.h),
-                  fullTextField(title: "Name", controller: namecontroller),
+                  fullTextField(
+                    title: "Name",
+                    controller: namecontroller,
+                    keyboardType: TextInputType.name,
+                  ),
                   SizedBox(height: 10.h),
                   fullTextField(
                     title: "Phone Number",
@@ -392,11 +406,17 @@ Future<void> _AgentopenDialog(
                     controller: phonecontroller,
                   ),
                   SizedBox(height: 10.h),
-                  fullTextField(title: "email", controller: emailController),
+                  fullTextField(
+                    title: "email",
+                    controller: emailController,
+
+                    keyboardType: TextInputType.emailAddress,
+                  ),
                   SizedBox(height: 10.h),
                   fullTextField(
                     title: "Address",
                     controller: addresscontroller,
+                    keyboardType: TextInputType.streetAddress,
                   ),
                   SizedBox(height: 21.h),
                   SizedBox(
@@ -417,18 +437,13 @@ Future<void> _AgentopenDialog(
                           print("Validation failed: All fields are required");
                           return;
                         }
-                        if (phonecontroller.text.length < 10) {
-                          print(
-                            "Validation failed: Phone number must be at least 10 digits",
-                          );
-                          return;
-                        }
+
                         final agendata = {
-                          "name": namecontroller.text.trim(),
+                          "name": namecontroller.text,
                           "phone_number":
-                              int.tryParse(phonecontroller.text.trim()) ?? 0,
-                          "email": emailController.text.trim(),
-                          "address": addresscontroller.text.trim(),
+                              int.tryParse(phonecontroller.text) ?? 0,
+                          "email": emailController.text,
+                          "address": addresscontroller.text,
                         };
                         print('Sending agendata: $agendata');
 
@@ -468,7 +483,7 @@ TableRow _AgentTableRow({
   required String name,
   required String phone,
   required String Address,
-  required String email,
+  // required String email,
   required VoidCallback onEdit,
   required VoidCallback onDelete,
 }) {
@@ -477,7 +492,7 @@ TableRow _AgentTableRow({
       cell(id),
       cell(name),
       cell(phone),
-      cell(email),
+      // cell(email),
       cell(Address),
       actionCell(onEdit, onDelete),
     ],
