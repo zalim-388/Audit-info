@@ -1,5 +1,5 @@
-import 'package:audit_info/Repositry/Api/accountant/accountantApi.dart';
-import 'package:audit_info/Repositry/model/accountant_modal.dart';
+import 'package:audit_info/repository/Api/accountant/accountantApi.dart';
+import 'package:audit_info/repository/model/accountant_modal.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 

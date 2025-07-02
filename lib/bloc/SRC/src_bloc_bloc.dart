@@ -1,5 +1,5 @@
-import 'package:audit_info/Repositry/Api/SRC/SRCapi.dart';
-import 'package:audit_info/Repositry/model/SRCmodel.dart';
+import 'package:audit_info/repository/Api/SRC/SRCapi.dart';
+import 'package:audit_info/repository/model/SRCmodel.dart';
 import 'package:audit_info/bloc/manger/manager_bloc.dart';
 import 'package:audit_info/ui/SRC.dart';
 import 'package:bloc/bloc.dart';

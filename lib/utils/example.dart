@@ -587,7 +587,7 @@
 //   );
 // }
 
-import 'package:audit_info/bloc/Adiministactor/adiministactor_bloc.dart';
+import 'package:audit_info/bloc/administrator/adiministactor_bloc.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';

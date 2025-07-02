@@ -1,5 +1,5 @@
-import 'package:audit_info/Repositry/Api/manager/managerApi.dart';
-import 'package:audit_info/Repositry/model/manager_model.dart';
+import 'package:audit_info/repository/Api/manager/managerApi.dart';
+import 'package:audit_info/repository/model/manager_model.dart';
 import 'package:audit_info/bloc/manger/manager_bloc.dart';
 import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';

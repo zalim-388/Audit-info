@@ -1,14 +1,20 @@
+import 'package:audit_info/bloc/lead/leadmanagement_bloc.dart';
+import 'package:audit_info/repository/model/lead_management.dart';
 import 'package:audit_info/ui/leadcall.dart';
 import 'package:audit_info/ui/leadhistory.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';
 import 'package:audit_info/utils/customDrawer.dart';
+import 'package:audit_info/utils/table.dart';
+import 'package:audit_info/utils/textfield.dart';
 import 'package:audit_info/utils/updatepass_sheet.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class LeadManagment extends StatefulWidget {
   const LeadManagment({super.key});
@@ -20,17 +26,23 @@ class LeadManagment extends StatefulWidget {
 class _LeadManagmentState extends State<LeadManagment> {
   int _selectedIndex = 7;
   bool showDropdown = false;
-  // bool _isVisible = false;
-  List<bool> _isVisibleList = List.generate(4, (_) => false);
+  List<bool> _isVisibleList = List.generate(5, (_) => false);
 
-  String? selectedItem;
-  String? selectedSchool;
-  String? selectedStatus;
-  String? selectedBranch;
+  LeadManagementModel? selectedItem;
+  LeadManagementModel? selectedSchool;
+  LeadManagementModel? selectedStatus;
+  LeadManagementModel? selectedBranch;
+  LeadManagementModel? selectedSRC;
+  LeadManagementModel? selectedSRO;
+  LeadManagementModel? selectedCourse;
 
-  final List<String> schools = ['School 1', 'School 2', 'School 3'];
-  final List<String> statuses = ['REGISTERED', 'PENDING', 'REJECTED'];
-  final List<String> branches = ['Branch A', 'Branch B', 'Branch C'];
+  List<LeadManagementModel> statuses = [];
+  List<LeadManagementModel> branches = [];
+  List<LeadManagementModel> schools = [];
+  List<LeadManagementModel> subjects = [];
+  List<LeadManagementModel> srcOptions = [];
+  List<LeadManagementModel> sroOptions = [];
+  List<LeadManagementModel> courses = [];
 
   void _onitemTapped(int index) {
     setState(() {
@@ -48,6 +60,25 @@ class _LeadManagmentState extends State<LeadManagment> {
     setState(() {
       _isVisibleList[index] = !_isVisibleList[index];
     });
+  }
+
+  TextEditingController dateController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController phonenumberController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController confirmController = TextEditingController();
+  TextEditingController percentageController = TextEditingController();
+
+  void onSelected(LeadManagementModel selected) {
+    setState(() {
+      selectedItem = selected;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    BlocProvider.of<LeadmanagementBloc>(context).add(fetchlead());
   }
 
   @override
@@ -87,7 +118,7 @@ class _LeadManagmentState extends State<LeadManagment> {
                         },
                       ),
         ),
-        title: Text(" Lead Managment", style: FontStyles.heading),
+        title: Text("Lead Managment", style: FontStyles.heading),
         actions: [
           if (!showDropdown)
             Padding(
@@ -141,10 +172,8 @@ class _LeadManagmentState extends State<LeadManagment> {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         alignment: Alignment.center,
-
                         child: GestureDetector(
                           onTap: _filterleads,
-
                           child: Icon(
                             Icons.filter_list_alt,
                             size: 16,
@@ -152,7 +181,6 @@ class _LeadManagmentState extends State<LeadManagment> {
                           ),
                         ),
                       ),
-
                       if (!showDropdown) ...[
                         Spacer(),
                         Container(
@@ -204,12 +232,10 @@ class _LeadManagmentState extends State<LeadManagment> {
                             ],
                           ),
                         ),
-
                         SizedBox(width: 8.w),
                         Container(
                           height: 28.h,
                           width: 88.w,
-
                           decoration: BoxDecoration(
                             color: Colors.black,
                             borderRadius: BorderRadius.circular(4),
@@ -228,7 +254,28 @@ class _LeadManagmentState extends State<LeadManagment> {
                               SizedBox(width: 11.w),
                               GestureDetector(
                                 onTap: () {
-                                  Addlead(context);
+                                  Addlead(
+                                    context,
+                                    onSelected,
+                                    nameController,
+                                    phonenumberController,
+                                    addressController,
+                                    confirmController,
+                                    percentageController,
+                                    dateController,
+                                    selectedSchool,
+                                    selectedBranch,
+                                    selectedSRC,
+                                    selectedSRO,
+                                    selectedBranch,
+                                    selectedCourse,
+                                    schools,
+                                    subjects,
+                                    srcOptions,
+                                    sroOptions,
+                                    branches,
+                                    courses,
+                                  );
                                 },
                                 child: Container(
                                   height: 28.h,
@@ -258,38 +305,81 @@ class _LeadManagmentState extends State<LeadManagment> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 10.h),
-
-                        _fullTextField(
+                        fullTextField(
                           title: "Start date - End date",
                           width: 360.w,
                           icon: Icons.calendar_today,
+                          onTap: () async {
+                            showDatePicker(
+                              context: context,
+                              initialDate: DateTime.now(),
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime(2101),
+                            ).then((pickedDate) {
+                              if (pickedDate != null) {
+                                dateController.text = DateFormat(
+                                  'yyyy-MM-dd',
+                                ).format(pickedDate);
+                              }
+                            });
+                          },
                         ),
-
                         SizedBox(height: 5.h),
-                        _buildDropdownField(
-                          "Select school",
-                          selectedSchool,
-                          schools,
-                          "Select school",
-                          (value) => setState(() => selectedSchool = value),
+                        DropdownField(
+                          "School Name",
+                          selectedSchool?.schoolId.name.toString(),
+                          schools
+                              .map((school) => school.schoolId.name)
+                              .whereType<String>()
+                              .toList(),
+                          "Select School",
+                          (selected) {
+                            if (selected != null) {
+                              final selectedSchoolModel = schools.firstWhere(
+                                (s) => s.schoolId.name == selected,
+                              );
+                              onSelected(selectedSchoolModel);
+                            }
+                          },
                           context,
                         ),
                         SizedBox(height: 10.h),
-                        _buildDropdownField(
+                        DropdownField(
                           "Select status",
-                          selectedStatus,
-                          statuses,
+                          selectedStatus?.status.toString(),
+                          statuses
+                              .map((s) => s.status)
+                              .whereType<String>()
+                              .toList(),
                           "Select status",
-                          (value) => setState(() => selectedStatus = value),
+                          (selected) {
+                            if (selected != null) {
+                              final status = statuses.firstWhere(
+                                // Changed from branches to statuses
+                                (s) => s.status == selected,
+                              );
+                              onSelected(status);
+                            }
+                          },
                           context,
                         ),
                         SizedBox(height: 10.h),
-                        _buildDropdownField(
-                          "Select branch",
-                          selectedBranch,
-                          branches,
-                          "Select branch",
-                          (value) => setState(() => selectedBranch = value),
+                        DropdownField(
+                          "Branch",
+                          selectedBranch?.branchId.name.toString(),
+                          branches
+                              .map((s) => s.branchId.name)
+                              .whereType<String>()
+                              .toList(),
+                          "Select Branch",
+                          (selected) {
+                            if (selected != null) {
+                              final Branches = branches.firstWhere(
+                                (s) => s.branchId.name == selected,
+                              );
+                              onSelected(Branches);
+                            }
+                          },
                           context,
                         ),
                         SizedBox(height: 20.h),
@@ -297,7 +387,6 @@ class _LeadManagmentState extends State<LeadManagment> {
                           padding: const EdgeInsets.only(left: 250),
                           child: GestureDetector(
                             onTap: () {
-                              // Add your show functionality here
                               print('Show button tapped');
                             },
                             child: Container(
@@ -332,444 +421,73 @@ class _LeadManagmentState extends State<LeadManagment> {
                       ],
                     ),
                   ],
-
                   SizedBox(height: 13.h),
-
-                  // Container(
-                  //   width: 358.w,
-                  //   decoration: BoxDecoration(
-                  //     color: AppColors.kContainerColor,
-                  //     borderRadius: const BorderRadius.only(
-                  //       topLeft: Radius.circular(9),
-                  //       topRight: Radius.circular(9),
-                  //     ),
-                  //     border: Border(
-                  //       top: BorderSide(color: Colors.black),
-                  //       left: BorderSide(color: Colors.black),
-                  //       right: BorderSide(color: Colors.black),
-                  //     ),
-                  //   ),
-                  //   child: Table(
-                  //     border: TableBorder(
-                  //       borderRadius: BorderRadius.circular(9),
-                  //       horizontalInside: BorderSide(color: Color(0xFFF2F2F2)),
-                  //       verticalInside: BorderSide(color: Color(0xFFF2F2F2)),
-                  //       // bottom: BorderSide(color: Colors.black),
-                  //     ),
-                  //     columnWidths: const <int, TableColumnWidth>{
-                  //       0: FixedColumnWidth(55), // Date
-                  //       1: FixedColumnWidth(70), // Name
-                  //       2: FixedColumnWidth(65), // School Name
-                  //       3: FixedColumnWidth(60), // SRC
-                  //       4: FixedColumnWidth(65), // Phone Number
-                  //       5: FixedColumnWidth(60), // Status
-                  //     },
-                  //     children: [
-                  //       TableRow(
-                  //         decoration: BoxDecoration(
-                  //           borderRadius: BorderRadius.circular(9),
-                  //           color: Colors.grey[300],
-                  //         ),
-                  //         children: [
-                  //           Padding(
-                  //             padding: const EdgeInsets.symmetric(vertical: 6),
-                  //             child: Text(
-                  //               'Date',
-                  //               textAlign: TextAlign.center,
-                  //               style: GoogleFonts.poppins(
-                  //                 fontSize: 10.sp,
-                  //                 color: AppColors.kTextColor,
-                  //                 fontWeight: FontWeight.bold,
-                  //               ),
-                  //             ),
-                  //           ),
-                  //           Padding(
-                  //             padding: const EdgeInsets.symmetric(vertical: 6),
-                  //             child: Text(
-                  //               'Name',
-                  //               textAlign: TextAlign.center,
-                  //               style: GoogleFonts.poppins(
-                  //                 fontSize: 10.sp,
-                  //                 color: AppColors.kTextColor,
-                  //                 fontWeight: FontWeight.bold,
-                  //               ),
-                  //             ),
-                  //           ),
-                  //           Padding(
-                  //             padding: const EdgeInsets.symmetric(vertical: 6),
-                  //             child: Text(
-                  //               'School Name',
-                  //               textAlign: TextAlign.center,
-                  //               style: GoogleFonts.poppins(
-                  //                 fontSize: 10.sp,
-                  //                 color: AppColors.kTextColor,
-                  //                 fontWeight: FontWeight.bold,
-                  //               ),
-                  //             ),
-                  //           ),
-                  //           Padding(
-                  //             padding: const EdgeInsets.symmetric(vertical: 6),
-                  //             child: Text(
-                  //               'SRC',
-                  //               textAlign: TextAlign.center,
-                  //               style: GoogleFonts.poppins(
-                  //                 fontSize: 10.sp,
-                  //                 color: AppColors.kTextColor,
-                  //                 fontWeight: FontWeight.bold,
-                  //               ),
-                  //             ),
-                  //           ),
-                  //           Padding(
-                  //             padding: const EdgeInsets.symmetric(vertical: 6),
-                  //             child: Text(
-                  //               'Phone number',
-                  //               textAlign: TextAlign.center,
-                  //               style: GoogleFonts.poppins(
-                  //                 fontSize: 10.sp,
-                  //                 color: AppColors.kTextColor,
-                  //                 fontWeight: FontWeight.bold,
-                  //               ),
-                  //             ),
-                  //           ),
-                  //           Padding(
-                  //             padding: const EdgeInsets.symmetric(vertical: 6),
-                  //             child: Text(
-                  //               'Status',
-                  //               textAlign: TextAlign.center,
-                  //               style: GoogleFonts.poppins(
-                  //                 fontSize: 10.sp,
-                  //                 color: AppColors.kTextColor,
-                  //                 fontWeight: FontWeight.bold,
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ],
-                  //       ),
-                  // _leadRow(
-                  //   Date: "1/2/2022",
-                  //   name: "SAlim",
-                  //   Schoolname: "",
-                  //   Src: "",
-                  //   phonenumber: "65347595",
-                  //   Status: 'Registered',
-                  // ),
-
-                  // _leadRow(
-                  //   Date: "1/2/2022",
-                  //   name: "SAlim",
-                  //   Schoolname: "",
-                  //   Src: "",
-                  //   phonenumber: "65347595",
-                  //   Status: 'Registered',
-                  // ),
-                  // _leadRow(
-                  //   Date: "1/2/2022",
-                  //   name: "SAlim",
-                  //   Schoolname: "",
-                  //   Src: "",
-                  //   phonenumber: "65347595",
-                  //   Status: 'Registered',
-                  // ),
-                  //     ],
-                  //   ),
-                  // ),
-
-                  // SizedBox(height: 10.h),
-                  // Positioned(
-                  //   top: 80,
-                  //   left: 0,
-                  //   child: Column(
-                  //     children: [
-                  //       _buildActions(
-                  //         isVisible: _isVisible,
-                  //         toggleVisibility: _toggleVisibility,
-                  //       ),
-                  //       if (_isVisible) downbotton(context),
-                  //     ],
-                  //   ),
-                  // ),
-                  // Positioned(
-                  //   top: 220,
-                  //   child: Column(
-                  //     children: [
-                  //       _buildActions(
-                  //         isVisible: _isVisible,
-                  //         toggleVisibility: _toggleVisibility,
-                  //       ),
-                  //       if (_isVisible) downbotton(context),
-                  //     ],
-                  //   ),
-                  // ),
-                  // Positioned(
-                  //   child: _buildActions(
-                  //     isVisible: _isVisible,
-                  //     toggleVisibility: _toggleVisibility,
-                  //   ),
-                  // ),
                   Container(
+                    width: 358.w,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade400),
-                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(9),
+                      border: Border.all(color: Colors.grey.shade300),
                     ),
-                    child: Column(
+                    child: Table(
+                      border: TableBorder(
+                        borderRadius: BorderRadius.circular(9),
+                        horizontalInside: BorderSide(color: Color(0xFFF2F2F2)),
+                        verticalInside: BorderSide(color: Color(0xFFF2F2F2)),
+                      ),
+                      columnWidths: const <int, TableColumnWidth>{
+                        0: FixedColumnWidth(55), // Date
+                        1: FixedColumnWidth(70), // Name
+                        2: FixedColumnWidth(65), // School Name
+                        3: FixedColumnWidth(60), // SRC
+                        4: FixedColumnWidth(65), // Phone Number
+                        5: FixedColumnWidth(60), // Status
+                      },
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
+                        // Header Row
+                        TableRow(
                           decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            borderRadius: const BorderRadius.vertical(
-                              top: Radius.circular(10),
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(9),
+                              topRight: Radius.circular(9),
                             ),
+                            color: Colors.grey[300],
                           ),
-                          child: Row(
-                            children: const [
-                              Expanded(
-                                child: Text(
-                                  "Date",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  "Name",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  "school Name",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  "SRC",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  "Phone number",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  "Status",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                          children: [
+                            tableheadRow('Date'),
+                            tableheadRow('Name'),
+                            tableheadRow('School Name'),
+                            tableheadRow('SRC'),
+                            tableheadRow('Phone number'),
+                            tableheadRow('Status'),
+                          ],
                         ),
-
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "21-10-2024",
-                                  style: FontStyles.body,
-                                ),
-                              ),
-                              Expanded(
-                                child: Text("Babu", style: FontStyles.body),
-                              ),
-                              Expanded(
-                                child: Text("PKM", style: FontStyles.body),
-                              ),
-                              Expanded(
-                                child: Text("None", style: FontStyles.body),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  "3652154652",
-                                  style: FontStyles.body,
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  "Registered",
-                                  style: GoogleFonts.poppins(
-                                    color: Colors.green,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                        // Data Row 1
+                        _leadRow(
+                          Date: "21-10-2024",
+                          name: "Babu",
+                          Schoolname: "PKM",
+                          Src: "None",
+                          phonenumber: "3652154652",
+                          Status: 'Registered',
                         ),
-
-                        _buildActions(
-                          isVisible: _isVisibleList[0],
-                          toggleVisibility: () => _toggleVisibility(0),
+                        // Actions Row 1
+                        _buildActionsRow(0),
+                        // Expandable Content Row 1
+                        if (_isVisibleList[0]) _buildExpandableRow(),
+                        // Data Row 2
+                        _leadRow(
+                          Date: "21-10-2024",
+                          name: "Sreya",
+                          Schoolname: "PKM",
+                          Src: "None",
+                          phonenumber: "3652154652",
+                          Status: 'Registered',
                         ),
-                        if (_isVisibleList[0]) downbotton(context),
-
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "21-10-2024",
-                                  style: FontStyles.body,
-                                ),
-                              ),
-                              Expanded(
-                                child: Text("Sreya", style: FontStyles.body),
-                              ),
-                              Expanded(
-                                child: Text("PKM", style: FontStyles.body),
-                              ),
-                              Expanded(
-                                child: Text("None", style: FontStyles.body),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  "3652154652",
-                                  style: FontStyles.body,
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  "Registered",
-                                  style: GoogleFonts.poppins(
-                                    color: Colors.green,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        _buildActions(
-                          isVisible: _isVisibleList[1],
-                          toggleVisibility: () => _toggleVisibility(1),
-                        ),
-                        if (_isVisibleList[1]) downbotton(context),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "21-10-2024",
-                                  style: FontStyles.body,
-                                ),
-                              ),
-                              Expanded(
-                                child: Text("Salim", style: FontStyles.body),
-                              ),
-                              Expanded(
-                                child: Text("PKM", style: FontStyles.body),
-                              ),
-                              Expanded(
-                                child: Text("None", style: FontStyles.body),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  "3652154652",
-                                  style: FontStyles.body,
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  "Registered",
-                                  style: GoogleFonts.poppins(
-                                    color: Colors.green,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Actions Row 3
-                        _buildActions(
-                          isVisible: _isVisibleList[2],
-                          toggleVisibility: () => _toggleVisibility(2),
-                        ),
-                        if (_isVisibleList[2]) downbotton(context),
-                        // Lead Data Row 4
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 8,
-                          ),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "21-10-2024",
-                                  style: FontStyles.body,
-                                ),
-                              ),
-                              Expanded(
-                                child: Text("Sreya", style: FontStyles.body),
-                              ),
-                              Expanded(
-                                child: Text("PKM", style: FontStyles.body),
-                              ),
-                              Expanded(
-                                child: Text("None", style: FontStyles.body),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  "3652154652",
-                                  style: FontStyles.body,
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  "None",
-                                  style: GoogleFonts.poppins(
-                                    color: Colors.black,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Actions Row 4
-                        _buildActions(
-                          isVisible: _isVisibleList[3],
-                          toggleVisibility: () => _toggleVisibility(3),
-                        ),
-                        if (_isVisibleList[3]) downbotton(context),
+                        // Actions Row 2
+                        _buildActionsRow(1),
+                        // Expandable Content Row 2
+                        if (_isVisibleList[1]) _buildExpandableRow(),
                       ],
                     ),
                   ),
@@ -779,6 +497,63 @@ class _LeadManagmentState extends State<LeadManagment> {
           ),
         ),
       ),
+    );
+  }
+
+  TableRow _buildActionsRow(int index) {
+    return TableRow(
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(4),
+      ),
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          child: GestureDetector(
+            onTap: () => _toggleVisibility(index),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Actions",
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 10.sp,
+                  ),
+                ),
+                Spacer(),
+                Icon(
+                  _isVisibleList[index]
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down,
+                  size: 16.sp,
+                ),
+              ],
+            ),
+          ),
+        ),
+        cell(""),
+        cell(""),
+        cell(""),
+        cell(""),
+        cell(""),
+      ],
+    );
+  }
+
+  TableRow _buildExpandableRow() {
+    return TableRow(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+          child: _downbotton(context),
+        ),
+        cell(""),
+        cell(""),
+        cell(""),
+        cell(""),
+        cell(""),
+      ],
     );
   }
 }
@@ -797,32 +572,20 @@ TableRow _leadRow({
       border: Border(bottom: BorderSide.none),
     ),
     children: [
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(Date, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(name, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(Schoolname, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(Src, style: FontStyles.body)),
-      ),
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8.0),
-        child: Center(child: Text(phonenumber, style: FontStyles.body)),
-      ),
+      cell(Date),
+      cell(name),
+      cell(Schoolname),
+      cell(Src),
+      cell(phonenumber),
       Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Center(
           child: Text(
             Status,
-            style: GoogleFonts.poppins(color: Colors.green, fontSize: 10),
+            style: GoogleFonts.poppins(
+              color: Status == 'Registered' ? Colors.green : Colors.red,
+              fontSize: 10,
+            ),
           ),
         ),
       ),
@@ -830,156 +593,33 @@ TableRow _leadRow({
   );
 }
 
-Widget _buildActions({
-  required bool isVisible,
-  required VoidCallback toggleVisibility,
-}) {
-  return Column(
-    children: [
-      GestureDetector(
-        onTap: toggleVisibility,
-        child: Container(
-          height: 12.h,
-          width: 352.w,
-          decoration: BoxDecoration(
-            color: Colors.grey[200],
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: Text(
-                  "Actions",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 10),
-                ),
-              ),
-              Spacer(),
-              Center(
-                child: Icon(
-                  isVisible
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ],
-  );
-}
-
-Widget _modalBottomSheet(BuildContext context) {
-  return Padding(
-    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-    child: SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: double.infinity,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-            ),
-            padding: EdgeInsets.symmetric(horizontal: 41.w, vertical: 20.h),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Upload Box
-                DottedBorder(
-                  dashPattern: [6, 3],
-                  color: Color(0xFF868686),
-                  strokeWidth: 1,
-                  borderType: BorderType.RRect,
-                  radius: Radius.circular(17),
-                  child: Container(
-                    height: 156.h,
-                    width: double.infinity,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade400,
-                      borderRadius: BorderRadius.circular(17),
-                    ),
-
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.upload_outlined,
-                          size: 50.sp,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 10.h),
-                        Text(
-                          "Click this here to upload your file",
-                          style: GoogleFonts.poppins(
-                            fontSize: 10.sp,
-                            color: Color(0xFF525252),
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                SizedBox(height: 30.h),
-
-                SizedBox(
-                  width: double.infinity,
-                  height: 30.h,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      // Handle submit
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFFF9900),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                    child: Text(
-                      "Submit",
-                      style: GoogleFonts.poppins(
-                        fontSize: 12.sp,
-
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-Future<void> Addlead(BuildContext context) async {
+Future<void> Addlead(
+  BuildContext context,
+  Function(LeadManagementModel) onSelected,
+  TextEditingController nameController,
+  TextEditingController phonenumberController,
+  TextEditingController AddressController,
+  TextEditingController confirmController,
+  TextEditingController percentageController,
+  TextEditingController dateController,
+  LeadManagementModel? selectedSchool,
+  LeadManagementModel? selectedSubject,
+  LeadManagementModel? selectedSRC,
+  LeadManagementModel? selectedSRO,
+  LeadManagementModel? selectedBranch,
+  LeadManagementModel? selectedCourse,
+  List<LeadManagementModel> schools,
+  List<LeadManagementModel> subjects,
+  List<LeadManagementModel> srcOptions,
+  List<LeadManagementModel> sroOptions,
+  List<LeadManagementModel> branches,
+  List<LeadManagementModel> courses,
+) async {
   return showDialog(
     context: context,
     builder: (context) {
       return StatefulBuilder(
         builder: (context, setState) {
-          String? selectedSchool;
-          String? selectedSubject;
-          String? selectedSRC;
-          String? selectedSRO;
-          String? selectedBranch;
-          String? selectedCourse;
-
-          final List<String> schools = ['School A', 'School B', 'School C'];
-          final List<String> subjects = ['Mathematics', 'Science', 'English'];
-          final List<String> srcOptions = ['SRC 1', 'SRC 2', 'SRC 3'];
-          final List<String> sroOptions = ['SRO 1', 'SRO 2', 'SRO 3'];
-          final List<String> branches = ['Branch A', 'Branch B', 'Branch C'];
-          final List<String> courses = ['Course 1', 'Course 2', 'Course 3'];
-
           return Dialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(18),
@@ -1012,108 +652,168 @@ Future<void> Addlead(BuildContext context) async {
                         ],
                       ),
                       SizedBox(height: 20.h),
-
-                      _fullTextField(title: "Name"),
+                      fullTextField(title: "Name", controller: nameController),
                       SizedBox(height: 10.h),
-                      _fullTextField(title: "Phone Number"),
+                      fullTextField(
+                        title: "Phone Number",
+                        controller: phonenumberController,
+                      ),
                       SizedBox(height: 10.h),
-                      _fullTextField(title: "Address"),
-
+                      fullTextField(
+                        title: "Address",
+                        controller: AddressController,
+                      ),
                       SizedBox(height: 13.h),
-
                       Row(
                         children: [
                           Expanded(
-                            child: _buildDropdownField(
+                            child: DropdownField(
                               "School Name",
-                              selectedSchool,
-                              schools,
+                              selectedSchool?.schoolId.name.toString(),
+                              schools
+                                  .map((school) => school.schoolId.name)
+                                  .whereType<String>()
+                                  .toList(),
                               "Select School",
-                              (value) => setState(() => selectedSchool = value),
+                              (selected) {
+                                if (selected != null) {
+                                  final selectedSchoolModel = schools
+                                      .firstWhere(
+                                        (s) => s.schoolId.name == selected,
+                                      );
+                                  onSelected(selectedSchoolModel);
+                                }
+                              },
                               context,
                             ),
                           ),
                           SizedBox(width: 10.w),
                           Expanded(
-                            child: _buildDropdownField(
+                            child: DropdownField(
                               "Subject Name",
-                              selectedSubject,
-                              subjects,
+                              selectedSubject?.subjectName.toString(),
+                              subjects
+                                  .map((sub) => sub.subjectName)
+                                  .whereType<String>()
+                                  .toList(),
                               "Select Subject",
-                              (value) =>
-                                  setState(() => selectedSubject = value),
+                              (Selected) {
+                                if (Selected != null) {
+                                  final subjectModel = subjects.firstWhere(
+                                    (s) => s.subjectName == Selected,
+                                  );
+                                  onSelected(subjectModel);
+                                }
+                              },
                               context,
                             ),
                           ),
                         ],
                       ),
                       SizedBox(height: 10.h),
-
-                      // Select SRC and Select SRO Row
                       Row(
                         children: [
                           Expanded(
-                            child: _buildDropdownField(
+                            child: DropdownField(
                               "Select SRC",
-                              selectedSRC,
-                              srcOptions,
+                              selectedSRC?.sRcId?.name.toString(),
+                              srcOptions
+                                  .map((s) => s.sRcId?.name)
+                                  .whereType<String>()
+                                  .toList(),
                               "Select SRC",
-                              (value) => setState(() => selectedSRC = value),
+                              (selected) {
+                                if (selected != null) {
+                                  final src = srcOptions.firstWhere(
+                                    (s) => s.sRcId!.name == selected,
+                                  );
+                                  onSelected(src);
+                                }
+                              },
                               context,
                             ),
                           ),
                           SizedBox(width: 10.w),
                           Expanded(
-                            child: _buildDropdownField(
+                            child: DropdownField(
                               "Select SRO",
-                              selectedSRO,
-                              sroOptions,
+                              selectedSRO?.sRoId?.name.toString(),
+                              sroOptions
+                                  .map((s) => s.sRoId?.name)
+                                  .whereType<String>()
+                                  .toList(),
                               "Select SRO",
-                              (value) => setState(() => selectedSRO = value),
+                              (selected) {
+                                if (selected != null) {
+                                  final sro = sroOptions.firstWhere(
+                                    // Changed from srcOptions to sroOptions
+                                    (s) => s.sRoId!.name == selected,
+                                  );
+                                  onSelected(sro);
+                                }
+                              },
                               context,
                             ),
                           ),
                         ],
                       ),
                       SizedBox(height: 10.h),
-
-                      _buildDropdownField(
+                      DropdownField(
                         "Branch",
-                        selectedBranch,
-                        branches,
+                        selectedBranch?.branchId.name.toString(),
+                        branches
+                            .map((s) => s.branchId.name)
+                            .whereType<String>()
+                            .toList(),
                         "Select Branch",
-                        (value) => setState(() => selectedBranch = value),
+                        (selected) {
+                          if (selected != null) {
+                            final Branches = branches.firstWhere(
+                              (s) => s.branchId.name == selected,
+                            );
+                            onSelected(Branches);
+                          }
+                        },
                         context,
                       ),
                       SizedBox(height: 10.h),
-
                       Row(
                         children: [
                           Expanded(
-                            child: _buildDropdownField(
+                            child: DropdownField(
                               "Course name",
-                              selectedCourse,
-                              courses,
+                              selectedCourse?.course.name.toString(),
+                              courses
+                                  .map((s) => s.course.name)
+                                  .whereType<String>()
+                                  .toList(),
                               "Select Course",
-                              (value) => setState(() => selectedCourse = value),
+                              (selected) {
+                                if (selected != null) {
+                                  final course = courses.firstWhere(
+                                    (s) => s.course.name == selected,
+                                  );
+                                  onSelected(course);
+                                }
+                              },
                               context,
                             ),
                           ),
                           SizedBox(width: 10.w),
                           Expanded(
-                            child: _fullTextField(
+                            child: fullTextField(
                               title: "Mark percentage",
-
                               keyboardType: TextInputType.number,
+                              controller: percentageController,
                             ),
                           ),
                         ],
                       ),
-
                       SizedBox(height: 10.h),
-                      _fullTextField(
+                      fullTextField(
                         title: "Confirm Password",
                         isPassword: true,
+                        controller: confirmController,
                       ),
                       SizedBox(height: 21.h),
                       SizedBox(
@@ -1126,7 +826,22 @@ Future<void> Addlead(BuildContext context) async {
                               borderRadius: BorderRadius.circular(6),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            String formattedDate = '';
+                            try {
+                              if (dateController.text.isNotEmpty) {
+                                DateTime parsedDate = DateFormat(
+                                  'yyyy-MM-dd',
+                                ).parse(dateController.text);
+                                formattedDate = DateFormat(
+                                  'yyyy-MM-dd',
+                                ).format(parsedDate);
+                              }
+                            } catch (e) {
+                              formattedDate = dateController.text;
+                            }
+                            // Add lead submission logic here
+                          },
                           child: Text(
                             "Add Lead",
                             style: GoogleFonts.inter(
@@ -1148,11 +863,10 @@ Future<void> Addlead(BuildContext context) async {
   );
 }
 
-Widget downbotton(BuildContext context) {
+Widget _downbotton(BuildContext context) {
   return Container(
     height: 35.h,
     width: double.infinity,
-    // padding: const EdgeInsets.symmetric(vertical: 8),
     decoration: BoxDecoration(
       color: Colors.white,
       borderRadius: BorderRadius.circular(4),
@@ -1179,7 +893,6 @@ Widget downbotton(BuildContext context) {
             child: Icon(Icons.visibility, color: Colors.white),
           ),
         ),
-
         GestureDetector(
           onTap: () => print('Edit button tapped'),
           child: Container(
@@ -1217,7 +930,6 @@ Widget downbotton(BuildContext context) {
             child: Icon(Icons.description, color: Colors.white),
           ),
         ),
-
         GestureDetector(
           onTap: () {
             Navigator.push(
@@ -1241,117 +953,86 @@ Widget downbotton(BuildContext context) {
   );
 }
 
-Widget _fullTextField({
-  required String title,
-  IconData? icon,
-  bool isPassword = false,
-  double? width,
-  TextInputType keyboardType = TextInputType.text,
-}) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(title, style: FontStyles.body),
-      SizedBox(height: 4.h),
-      SizedBox(
-        height: 30.h,
-        width: width ?? 324.w,
-
-        child: TextField(
-          keyboardType: keyboardType,
-          obscureText: isPassword,
-          decoration: InputDecoration(
-            hintStyle: GoogleFonts.poppins(fontSize: 12),
-            suffixIcon: icon != null ? Icon(icon, size: 18) : null,
-            contentPadding: EdgeInsets.symmetric(horizontal: 12),
-            filled: true,
-            fillColor: Colors.white,
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-              borderSide: BorderSide(color: AppColors.kBorderColor),
+Widget _modalBottomSheet(BuildContext context) {
+  return Padding(
+    padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+    child: SingleChildScrollView(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
             ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(6),
-              borderSide: BorderSide(color: AppColors.kBorderColor),
-            ),
-          ),
-        ),
-      ),
-    ],
-  );
-}
-
-Widget _buildDropdownField(
-  String label,
-  String? selectedValue,
-  List<String> options,
-  String hint,
-  Function(String?) onChanged,
-  BuildContext context,
-) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(label, style: FontStyles.body),
-      SizedBox(height: 8.h),
-      GestureDetector(
-        onTapDown: (TapDownDetails details) async {
-          final selected = await showMenu<String>(
-            context: context,
-            position: RelativeRect.fromLTRB(
-              details.globalPosition.dx,
-              details.globalPosition.dy,
-              MediaQuery.of(context).size.width - details.globalPosition.dx,
-              MediaQuery.of(context).size.height - details.globalPosition.dy,
-            ),
-            items:
-                options.map((option) {
-                  return PopupMenuItem<String>(
-                    value: option,
-                    child: Text(
-                      option,
-                      style: GoogleFonts.poppins(fontSize: 12),
+            padding: EdgeInsets.symmetric(horizontal: 41.w, vertical: 20.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                DottedBorder(
+                  dashPattern: [6, 3],
+                  color: Color(0xFF868686),
+                  strokeWidth: 1,
+                  borderType: BorderType.RRect,
+                  radius: Radius.circular(17),
+                  child: Container(
+                    height: 156.h,
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade400,
+                      borderRadius: BorderRadius.circular(17),
                     ),
-                  );
-                }).toList(),
-            color: Colors.white,
-          );
-
-          if (selected != null) {
-            onChanged(selected);
-          }
-        },
-        child: Container(
-          height: 30.h,
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 12.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(6),
-            border: Border.all(color: AppColors.kBorderColor),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                selectedValue ?? hint,
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color:
-                      selectedValue == null
-                          ? const Color(0xFF868686)
-                          : Colors.black,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.upload_outlined,
+                          size: 50.sp,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(height: 10.h),
+                        Text(
+                          "Click this here to upload your file",
+                          style: GoogleFonts.poppins(
+                            fontSize: 10.sp,
+                            color: Color(0xFF525252),
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-              Icon(
-                Icons.keyboard_arrow_down,
-                size: 16,
-                color: AppColors.kTextColor,
-              ),
-            ],
+                SizedBox(height: 30.h),
+                SizedBox(
+                  width: double.infinity,
+                  height: 30.h,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Handle submit
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFFF9900),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      "Submit",
+                      style: GoogleFonts.poppins(
+                        fontSize: 12.sp,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
+        ],
       ),
-    ],
+    ),
   );
 }

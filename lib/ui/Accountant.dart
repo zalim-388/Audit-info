@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:audit_info/Repositry/Api/SRC/SRCapi.dart';
-import 'package:audit_info/Repositry/model/SRCmodel.dart';
-import 'package:audit_info/Repositry/model/accountant_modal.dart';
+import 'package:audit_info/repository/Api/SRC/SRCapi.dart';
+import 'package:audit_info/repository/model/SRCmodel.dart';
+import 'package:audit_info/repository/model/accountant_modal.dart';
 import 'package:audit_info/bloc/accountant/accountant_bloc.dart';
 import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';

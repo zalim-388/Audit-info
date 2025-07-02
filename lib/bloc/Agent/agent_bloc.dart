@@ -1,5 +1,5 @@
-import 'package:audit_info/Repositry/Api/Agent/AgentApi.dart';
-import 'package:audit_info/Repositry/model/Agent_model.dart';
+import 'package:audit_info/repository/Api/Agent/AgentApi.dart';
+import 'package:audit_info/repository/model/Agent_model.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 

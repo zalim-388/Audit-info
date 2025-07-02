@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:audit_info/Repositry/model/manager_model.dart';
-import 'package:audit_info/Repositry/Api/manager/managerApi.dart';
+import 'package:audit_info/repository/model/manager_model.dart';
+import 'package:audit_info/repository/Api/manager/managerApi.dart';
 
 part 'manager_event.dart';
 part 'manager_state.dart';
@@ -14,7 +14,7 @@ class ManagerBloc extends Bloc<ManagerEvent, ManagerState> {
       emit(ManagerBlocloading());
       try {
         final result = await ManagerApi().getManager();
-        print("Fecth${result.length} mangaer");
+        print("Fetch${result.length} mangaer");
         emit(ManagerBlocloaded(manager: result));
       } catch (e) {
         print("Manager fetch error: $e");

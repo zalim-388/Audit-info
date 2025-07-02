@@ -1,5 +1,5 @@
-import 'package:audit_info/Repositry/Api/branch/BranchManager_Api.dart';
-import 'package:audit_info/Repositry/model/Settings/BranchManagement.dart';
+import 'package:audit_info/repository/Api/branch/BranchManager_Api.dart';
+import 'package:audit_info/repository/model/Settings/BranchManagement.dart';
 import 'package:audit_info/bloc/manger/manager_bloc.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';

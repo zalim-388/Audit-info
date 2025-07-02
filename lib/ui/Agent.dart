@@ -1,4 +1,4 @@
-import 'package:audit_info/Repositry/model/Agent_model.dart';
+import 'package:audit_info/repository/model/Agent_model.dart';
 import 'package:audit_info/bloc/Agent/agent_bloc.dart';
 import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';

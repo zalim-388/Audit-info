@@ -1,7 +1,6 @@
 import 'dart:convert';
-import 'package:audit_info/Repositry/Api/Api_client.dart';
-import 'package:audit_info/Repositry/model/SRCmodel.dart';
-import 'package:audit_info/bloc/SRO/sro_bloc.dart';
+import 'package:audit_info/repository/Api/Api_client.dart';
+import 'package:audit_info/repository/model/SRCmodel.dart';
 
 class Srcapi {
   ApiClient api = ApiClient();

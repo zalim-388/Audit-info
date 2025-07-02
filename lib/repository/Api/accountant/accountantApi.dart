@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:audit_info/Repositry/Api/Api_client.dart';
-import 'package:audit_info/Repositry/model/accountant_modal.dart';
+import 'package:audit_info/repository/Api/Api_client.dart';
+import 'package:audit_info/repository/model/accountant_modal.dart';
 import 'package:http/http.dart';
 
 class Accountantapi {

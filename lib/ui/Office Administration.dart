@@ -1,6 +1,6 @@
-import 'package:audit_info/Repositry/Api/Adiministactor/Adiministactor_Api.dart';
-import 'package:audit_info/Repositry/model/Adiministactor.dart';
-import 'package:audit_info/bloc/Adiministactor/adiministactor_bloc.dart';
+import 'package:audit_info/repository/Api/Adiministactor/Adiministactor_Api.dart';
+import 'package:audit_info/repository/model/Adiministactor.dart';
+import 'package:audit_info/bloc/administrator/adiministactor_bloc.dart';
 import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';
 import 'package:audit_info/utils/colors.dart';

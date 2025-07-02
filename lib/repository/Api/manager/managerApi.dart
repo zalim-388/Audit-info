@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:audit_info/Repositry/Api/Api_client.dart';
-import 'package:audit_info/Repositry/model/manager_model.dart';
+import 'package:audit_info/repository/Api/Api_client.dart';
+import 'package:audit_info/repository/model/manager_model.dart';
 
 class ManagerApi {
   ApiClient api = ApiClient();

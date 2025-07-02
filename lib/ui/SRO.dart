@@ -1,5 +1,5 @@
-import 'package:audit_info/Repositry/Api/SRO/sroapi.dart';
-import 'package:audit_info/Repositry/model/SRO_model.dart';
+import 'package:audit_info/repository/Api/SRO/sroapi.dart';
+import 'package:audit_info/repository/model/SRO_model.dart';
 import 'package:audit_info/bloc/SRO/sro_bloc.dart';
 import 'package:audit_info/ui/loginpage.dart';
 import 'package:audit_info/utils/FontStyle.dart';

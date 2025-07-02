@@ -1,5 +1,5 @@
-import 'package:audit_info/Repositry/Api/Adiministactor/Adiministactor_Api.dart';
-import 'package:audit_info/Repositry/model/Adiministactor.dart';
+import 'package:audit_info/repository/Api/Adiministactor/Adiministactor_Api.dart';
+import 'package:audit_info/repository/model/Adiministactor.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 
