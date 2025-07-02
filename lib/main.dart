@@ -39,7 +39,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<AdiministactorBloc>(
           create: (BuildContext context) => AdiministactorBloc(),
         ),
-          BlocProvider<LeadmanagementBloc>(
+        BlocProvider<LeadmanagementBloc>(
           create: (BuildContext context) => LeadmanagementBloc(),
         ),
       ],
@@ -53,122 +53,11 @@ class MyApp extends StatelessWidget {
 
             // home: Loginpage(),
             //  home:LeadsTable (),
-             home: LeadManagment(),
+            home: LeadManagment(),
           );
         },
       ),
     );
-  }
-}
-
-
-
-
-class AuroraWidget extends StatefulWidget {
-  const AuroraWidget({super.key});
-
-  @override
-  State<AuroraWidget> createState() => _AuroraWidgetState();
-}
-
-class _AuroraWidgetState extends State<AuroraWidget> {
-  late FlutterGlPlugin flutterGl;
-  late int width;
-  late int height;
-
-  late dynamic glProgram;
-  double time = 0.0;
-
-  @override
-  void initState() {
-    super.initState();
-    initOpenGL();
-  }
-
-  Future<void> initOpenGL() async {
-    flutterGl = FlutterGlPlugin();
-    width = 400;
-    height = 600;
-
-    await flutterGl.initialize(options: {
-      "antialias": true,
-      "alpha": true,
-      "width": width,
-      "height": height,
-    });
-
-    await flutterGl.prepareContext();
-    // Provide vertex and fragment shader source code as arguments
-    const String vertCode = """
-    attribute vec4 position;
-    void main() {
-      gl_Position = position;
-    }
-    """;
-
-    const String fragCode = """
-    precision mediump float;
-    uniform float uTime;
-    void main() {
-      gl_FragColor = vec4(abs(sin(uTime)), 0.0, abs(cos(uTime)), 1.0);
-    }
-    """;
-
-    _initShader(vertCode, fragCode);
-  }
-
-  void _initShader(dynamic vertCode, dynamic fragCode) {
-    final gl = flutterGl.gl;
-
-    final vertShader = gl.createShader(gl.VERTEX_SHADER);
-    gl.shaderSource(vertShader, vertCode);
-    gl.compileShader(vertShader);
-
-    final fragShader = gl.createShader(gl.FRAGMENT_SHADER);
-    gl.shaderSource(fragShader, fragCode);
-    gl.compileShader(fragShader);
-
-    glProgram = gl.createProgram();
-    gl.attachShader(glProgram, vertShader);
-    gl.attachShader(glProgram, fragShader);
-    gl.linkProgram(glProgram);
-    gl.useProgram(glProgram);
-
-    // TODO: Add mesh and uniforms similar to JavaScript code
-
-    _animate();
-  }
-
-  void _animate() {
-    final gl = flutterGl.gl;
-    time += 0.01;
-
-    // TODO: update uTime, draw mesh, etc.
-
-    gl.clearColor(0, 0, 0, 0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
-    gl.useProgram(glProgram);
-
-    flutterGl.gl.flush();
-    flutterGl.updateTexture(flutterGl.textureId!);
-    Future.delayed(const Duration(milliseconds: 16), _animate);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: width.toDouble(),
-      height: height.toDouble(),
-      child: flutterGl.isInitialized
-          ? Texture(textureId: flutterGl.textureId!)
-          : const Center(child: CircularProgressIndicator()),
-    );
-  }
-
-  @override
-  void dispose() {
-    flutterGl.dispose();
-    super.dispose();
   }
 }
 

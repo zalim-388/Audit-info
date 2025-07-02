@@ -5,25 +5,31 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../utils/colors.dart'; // your app colors
 
-Widget tableheadRow(String heading) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 10.0),
-    child: Text(
-      heading,
-      textAlign: TextAlign.center,
-      style: GoogleFonts.poppins(
-        fontSize: 10.sp,
-        color: AppColors.kTextColor,
-        fontWeight: FontWeight.bold,
+Widget tableheadRow(String heading,[double? width]) {
+  return SizedBox(
+    width: width,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
+      child: Text(
+        heading,
+        textAlign: TextAlign.center,
+        style: GoogleFonts.poppins(
+          fontSize: 10.sp,
+          color: AppColors.kTextColor,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     ),
   );
 }
 
-Widget cell(String text) {
-  return Padding(
-    padding: const EdgeInsets.symmetric(vertical: 5),
-    child: Center(child: Text(text, style: FontStyles.body)),
+Widget cell(String text, [double? width]) {
+  return SizedBox(
+    width: width,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Center(child: Text(text, style: FontStyles.body)),
+    ),
   );
 }
 
